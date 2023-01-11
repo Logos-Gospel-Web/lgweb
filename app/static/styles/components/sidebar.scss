@@ -1,0 +1,95 @@
+.sidebar {
+    display: none;
+}
+
+@media screen and (min-width: 960px) {
+    .sidebar-container {
+        max-width: 1440px;
+        display: table;
+        width: 100%;
+        padding: 24px;
+
+        .sidebar {
+            display: table-cell;
+            position: relative;
+            width: 240px;
+            min-width: 240px;
+        }
+
+        .body {
+            display: table-cell;
+            vertical-align: top;
+            width: 100%;
+            padding: 0;
+            padding-right: 24px;
+        }
+    }
+    .blog-sidebar__content {
+        display: none;
+    }
+}
+
+
+.sidebar-container--closed {
+    max-width: 1080px;
+    display: block;
+
+    .sidebar {
+        display: none;
+    }
+
+    .body {
+        display: block;
+        padding-right: 0;
+        width: auto;
+    }
+}
+
+.sidebar__content,
+.blog-sidebar__content {
+    width: inherit;
+    background-color: white;
+    border: 1px solid #e0e0e0;
+    padding: 8px;
+}
+
+.blog-sidebar__content {
+    margin-bottom: 20px;
+}
+
+.sidebar__header {
+    display: table;
+    margin-bottom: 8px;
+}
+
+.sidebar__title {
+    display: table-cell;
+    width: 100%;
+    font-size: 1.1em;
+    font-weight: 700;
+}
+
+.sidebar__close {
+    @include icon-close;
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+    padding: 0 4px;
+    font-size: 20px;
+    cursor: pointer;
+
+    &:hover {
+        color: #2ebcfc;
+    }
+}
+
+.sidebar__item {
+    padding: 0.5em;
+    &+& {
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+}
+
+.sidebar__link {
+    @extend .link--hoverable;
+}

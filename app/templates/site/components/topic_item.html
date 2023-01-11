@@ -1,0 +1,26 @@
+{% load i18n %}
+{% load localize %}
+<tr>
+    <td>
+        <a href="{{ url }}">{{ title }}</a>
+        {% if is_new %}
+            <span class="topic__new">NEW</span>
+        {% endif %}
+    </td>
+    {% if has_audio %}
+        {% if audio %}
+            <td>
+                <a href="{{ audio }}" target="_blank" download>{% translate '下載 MP3' %}</a>
+            </td>
+        {% else %}
+            <td>{% translate '不設錄音' %}</td>
+        {% endif %}
+    {% endif %}
+    {% if document %}
+        <td>
+            <a href="{{ document }}" target="_blank" download>{% translate '下載 DOC' %}</a>
+        </td>
+    {% else %}
+        <td>{% translate '不設文字檔' %}</td>
+    {% endif %}
+</tr>

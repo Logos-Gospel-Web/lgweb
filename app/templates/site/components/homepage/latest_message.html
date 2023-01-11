@@ -1,0 +1,20 @@
+{% load localize %}
+{% load page_link %}
+{% with link=msg|page_link parent_link=msg.parent|page_link %}
+<tr>
+    <td class="latest__date">
+        <span class="latest__month">{{ msg.publish|date:'M' }}</span>
+        <span class="latest__year">{{ msg.publish|date:'Y' }}</span>
+    </td>
+    <td class="latest__page">
+        <div class="latest__page__inner">
+            <div class="latest__title latest__item">
+                <a class="latest__link" href="{{ link }}">{% localize msg.title %}</a>
+            </div>
+            <div class="latest__parent latest__item">
+                <a class="latest__link" href="{{ parent_link }}">{% localize msg.parent.title %}</a>
+            </div>
+        </div>
+    </td>
+</div>
+{% endwith %}

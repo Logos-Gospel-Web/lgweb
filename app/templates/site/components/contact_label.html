@@ -1,0 +1,10 @@
+<div class="contact__label">
+    <span>{{ label }}</span>
+    <span class="contact__alert">
+        <span> * </span>
+        {% if error %}
+            <span class="icon contact__alert__icon"></span>
+            <span>{{ error }}</span>
+        {% endif %}
+    </span>
+</div>

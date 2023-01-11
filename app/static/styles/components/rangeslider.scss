@@ -1,0 +1,11 @@
+.slider__range {
+    position: relative;
+    width: 100%;
+    max-width: 0;
+    height: 100%;
+    transition: max-width .1s linear;
+}
+
+.slider__thumb {
+    position: absolute;
+}

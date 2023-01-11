@@ -1,0 +1,160 @@
+.toolbar {
+    position: fixed;
+    bottom: 4px;
+    width: 36px;
+    height: 36px;
+    text-align: center;
+    line-height: 36px;
+    border-radius: 100%;
+    color: #fff;
+    background-color: rgba(0, 0, 0, .8);
+    cursor: pointer;
+
+    .fullscreen & {
+        position: absolute;
+    }
+}
+
+.toolbar--fullscreen {
+    left: 4px;
+    @include icon-enlarge;
+    .fullscreen & {
+        position: fixed;
+        @include icon-shrink;
+    }
+}
+
+.toolbar--fontsize {
+    left: 44px;
+    @include icon-font-size;
+}
+
+.toolbar--qrcode {
+    right: 44px;
+    @include icon-qrcode;
+}
+
+.toolbar--share {
+    right: 4px;
+    @include icon-share;
+}
+
+.fontsize {
+    color: #fff;
+    text-align: center;
+    position: fixed;
+    border: 1px solid #999;
+    width: 194px;
+    height: 62px;
+    bottom: 48px;
+    left: 20px;
+    background-color: #000;
+    border-radius: 4px;
+    user-select: none;
+}
+
+.fontsize--hidden {
+    display: none;
+}
+
+.fontsize__title {
+    font-size: 18px;
+    line-height: 32px;
+}
+
+.fontsize__editor {
+    font-size: 18px;
+    line-height: 1;
+}
+
+.fontsize__slider {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0 8px;
+
+    .slider {
+        width: 120px;
+        height: 10px;
+        background-color: #a9acb1;
+        border-radius: 15px;
+    }
+
+    .slider__thumb {
+        width: 20px;
+        height: 20px;
+        right: -10px;
+        top: -5px;
+        background-color: #fff;
+        border-radius: 100%;
+    }
+}
+
+.fontsize__button {
+    display: inline-block;
+    vertical-align: middle;
+    width: 28px;
+    height: 28px;
+    line-height: 28px;
+    cursor: pointer;
+}
+
+.fontsize__button--plus {
+    @include icon-plus;
+}
+
+.fontsize__button--minus {
+    @include icon-minus;
+}
+
+.qrcode {
+    z-index: 10;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    line-height: 100vh;
+    text-align: center;
+    background-color: rgba(0, 0, 0, .9);
+}
+
+.qrcode--hidden {
+    display: none;
+}
+
+.qrcode__container {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0 auto;
+    width: 100px;
+    height: 100px;
+    border-radius: 2px;
+    background-color: white;
+    position: relative;
+
+    svg {
+        display: block;
+    }
+}
+
+.qrcode__close {
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    width: 32px;
+    height: 32px;
+
+    background-color: #666;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 20px;
+    text-align: center;
+    line-height: 1.5;
+    cursor: pointer;
+
+    @include icon-close;
+
+    &:hover {
+        background-color: #999;
+    }
+}

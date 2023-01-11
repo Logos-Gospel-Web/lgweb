@@ -1,0 +1,9 @@
+.lgweb-dropbox {
+    display: flex;
+    column-gap: 8px;
+    width: 100%;
+}
+
+.lgweb-dropbox__input {
+    flex: 1 1 0;
+}

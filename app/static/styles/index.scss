@@ -1,0 +1,71 @@
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.inline-block-fix {
+    line-height: 0 !important;
+    & > * {
+        line-height: 1.5;
+    }
+}
+
+@mixin no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+#app {
+    width: 100%;
+    background-color: #f5fafd;
+    min-height: 100vh;
+    position: relative;
+    line-height: 1.5;
+}
+
+.email {
+    @extend .link--hoverable;
+}
+
+.main {
+    max-width: 1080px;
+    margin: 0 auto;
+    display: block;
+}
+
+.main--large {
+    max-width: 1440px;
+}
+
+.body {
+    padding: 24px;
+}
+
+.page-banner {
+    max-width: 1080px;
+    margin: 0 auto;
+}
+
+@import "./common";
+@import "./icons/icons";
+@import "./richtext";
+@import "./components/audioplayer";
+@import "./components/author";
+@import "./components/banner";
+@import "./components/breadcrumb";
+@import "./components/footer";
+@import "./components/header";
+@import "./components/rangeslider";
+@import "./components/sidebar";
+@import "./components/title";
+@import "./components/toolbar";
+@import "./pages/contact";
+@import "./pages/error";
+@import "./pages/home";
+@import "./pages/message";
+@import "./pages/topic";

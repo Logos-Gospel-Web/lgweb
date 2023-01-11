@@ -1,0 +1,19 @@
+{% load i18n %}
+<div class="icon toolbar toolbar--fullscreen"></div>
+<div class="icon toolbar toolbar--fontsize"></div>
+<div class="icon toolbar toolbar--qrcode"></div>
+<div class="icon toolbar toolbar--share"></div>
+<div class="fontsize fontsize--hidden">
+    <div class="fontsize__title">{% translate '字體大小' %}</div>
+    <div class="fontsize__editor">
+        <div class="icon fontsize__button fontsize__button--minus"></div>
+        <div class="fontsize__slider"></div>
+        <div class="icon fontsize__button fontsize__button--plus"></div>
+    </div>
+</div>
+<div class="qrcode qrcode--hidden">
+    <div class="qrcode__container">
+        <div class="icon qrcode__close"></div>
+        <div class="qrcode__image"></div>
+    </div>
+</div>

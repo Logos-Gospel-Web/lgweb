@@ -1,0 +1,14 @@
+{% load i18n %}
+{% load page_link %}
+{% translate 'Switch Language' as switch_language_title %}
+{% translate '聯絡我們' as contact_title %}
+{% url 'contact' language as contact_url %}
+<nav class="nav">
+    <ul class="nav__list">
+        {% for item in menu %}
+            {% include './menu_item.html' with children=item.children.all link=item.page|page_link title=item.title %}
+        {% endfor %}
+        {% include './menu_item.html' with link=contact_url title=contact_title %}
+        {% include './menu_item.html' with link=request.path|switch_language title=switch_language_title %}
+    </ul>
+</nav>

@@ -1,0 +1,26 @@
+footer,
+.footer {
+    height: 160px;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #111111;
+    color: #999999;
+    line-height: 2;
+    font-weight: bold;
+    padding: 8px 0;
+
+    & > div {
+        max-width: 1080px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+}
+
+.footer__link {
+    @extend .link--hoverable;
+}

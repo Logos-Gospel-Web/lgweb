@@ -1,0 +1,102 @@
+from django.shortcuts import render
+from django.utils.translation import gettext as _
+from django.http import HttpResponseRedirect
+from django_ratelimit.core import is_ratelimited
+import re
+
+from ..services.send_email import send_contact_email
+from ..models import Contact
+from .common import view_func, make_title
+
+def sanitize_email(email: str) -> str:
+    if len(email) < 6:
+        return ''
+    if '@' not in email:
+        return ''
+    email = re.sub(r'^[\s\0.]+|[\s\0.]+$', '', email)
+    local, domain = email.split('@')
+    if domain.endswith('-'):
+        return ''
+    if not re.match(r'^[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+$', domain):
+        return ''
+    if not re.match(r"^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~.-]+$", local):
+        return ''
+    return f'{local}@{domain}'
+
+def validate_contact_form(values):
+    name = values.get('name', '')
+    email = values.get('email', '')
+    comment = values.get('comment', '')
+    errors = dict()
+
+    if not name:
+        errors['name'] = _('請輸入您的姓名')
+    elif not re.match(r'^[\s.,A-Za-z\u3000\u3400-\u4DBF\u4E00-\u9FFF]+$', name):
+        errors['name'] = _('請使用中文或英文字母填寫姓名')
+
+    if not email:
+        errors['email'] = _('請輸入您的電郵')
+    else:
+        clean_email = sanitize_email(email)
+        if clean_email:
+            email = clean_email
+        else:
+            errors['email'] = _('請輸入正確電郵')
+
+    if not comment:
+        errors['comment'] = _('請輸入內容')
+
+    return { 'name': name, 'email': email, 'comment': comment }, errors
+
+class HttpResponseSeeOther(HttpResponseRedirect):
+    status_code = 303
+
+def submit_form(values, **kwargs):
+    c = Contact(**values, **kwargs)
+    c.save()
+    return c.id
+
+_CONTACT_KEY = 'contact_success'
+
+@view_func
+def contact(request, context, lang):
+    status = ''
+    sent = False
+    failed = False
+
+    if request.method == 'POST':
+        values, errors = validate_contact_form(request.POST)
+        failed = len(errors) > 0
+        if not failed:
+            if is_ratelimited(request, key='ip', group='contact', rate='5/m', method='POST', increment=True):
+                status = _('發送次數超出頻次限制，請稍後再嘗試。')
+                failed = True
+            else:
+                id = submit_form(values, ip=context['ip'], language=lang, fingerprint=context['fingerprint'])
+                send_contact_email(id, context['base_url'])
+                resp = HttpResponseSeeOther(request.path)
+                resp.set_cookie(key=_CONTACT_KEY, value='1', path=request.path, httponly=True, samesite='Strict')
+                return resp
+    else:
+        values, errors = dict(), dict()
+        success = request.COOKIES.get(_CONTACT_KEY)
+        if success == '1':
+            sent = True
+            status = _('您的訊息已經成功發出。')
+
+    resp = render(request, 'site/pages/contact.html', {
+        **context,
+        'title': make_title(_('聯絡我們')),
+        'values': values,
+        'errors': errors,
+        'status': status,
+        'sent': sent,
+    })
+
+    if sent:
+        resp.delete_cookie(key=_CONTACT_KEY, path=request.path, samesite='Strict')
+
+    if failed:
+        resp.status_code = 400
+
+    return resp

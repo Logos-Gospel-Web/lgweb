@@ -1,0 +1,9 @@
+{% load i18n %}
+<h2 class="home__title">{% translate '最新信息' %}</h2>
+<table class="latest">
+    <tbody>
+        {% for msg in latest_messages %}
+            {% include './latest_message.html' with msg=msg %}
+        {% endfor %}
+    </tbody>
+</table>

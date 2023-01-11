@@ -1,0 +1,21 @@
+{% load i18n %}
+{% load page_link %}
+<h2 class="home__title">{% translate '信息推介' %}</h2>
+<div class="promotions">
+    {% for promotion in promotions %}
+        <div class="promo">
+            <a class="promo__inner" href="{{ promotion.page|page_link }}">
+                <div class="promo__left">
+                    <div class="promo__left__inner">
+                        <div class="promo__image" style="background-image:url('{{ promotion.image.url }}')"></div>
+                        <div class="promo__alt">{{ promotion.alt }}</div>
+                    </div>
+                </div>
+                <div class="promo__right">
+                    <div class="promo__title">{{ promotion.title }}</div>
+                    <div class="promo__description">{{ promotion.description }}</div>
+                </div>
+            </a>
+        </div>
+    {% endfor %}
+</table>

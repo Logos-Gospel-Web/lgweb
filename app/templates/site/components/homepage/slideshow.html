@@ -1,0 +1,8 @@
+{% load page_link %}
+<div class="slideshow">
+    {% for banner in banners %}
+        <div class="slideshow__item">
+            {% include '../banner.html' with banner=banner.banner link=banner.target_page|page_link %}
+        </div>
+    {% endfor %}
+</div>

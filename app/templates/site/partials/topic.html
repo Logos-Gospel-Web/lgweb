@@ -1,0 +1,41 @@
+{% load i18n %}
+{% load localize %}
+{% load message %}
+{% load page_link %}
+{% if topic.banner|localize != None %}
+    <div class="page-banner">
+        {% include '../components/banner.html' with banner=topic.banner|localize %}
+    </div>
+{% endif %}
+<main class="main">
+    <div class="body">
+        {% if topic.banner|localize == None %}
+            <h1 class="title">{% localize topic.title %}</h1>
+        {% endif %}
+        <div class="author">{% localize topic.author %}</div>
+        <article class="richtext">{{ topic.description|localize|safe }}</article>
+        <table class="topic">
+            <thead>
+                <tr>
+                    {% if has_audio %}
+                        <td>{% translate '網上閱讀/收聽' %}</td>
+                        <td>{% translate '錄音下載' %}</td>
+                    {% else %}
+                        <td>{% translate '網上閱讀' %}</td>
+                    {% endif %}
+                    <td>{% translate '文字檔下載' %}</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for child in topic.children.all %}
+                    {% include '../components/topic_item.html' with page=child title=child|full_title:language url=child|page_link:topic.slug is_new=child|is_new:now audio=child.audio|localize document=child.document|file %}
+                {% endfor %}
+            </tbody>
+        </table>
+        {% if topic.end_msg|localize %}
+            <div class="topic__ended">
+                <span>{% localize topic.end_msg %}</span>
+            </div>
+        {% endif %}
+    </div>
+</main>

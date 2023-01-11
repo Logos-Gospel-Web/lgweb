@@ -1,0 +1,15 @@
+{% load localize %}
+{% load page_link %}
+{% with link=item.page|page_link %}
+<li class="nav__subitem">
+    {% if link %}
+        <a href="{{ link }}" class="nav__subitem__inner">
+            <span class="nav__subitem__text">{% localize item.title %}</span>
+        </a>
+    {% else %}
+        <span class="nav__subitem__inner">
+            <span class="nav__subitem__text">{% localize item.title %}</span>
+        </span>
+    {% endif %}
+</li>
+{% endwith %}

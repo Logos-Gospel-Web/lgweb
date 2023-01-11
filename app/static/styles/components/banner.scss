@@ -1,0 +1,50 @@
+.banner {
+    position: relative;
+    padding-bottom: 56.25%;
+    font-size: 1rem;
+    @for $i from 1 through 8 {
+        @media not screen and (min-width: (640px - (40px * $i))) {
+            font-size: 1rem - (0.05rem * $i);
+            padding-bottom: 56.25% + (2.5% * $i);
+        }
+    }
+}
+
+.banner__inner {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.banner__table {
+    display: table;
+    height: 100%;
+    width: 100%;
+    background-color: #bbbbbb;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow: hidden;
+}
+
+.banner__row {
+    display: table-row;
+}
+
+.banner__cell {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+}
+
+a.banner__title {
+    @extend .link--hidden;
+}
+
+.banner__text {
+    @media screen and (min-width: 720px) {
+        font-size: 1.4em;
+    }
+}

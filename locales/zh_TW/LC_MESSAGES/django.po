@@ -1,0 +1,117 @@
+msgid ""
+msgstr ""
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-04-08 17:58+0800\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "完"
+msgstr "完"
+
+#, python-format
+msgid "© %(year)s LOGOS福音網。版權所有。"
+msgstr "© %(year)s LOGOS福音網。版權所有。"
+
+msgid "歡迎轉載，但須註明出處及鏈接 (URL) 並保持信息完整。"
+msgstr "歡迎轉載，但須註明出處及鏈接 (URL) 並保持信息完整。"
+
+msgid "鏈接："
+msgstr "鏈接："
+
+#, python-format
+msgid "%(year)s年%(month)s月"
+msgstr "%(year)s年%(month)s月"
+
+msgid "(深入瞭解...)"
+msgstr "(深入瞭解...)"
+
+msgid "聯絡我們"
+msgstr "聯絡我們"
+
+msgid "聖道福音網"
+msgstr "聖道福音網"
+
+msgid "Switch Language"
+msgstr "简体版"
+
+msgid "最新信息"
+msgstr "最新信息"
+
+msgid "信息推介"
+msgstr "信息推介"
+
+msgid "字體大小"
+msgstr "字體大小"
+
+msgid "下載 MP3"
+msgstr "下載 MP3"
+
+msgid "不設錄音"
+msgstr "不設錄音"
+
+msgid "下載 DOC"
+msgstr "下載 DOC"
+
+msgid "不設文字檔"
+msgstr "不設文字檔"
+
+msgid "若有任何意見或問題，歡迎您反饋給我們。您可以選擇發送電郵至"
+msgstr "若有任何意見或問題，歡迎您反饋給我們。您可以選擇發送電郵至"
+
+msgid "，或者填寫以下表格表達您的意見。"
+msgstr "，或者填寫以下表格表達您的意見。"
+
+msgid "您的姓名"
+msgstr "您的姓名"
+
+msgid "您的電子郵箱地址"
+msgstr "您的電子郵箱地址"
+
+msgid "內容"
+msgstr "內容"
+
+msgid "提交"
+msgstr "提交"
+
+msgid "下載錄音"
+msgstr "下載錄音"
+
+msgid "下載文字檔"
+msgstr "下載文字檔"
+
+msgid "網上閱讀/收聽"
+msgstr "網上閱讀/收聽"
+
+msgid "錄音下載"
+msgstr "錄音下載"
+
+msgid "網上閱讀"
+msgstr "網上閱讀"
+
+msgid "文字檔下載"
+msgstr "文字檔下載"
+
+msgid "請輸入您的姓名"
+msgstr "請輸入您的姓名"
+
+msgid "請使用中文或英文字母填寫姓名"
+msgstr "請使用中文或英文字母填寫姓名"
+
+msgid "請輸入您的電郵"
+msgstr "請輸入您的電郵"
+
+msgid "請輸入正確電郵"
+msgstr "請輸入正確電郵"
+
+msgid "請輸入內容"
+msgstr "請輸入內容"
+
+msgid "發送次數超出頻次限制，請稍後再嘗試。"
+msgstr "發送次數超出頻次限制，請稍後再嘗試。"
+
+msgid "您的訊息已經成功發出。"
+msgstr "您的訊息已經成功發出。"
+
+msgid "首頁"
+msgstr "首頁"

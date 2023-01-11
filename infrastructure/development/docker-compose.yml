@@ -1,0 +1,47 @@
+version: '3.3'
+volumes:
+    virtualenv: {}
+    static: {}
+    uploads: {}
+    db: {}
+services:
+    lgweb-dev:
+        ports:
+            - '8000:8000'
+        container_name: lgweb-dev
+        image: lgweb-dev
+        build:
+            dockerfile: ./infrastructure/development/Dockerfile
+            context: ../..
+        env_file:
+            - .env
+        environment:
+            - MODE=development
+            - ALLOWED_HOSTS=*
+            - STATIC_ROOT=/static
+            - MEDIA_ROOT=/uploads
+            - LOCALE_PATH=/locales
+            - DB_ROOT=/db/db.sqlite3
+            - CONTACT_DB_ROOT=/db/contact.sqlite3
+            - ANALYTICS_DB_ROOT=/db/analytics.sqlite3
+        volumes:
+            - ../../:/lgweb/
+            - virtualenv:/venv/
+            - static:/static/
+            - uploads:/uploads/
+            - db:/db/
+        entrypoint:
+            - /bin/sh
+            - -c
+            - >-
+                python -m venv /venv &&
+                source /venv/bin/activate &&
+                pip install wheel &&
+                pip install -r requirements.txt &&
+                cp -R ./locales /locales &&
+                ./manage.py migrate &&
+                ./manage.py migrate --database contact &&
+                ./manage.py migrate --database analytics &&
+                ./manage.py seed &&
+                ./manage.py compilemessages &&
+                ./manage.py runserver 0.0.0.0:8000

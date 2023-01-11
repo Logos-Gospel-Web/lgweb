@@ -1,0 +1,13 @@
+{% load page_link %}
+{% load localize %}
+<aside class="sidebar">
+    <div class="sidebar__content">
+        <div class="sidebar__header">
+            <div class="sidebar__title">
+                <a class="sidebar__link" href="{{ sidebar.topic|page_link }}">{% localize sidebar.topic.title %}</a>
+            </div>
+            <div class="icon sidebar__close"></div>
+        </div>
+        {% include './sidebar_content.html' %}
+    </div>
+</aside>

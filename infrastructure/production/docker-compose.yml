@@ -1,0 +1,15 @@
+version: '3.3'
+services:
+    lgweb:
+        ports:
+            - '8000:80'
+        container_name: lgweb
+        image: lgweb
+        env_file:
+            - .env
+        build:
+            dockerfile: ./infrastructure/production/Dockerfile
+            context: ../..
+        volumes:
+            - /opt/lgweb/db/:/db/
+            - /opt/lgweb/uploads/:/uploads/

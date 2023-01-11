@@ -1,0 +1,4 @@
+{% load banner %}
+{% if fonts %}
+<style>{% for font in fonts %}{{ font|font_face|safe }}{% endfor %}</style>
+{% endif %}

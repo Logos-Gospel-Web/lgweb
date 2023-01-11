@@ -1,0 +1,17 @@
+asgiref==3.6.0
+beautifulsoup4==4.11.2
+cssutils==2.6.0
+Django==4.1.5
+django-cleanup==6.0.0
+django-grappelli==3.0.4
+django-pipeline==2.0.8
+django-ratelimit==4.0.0
+fonttools==4.39.3
+jsmin==3.0.1
+libsass==0.22.0
+lxml==4.9.2
+Pillow==9.4.0
+soupsieve==2.3.2.post1
+sqlparse==0.4.3
+tzdata==2022.7
+ulid-py==1.1.0

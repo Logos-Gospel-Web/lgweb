@@ -1,0 +1,13 @@
+.breadcrumb {
+    color: #666666;
+    margin-bottom: 1.2em;
+}
+
+.breadcrumb__item + .breadcrumb__item::before {
+    padding: 0 .5em;
+    content: "/";
+}
+
+.breadcrumb__link {
+    @extend .link--hoverable;
+}

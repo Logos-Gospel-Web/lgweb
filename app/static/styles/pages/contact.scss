@@ -1,0 +1,71 @@
+.contact__input {
+    font: inherit;
+    max-width: 100%;
+    appearance: none;
+    display: block;
+    padding: .375em .75em;
+    line-height: 1.5;
+    border: 1px solid #ced4da;
+    border-radius: .25em;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+
+    &:focus {
+        border-color: #86b7fe;
+        outline: 0;
+        box-shadow: 0 0 0 .15em rgba(13,110,253,.25);
+    }
+}
+
+.contact__textarea {
+    width: 100%;
+    resize: vertical;
+}
+
+.contact__label {
+    padding-top: 1em;
+    padding-bottom: .4em;
+}
+
+.contact__alert {
+    color: red;
+}
+
+.contact__hidden,
+.contact__input + .contact__input {
+    display: none;
+}
+
+.contact__submit {
+    appearance: none;
+    margin-top: 1em;
+    display: block;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: center;
+    user-select: none;
+    padding: .375em .75em;
+    border-radius: .25em;
+    border: 1px solid #d0d0d0;
+    background-color: #f0f0f0;
+    transition: background-color .15s ease-in-out;
+    cursor: pointer;
+    &:hover {
+        background-color: #e0e0e0;
+    }
+}
+
+.contact__success {
+    color: #00cc00;
+}
+
+.contact__success__icon {
+    @include icon-success;
+    display: inline-block;
+    margin-right: 0.5em;
+}
+
+.contact__alert__icon {
+    @include icon-error;
+    display: inline-block;
+    margin-right: 0.5em;
+}
