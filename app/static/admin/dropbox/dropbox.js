@@ -21,9 +21,9 @@ function initializeDropbox(elem) {
         multiselect: false,
         extensions: [".mp3"],
         folderselect: false,
-        linkType: "direct",
+        linkType: "preview",
         success: function(files) {
-            elem.nextElementSibling.value = files[0].link + "?dl=1"
+            elem.nextElementSibling.value = files[0].link.replace("?dl=0", "")
         }
     })
     elem.appendChild(button)

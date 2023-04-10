@@ -17,12 +17,12 @@
         <div class="author">{% localize message.author %}</div>
         {% if audio %}
             <audio class="audio__player" controls>
-                <source src="{{ audio }}" type="audio/mpeg">
+                <source src="{{ audio }}?raw=1" type="audio/mpeg">
             </audio>
         {% endif %}
         <div>
             {% if audio %}
-                <a class="attachment attachment--audio" href="{{ audio }}" download>{% translate '下載錄音' %}</a>
+                <a class="attachment attachment--audio" href="{{ audio }}?dl=1" download>{% translate '下載錄音' %}</a>
             {% endif %}
             {% if document %}
                 <a class="attachment attachment--document" href="{{ document }}" download>{% translate '下載文字檔' %}</a>
