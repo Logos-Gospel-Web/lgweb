@@ -109,7 +109,6 @@ function registerSlideshow(slideshow) {
 
     var unregister = createDrag({
         elem: slideshow,
-        preventDefault: true,
         onStart: function(p) {
             if (moving || holding) return
             startSlide(p.x)
@@ -119,8 +118,9 @@ function registerSlideshow(slideshow) {
             dx = p.x - startX
             slide()
         },
-        onEnd: function() {
+        onEnd: function(preventDefault) {
             if (!holding) return
+            if (Math.abs(dx) > 10) preventDefault()
             stopSlide()
         },
     })

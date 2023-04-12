@@ -4,61 +4,55 @@ function getPoint(ev) {
 
 function createDrag(options) {
     var elem = options.elem
-    var preventDefault = options.preventDefault
 
     var unregisterMouse = { f: noop }
     var mousedown = listen(elem, "mousedown", function(ev) {
-        if (preventDefault) ev.preventDefault()
         function onMouseMove(ev) {
-            if (preventDefault) ev.preventDefault()
-            options.onMove(getPoint(ev))
+            options.onMove(getPoint(ev), function () { ev.preventDefault() })
         }
         function onMouseUp(ev) {
-            if (preventDefault) ev.preventDefault()
-            options.onEnd()
+            options.onEnd(function () { ev.preventDefault() })
             unregisterMouse.f()
             unregisterMouse.f = noop
         }
-        var mousemove = listen(document, "mousemove", onMouseMove, !preventDefault)
-        var mouseup = listen(document, "mouseup", onMouseUp, !preventDefault)
+        var mousemove = listen(document, "mousemove", onMouseMove)
+        var mouseup = listen(document, "mouseup", onMouseUp)
         unregisterMouse.f = function() {
             mousemove()
             mouseup()
         }
-        options.onStart(getPoint(ev))
-    }, !preventDefault)
+        options.onStart(getPoint(ev), function () { ev.preventDefault() })
+    })
 
     var touches = 0
     var unregisterTouch = { f: noop }
     var touchstart = listen(elem, "touchstart", function(ev) {
-        if (preventDefault) ev.preventDefault()
         var p = getPoint(ev.touches[0])
         if (touches) {
-            options.onMove(p)
+            options.onMove(p, function () { ev.preventDefault() })
         } else {
             function onTouchChange(ev) {
-                if (preventDefault) ev.preventDefault()
                 touches = ev.touches.length
                 if (touches) {
-                    options.onMove(getPoint(ev.touches[0]))
+                    options.onMove(getPoint(ev.touches[0], function () { ev.preventDefault() }))
                 } else {
-                    options.onEnd()
+                    options.onEnd(function () { ev.preventDefault() })
                     unregisterTouch.f()
                     unregisterTouch.f = noop
                 }
             }
-            var touchmove = listen(document, "touchmove", onTouchChange, !preventDefault)
-            var touchend = listen(document, "touchend", onTouchChange, !preventDefault)
-            var touchcancel = listen(document, "touchcancel", onTouchChange, !preventDefault)
+            var touchmove = listen(document, "touchmove", onTouchChange)
+            var touchend = listen(document, "touchend", onTouchChange)
+            var touchcancel = listen(document, "touchcancel", onTouchChange)
             unregisterTouch.f = function() {
                 touchmove()
                 touchend()
                 touchcancel()
             }
-            options.onStart(p)
+            options.onStart(p, function () { ev.preventDefault() })
         }
         touches = ev.touches.length
-    }, !preventDefault)
+    })
 
     return function() {
         touchstart()
