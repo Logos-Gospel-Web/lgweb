@@ -38,8 +38,8 @@ def view_func(fn):
             lang = None
 
         if not is_valid_language(lang):
-            preferred_lang = parse_preferred_language(request.META.get("HTTP_ACCEPT_LANGUAGE", ""))
-            return redirect('home', preferred_lang)
+            lang = parse_preferred_language(request.META.get("HTTP_ACCEPT_LANGUAGE", ""))
+            return redirect('home', lang)
 
         translation.activate(to_locale(lang))
 
@@ -81,12 +81,15 @@ def _get_fingerprint(request):
     ))
     return sha256(raw.encode('utf-8')).hexdigest()
 
+def get_base_url(request):
+    return f'{request.scheme}://{request.get_host()}'
+
 def get_base_context(request, lang):
     now = datetime.now()
-    base_url = f'{request.scheme}://{request.get_host()}'
+    base_url = get_base_url(request)
     return {
         'now': now,
-        'ip': request.META['REMOTE_ADDR'],
+        'ip': request.META.get('REMOTE_ADDR') or request.META.get('HTTP_X_REAL_IP'),
         'fingerprint': _get_fingerprint(request),
         'base_url': base_url,
         'path': request.path,
