@@ -39,6 +39,8 @@ CSRF_TRUSTED_ORIGINS = [s + x for x in ALLOWED_HOSTS for s in ('http://', 'https
 
 SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 
+RATELIMIT_IP_META_KEY = lambda r: r.META.get('REMOTE_ADDR') or r.META.get('HTTP_X_REAL_IP')
+
 # Application definition
 
 INSTALLED_APPS = [
