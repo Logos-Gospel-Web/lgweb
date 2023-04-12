@@ -1,5 +1,42 @@
 {% extends '../base.html' %}
 
+{% load i18n %}
+
 {% block content %}
-{% include '../partials/contact.html' %}
+<main class="main">
+    <div class="body">
+        {% if status %}
+            {% if sent %}
+                <div class="contact__status contact__success">
+                    <span class="icon contact__success__icon"></span>
+                    <span>{{ status }}</span>
+                </div>
+            {% else %}
+                <div class="contact__status contact__alert">
+                    <span class="icon contact__alert__icon"></span>
+                    <span>{{ status }}</span>
+                </div>
+            {% endif %}
+        {% endif %}
+        <h1 class="title">{% translate '聯絡我們' %}</h1>
+        <div class="content">
+            <span>{% blocktranslate %}若有任何意見或問題，歡迎您反饋給我們。您可以選擇發送電郵至{% endblocktranslate %} </span>
+            <a href="mailto:{{ contact_email }}">{{ contact_email }}</a>
+            <span>{% blocktranslate %}，或者填寫以下表格表達您的意見。{% endblocktranslate %}</span>
+        </div>
+        <form class="contact__form" method="POST" novalidate>
+            {% csrf_token %}
+            {% translate '您的姓名' as label %}
+            {% include '../components/contact_label.html' with label=label error=errors.name %}
+            <input class="contact__input" type="text" name="name" size="50" maxlength="50" value="{{ values.name }}">
+            {% translate '您的電子郵箱地址' as label %}
+            {% include '../components/contact_label.html' with label=label error=errors.email %}
+            <input class="contact__input" type="email" name="email" size="50" maxlength="100" value="{{ values.email }}">
+            {% translate '內容' as label %}
+            {% include '../components/contact_label.html' with label=label error=errors.comment %}
+            <textarea class="contact__input contact__textarea" type="text" name="comment" rows="12">{{ values.comment }}</textarea>
+            <button type="submit" class="contact__submit">{% translate '提交' %}</button>
+        </form>
+    </div>
+</main>
 {% endblock content %}

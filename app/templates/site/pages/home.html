@@ -1,5 +1,11 @@
 {% extends '../base.html' %}
 
 {% block content %}
-{% include '../partials/home.html' %}
+<main class="main">
+    {% include '../components/homepage/slideshow.html' %}
+    <div class="body">
+        {% include '../components/homepage/latest.html' %}
+        {% include '../components/homepage/promotion.html' %}
+    </div>
+</main>
 {% endblock content %}
