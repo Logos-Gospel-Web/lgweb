@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 from copy import deepcopy
 import ulid
 
@@ -235,7 +236,7 @@ class Contact:
     comment = models.TextField()
 
     def __str__(self):
-        return f'{self.name} ({self.submitted_at.strftime(r"%Y-%m-%d %H:%M:%S")})'
+        return f'{self.name} ({timezone.localtime(self.submitted_at).strftime(r"%Y-%m-%d %H:%M:%S")})'
 
 @model()
 class Analytics:
