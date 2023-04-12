@@ -24,29 +24,6 @@ LOCALE_PATHS = [environ.get('LOCALE_PATH') or BASE_DIR / 'locales']
 GRAPPELLI_ADMIN_TITLE = 'Logos Gospel Web'
 GRAPPELLI_CLEAN_INPUT_TYPES = False
 
-# LOGGING = {
-#     'version': 1,
-#     'filters': {
-#         'require_debug_true': {
-#             '()': 'django.utils.log.RequireDebugTrue',
-#         }
-#     },
-#     'handlers': {
-#         'console': {
-#             'level': 'DEBUG',
-#             'filters': ['require_debug_true'],
-#             'class': 'logging.StreamHandler',
-#         }
-#     },
-#     'loggers': {
-#         'django.db.backends': {
-#             'level': 'DEBUG',
-#             'handlers': ['console'],
-#         }
-#     }
-# }
-
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
@@ -106,6 +83,47 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'project.wsgi.application'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+    },
+    'formatters': {
+        'default': {
+            '()': 'django.utils.log.ServerFormatter',
+            'format': '[{server_time}] [{levelname}] {message}',
+            'style': '{',
+        }
+    },
+    'handlers': {
+        'console': {
+            'level': 'INFO',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'default',
+        },
+    },
+    'loggers': {
+        'django': {
+            'level': 'INFO',
+            'handlers': ['console'],
+            'propagate': True,
+        },
+    },
+}
+
+if environ.get('ERROR_LOG_FILE'):
+    LOGGING['handlers']['file'] = {
+        'level': 'ERROR',
+        'class': 'logging.handlers.RotatingFileHandler',
+        'filename': environ.get('ERROR_LOG_FILE'),
+        'maxBytes': 1024 * 1024 * 100,
+    }
+    LOGGING['loggers']['django']['handlers'].append('file')
 
 
 # Database

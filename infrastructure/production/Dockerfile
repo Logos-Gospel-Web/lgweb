@@ -28,4 +28,6 @@ ENV ANALYTICS_DB_ROOT /db/analytics.sqlite3
 RUN python manage.py compilemessages &&\
     python manage.py collectstatic --no-input
 
+ENV ERROR_LOG_FILE /reports/error.log
+
 CMD [ "supervisord", "-c", "/supervisor.conf" ]

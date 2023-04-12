@@ -5,6 +5,7 @@ services:
             - '8000:80'
         container_name: lgweb
         image: lgweb
+        restart: unless-stopped
         env_file:
             - .env
         build:
@@ -13,3 +14,4 @@ services:
         volumes:
             - /opt/lgweb/db/:/db/
             - /opt/lgweb/uploads/:/uploads/
+            - /opt/lgweb/reports/:/reports/
