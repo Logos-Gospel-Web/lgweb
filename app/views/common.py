@@ -89,7 +89,7 @@ def get_base_context(request, lang):
     base_url = get_base_url(request)
     return {
         'now': now,
-        'ip': request.META.get('REMOTE_ADDR') or request.META.get('HTTP_X_REAL_IP'),
+        'ip': request.META.get('REMOTE_ADDR') or request.META.get('HTTP_X_FORWARDED_FOR'),
         'fingerprint': _get_fingerprint(request),
         'base_url': base_url,
         'path': request.path,
