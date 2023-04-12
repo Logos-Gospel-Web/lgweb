@@ -1,13 +1,7 @@
 from os import environ
 import json
-from pathlib import Path
-import random
-import string
 from django import forms
-from django.conf import settings
 from django.contrib import admin
-from django.db.models import signals
-from django.dispatch import receiver
 from django.forms.utils import flatatt
 from django.forms.widgets import Input, TextInput, HiddenInput
 from django.templatetags.static import static
@@ -15,7 +9,6 @@ from django.utils.html import format_html, html_safe
 from django.utils.safestring import mark_safe
 from pipeline.forms import PipelineFormMedia
 from .models import LANGUAGES, with_lang, Banner, HomePage, HomeBanner, Promotion, Message, Topic, ChildMenuItem, ParentMenuItem, Contact
-from .services.subfont import make_subfont
 
 def make_multilingual_fields(*fields: str, collapsed: bool = False):
     return tuple(((name, {
@@ -102,23 +95,6 @@ class BannerForm(forms.ModelForm):
 @admin.register(Banner)
 class BannerAdmin(admin.ModelAdmin):
     form = BannerForm
-
-media_root = Path(settings.MEDIA_ROOT)
-subfont_base_path = Path('banner') / 'subfont'
-
-@receiver(signals.pre_save, sender=Banner)
-def banner_pre_save(sender, instance, **kwargs):
-    if instance.font and not instance.subfont:
-        name = ''.join(random.choices(string.ascii_letters, k=20)) + Path(instance.font.name).suffix
-        instance.subfont.name = str(subfont_base_path / name)
-    elif instance.subfont and not instance.font:
-        instance.subfont.name = None
-
-@receiver(signals.post_save, sender=Banner)
-def banner_pre_save(sender, instance, **kwargs):
-    if instance.subfont:
-        (media_root / subfont_base_path).mkdir(parents=True, exist_ok=True)
-        make_subfont(instance.font.path, instance.subfont.path, instance.title)
 
 class MessageForm(forms.ModelForm):
     class Meta:

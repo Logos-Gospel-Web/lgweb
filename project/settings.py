@@ -113,7 +113,7 @@ LOGGING = {
         'django': {
             'level': 'INFO',
             'handlers': ['console'],
-            'propagate': True,
+            'propagate': False,
         },
     },
 }
@@ -124,6 +124,7 @@ if environ.get('ERROR_LOG_FILE'):
         'class': 'logging.handlers.RotatingFileHandler',
         'filename': environ.get('ERROR_LOG_FILE'),
         'maxBytes': 1024 * 1024 * 100,
+        'formatter': 'default',
     }
     LOGGING['loggers']['django']['handlers'].append('file')
 
