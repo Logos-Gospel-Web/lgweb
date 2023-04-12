@@ -207,7 +207,8 @@ PIPELINE = {
        'pipeline.compilers.sass.SASSCompiler',
     ),
     'CSS_COMPRESSOR': 'pipeline.compressors.NoopCompressor',
-    'JS_COMPRESSOR': 'pipeline.compressors.jsmin.JSMinCompressor',
+    'JS_COMPRESSOR': 'pipeline.compressors.uglifyjs.UglifyJSCompressor',
+    'UGLIFYJS_ARGUMENTS': '--compress --mangle --ie',
     'STYLESHEETS': {
         'site': {
             'source_filenames': (

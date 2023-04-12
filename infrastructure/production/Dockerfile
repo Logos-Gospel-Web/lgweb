@@ -2,7 +2,7 @@ FROM python:3.11-alpine
 
 WORKDIR /lgweb
 
-RUN apk add --no-cache 'abiword=~3' 'build-base' 'nginx' 'supervisor=~4' 'gettext' &&\
+RUN apk add --no-cache 'abiword=~3' 'build-base' 'nginx' 'supervisor=~4' 'gettext' 'uglify-js' &&\
     pip install wheel gunicorn
 
 ADD requirements.txt /lgweb/
@@ -26,7 +26,8 @@ ENV CONTACT_DB_ROOT /db/contact.sqlite3
 ENV ANALYTICS_DB_ROOT /db/analytics.sqlite3
 
 RUN python manage.py compilemessages &&\
-    python manage.py collectstatic --no-input
+    python manage.py collectstatic --no-input &&\
+    apk del 'uglify-js'
 
 ENV ERROR_LOG_FILE /reports/error.log
 

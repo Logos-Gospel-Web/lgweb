@@ -2,4 +2,4 @@ FROM python:3.11-alpine
 
 WORKDIR /lgweb
 
-RUN apk add --no-cache 'abiword=~3' 'build-base' 'gettext'
+RUN apk add --no-cache 'abiword=~3' 'build-base' 'gettext' 'uglify-js'
