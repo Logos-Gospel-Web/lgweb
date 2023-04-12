@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 from os import environ
+from app.services.ip import get_client_ip
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -39,7 +40,7 @@ CSRF_TRUSTED_ORIGINS = [s + x for x in ALLOWED_HOSTS for s in ('http://', 'https
 
 SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 
-RATELIMIT_IP_META_KEY = lambda r: r.META.get('REMOTE_ADDR') or r.META.get('HTTP_X_FORWARDED_FOR')
+RATELIMIT_IP_META_KEY = get_client_ip
 
 # Application definition
 

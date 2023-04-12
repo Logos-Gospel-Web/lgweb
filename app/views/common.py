@@ -7,6 +7,7 @@ from hashlib import sha256
 from os import environ
 from django.utils.translation.trans_real import parse_accept_lang_header
 
+from ..services.ip import get_client_ip
 from ..services.queries import get_menu
 from ..models import LANGUAGES, to_locale, Analytics
 
@@ -89,7 +90,7 @@ def get_base_context(request, lang):
     base_url = get_base_url(request)
     return {
         'now': now,
-        'ip': request.META.get('REMOTE_ADDR') or request.META.get('HTTP_X_FORWARDED_FOR'),
+        'ip': get_client_ip(request),
         'fingerprint': _get_fingerprint(request),
         'base_url': base_url,
         'path': request.path,
