@@ -49,6 +49,7 @@ def parse_message(lang, page, meta, content, upload_dir):
     dt['position'] = page['order'] - 1
     dt['parent_slug'] = parent_slug
     dt[with_lang('prefix', lang)] = page['prefix']
+    dt[with_lang('audio', lang)] = page.get('aud', '').replace('?dl=0', '')
     doc_name = page.get('doc')
     if not doc_name:
         return
