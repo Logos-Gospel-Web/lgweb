@@ -5,19 +5,28 @@ from django.utils import translation
 from django.utils.translation import gettext as _
 from hashlib import sha256
 from os import environ
+from django.utils.translation.trans_real import parse_accept_lang_header
 
 from ..services.queries import get_menu
 from ..models import LANGUAGES, to_locale, Analytics
 
 contact_email = environ.get('CONTACT_EMAIL')
 
-_DEFAULT_LANG = 'tc'
+_DEFAULT_LANG = 'sc'
 
 class NotFound(Exception):
     pass
 
 def is_valid_language(language: str) -> bool:
     return next((True for (lang, _) in LANGUAGES if lang == language), False)
+
+def parse_preferred_language(accept: str) -> str:
+    for lang, _ in parse_accept_lang_header(accept):
+        if lang in ('zh-hk', 'zh-mo', 'zh-tw', 'zh-hant'):
+            return 'tc'
+        elif lang in ('zh-cn', 'zh-my', 'zh-sg', 'zh-hans'):
+            return 'sc'
+    return _DEFAULT_LANG
 
 def view_func(fn):
     def wrap(request, *args, **kwargs):
@@ -26,10 +35,11 @@ def view_func(fn):
         elif len(args) > 0:
             lang = args[0]
         else:
-            return redirect('home', _DEFAULT_LANG)
+            lang = None
 
         if not is_valid_language(lang):
-            return redirect('home', _DEFAULT_LANG)
+            preferred_lang = parse_preferred_language(request.META.get("HTTP_ACCEPT_LANGUAGE", ""))
+            return redirect('home', preferred_lang)
 
         translation.activate(to_locale(lang))
 
