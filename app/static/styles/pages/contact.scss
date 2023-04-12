@@ -30,9 +30,13 @@
     color: red;
 }
 
-.contact__hidden,
-.contact__input + .contact__input {
-    display: none;
+.contact__input--first {
+    display: block;
+    height: 0;
+    font-size: 0;
+    border: 0;
+    padding: 0;
+    margin: 0;
 }
 
 .contact__submit {

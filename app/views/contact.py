@@ -8,6 +8,13 @@ from ..services.send_email import send_contact_email
 from ..models import Contact
 from .common import view_func, make_title
 
+_keys = {
+    'name': '3nj99LU9Ko',
+    'email': 'Q0WBqMTnIu',
+    'comment': 'Lzkq2MOlID',
+    'fake': 'AKtANrG3H0',
+}
+
 def sanitize_email(email: str) -> str:
     if len(email) < 6:
         return ''
@@ -24,9 +31,15 @@ def sanitize_email(email: str) -> str:
     return f'{local}@{domain}'
 
 def validate_contact_form(values):
-    name = values.get('name', '')
-    email = values.get('email', '')
-    comment = values.get('comment', '')
+    fake = values.get(_keys['fake'], '')
+
+    if fake:
+        return dict(), dict(), True
+
+    name = values.get(_keys['name'], '')
+    email = values.get(_keys['email'], '')
+    comment = values.get(_keys['comment'], '')
+
     errors = dict()
 
     if not name:
@@ -46,7 +59,7 @@ def validate_contact_form(values):
     if not comment:
         errors['comment'] = _('請輸入內容')
 
-    return { 'name': name, 'email': email, 'comment': comment }, errors
+    return { 'name': name, 'email': email, 'comment': comment }, errors, False
 
 class HttpResponseSeeOther(HttpResponseRedirect):
     status_code = 303
@@ -65,18 +78,21 @@ def contact(request, context, lang):
     failed = False
 
     if request.method == 'POST':
-        values, errors = validate_contact_form(request.POST)
+        values, errors, fake = validate_contact_form(request.POST)
         failed = len(errors) > 0
-        if not failed:
+
+        if not failed and not fake:
             if is_ratelimited(request, key='ip', group='contact', rate='5/m', method='POST', increment=True):
                 status = _('發送次數超出頻次限制，請稍後再嘗試。')
                 failed = True
             else:
                 id = submit_form(values, ip=context['ip'], language=lang, fingerprint=context['fingerprint'])
                 send_contact_email(id, context['base_url'])
-                resp = HttpResponseSeeOther(request.path)
-                resp.set_cookie(key=_CONTACT_KEY, value='1', path=request.path, httponly=True, samesite='Strict')
-                return resp
+
+        if not failed:
+            resp = HttpResponseSeeOther(request.path)
+            resp.set_cookie(key=_CONTACT_KEY, value='1', path=request.path, httponly=True, samesite='Strict')
+            return resp
     else:
         values, errors = dict(), dict()
         success = request.COOKIES.get(_CONTACT_KEY)
@@ -87,6 +103,7 @@ def contact(request, context, lang):
     resp = render(request, 'site/pages/contact.html', {
         **context,
         'title': make_title(_('聯絡我們')),
+        'keys': _keys,
         'values': values,
         'errors': errors,
         'status': status,
