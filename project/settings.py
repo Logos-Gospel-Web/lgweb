@@ -42,6 +42,19 @@ SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 
 RATELIMIT_IP_META_KEY = get_client_ip
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'lgweb-default-cache',
+        'TIMEOUT': None,
+    },
+    'etag': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'lgweb-etag-cache',
+        'TIMEOUT': None,
+    },
+}
+
 # Application definition
 
 INSTALLED_APPS = [

@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from django.utils.translation import gettext as _
+from django.views.decorators.cache import cache_page
 
 from ..models import HomeBanner, Promotion
-from .common import view_func, make_title
+from .common import use_etag, view_func, make_title
 from ..services.queries import get_messages
 
 def get_home_banners(lang):
@@ -20,7 +21,10 @@ def get_promotions(lang):
         .filter(language=lang)
 
 @view_func
-def home(request, context, lang):
+@use_etag()
+@cache_page(None)
+def home(request, lang):
+    context = request.context
     banners = get_home_banners(lang)
     return render(request, 'site/pages/home.html', {
         **context,

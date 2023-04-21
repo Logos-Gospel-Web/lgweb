@@ -2,8 +2,9 @@ from django.shortcuts import render
 from django.utils.translation import gettext as _
 from django.urls import reverse
 from django.db.models import Prefetch
+from django.views.decorators.cache import cache_page
 
-from .common import view_func, make_title, NotFound
+from .common import use_etag, view_func, make_title, NotFound
 from ..services.queries import get_messages
 
 def get_message(slug, position, lang, now):
@@ -41,7 +42,10 @@ def get_sidebar(topic):
     }
 
 @view_func
-def message(request, context, lang, slug, pos):
+@use_etag()
+@cache_page(None)
+def message(request, lang, slug, pos):
+    context = request.context
     if len(pos) == 2:
         try:
             position = int(pos) - 1

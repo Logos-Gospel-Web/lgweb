@@ -2,13 +2,13 @@ from typing import List
 from django.conf import settings
 from django.utils.translation import gettext as _
 from pathlib import Path
-import random
-import string
 import subprocess
 import sys
 import re
 from bs4 import BeautifulSoup, NavigableString
 from cssutils import parseStyle
+
+from .random_string import random_string
 
 import_doc_dir = Path(settings.MEDIA_ROOT) / 'import_doc'
 
@@ -118,9 +118,6 @@ class Document:
         root.append(tag)
 
         return str(root)
-
-def random_string():
-    return ''.join(random.choices(string.ascii_letters, k=20))
 
 def save_to_tmp_file(file: str) -> str:
     ext = Path(file.name).suffix

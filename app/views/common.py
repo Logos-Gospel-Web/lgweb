@@ -1,12 +1,16 @@
 from django.shortcuts import redirect
 from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime
+from django.core.cache import caches
 from django.utils import translation
 from django.utils.translation import gettext as _
+from django.utils.translation.trans_real import parse_accept_lang_header
+from django.views.decorators.cache import cache_control
+from django.views.decorators.http import etag
 from hashlib import sha256
 from os import environ
-from django.utils.translation.trans_real import parse_accept_lang_header
 
+from ..services.random_string import random_string
 from ..services.ip import get_client_ip
 from ..services.queries import get_menu
 from ..models import LANGUAGES, to_locale, Analytics
@@ -30,6 +34,7 @@ def parse_preferred_language(accept: str) -> str:
     return _DEFAULT_LANG
 
 def view_func(fn):
+    @cache_control(must_revalidate=True, max_age=0)
     def wrap(request, *args, **kwargs):
         if 'lang' in kwargs:
             lang = kwargs['lang']
@@ -39,27 +44,27 @@ def view_func(fn):
             lang = None
 
         if not is_valid_language(lang):
-            lang = parse_preferred_language(request.META.get("HTTP_ACCEPT_LANGUAGE", ""))
+            lang = parse_preferred_language(request.META.get('HTTP_ACCEPT_LANGUAGE', ''))
             return redirect('home', lang)
 
         translation.activate(to_locale(lang))
+        request.context = _get_base_context(request, lang)
+        _save_analytics(request, lang)
 
         try:
-            context = get_base_context(request, lang)
-            _save_analytics(request, context, lang)
-            return fn(request, context, *args, **kwargs)
+            return fn(request, *args, **kwargs)
         except (ObjectDoesNotExist, NotFound):
             return redirect('home', lang)
 
     return wrap
 
-def _save_analytics(request, context, lang):
+def _save_analytics(request, lang):
     if request.method != 'GET':
         return
     headers = request.headers
     Analytics(
-        ip=context['ip'],
-        fingerprint=context['fingerprint'],
+        ip=request.context['ip'],
+        fingerprint=request.context['fingerprint'],
         language=lang,
         url=request.path,
         user_agent=headers.get('user-agent', ''),
@@ -82,10 +87,15 @@ def _get_fingerprint(request):
     ))
     return sha256(raw.encode('utf-8')).hexdigest()
 
+def use_etag(key = None):
+    def etag_func(request, *args, **kwargs):
+        return caches['etag'].get_or_set(request.path if key is None else key, random_string)
+    return etag(etag_func)
+
 def get_base_url(request):
     return f'{request.scheme}://{request.get_host()}'
 
-def get_base_context(request, lang):
+def _get_base_context(request, lang):
     now = datetime.now()
     base_url = get_base_url(request)
     return {

@@ -1,12 +1,13 @@
 from django.shortcuts import render
 from django.utils.translation import gettext as _
 from django.http import HttpResponseRedirect
+from django.views.decorators.cache import cache_page
 from django_ratelimit.core import is_ratelimited
 import re
 
 from ..services.send_email import send_contact_email
 from ..models import Contact
-from .common import view_func, make_title
+from .common import use_etag, view_func, make_title
 
 _keys = {
     'name': '3nj99LU9Ko',
@@ -72,7 +73,8 @@ def submit_form(values, **kwargs):
 _CONTACT_KEY = 'contact_success'
 
 @view_func
-def contact(request, context, lang):
+def contact(request, lang):
+    context = request.context
     status = ''
     sent = False
     failed = False
@@ -100,20 +102,25 @@ def contact(request, context, lang):
             sent = True
             status = _('您的訊息已經成功發出。')
 
-    resp = render(request, 'site/pages/contact.html', {
-        **context,
-        'title': make_title(_('聯絡我們')),
-        'keys': _keys,
-        'values': values,
-        'errors': errors,
-        'status': status,
-        'sent': sent,
-    })
+    @use_etag(f'{request.path}:{sent}')
+    @cache_page(None, key_prefix=str(sent))
+    def wrap(request, lang):
+        resp = render(request, 'site/pages/contact.html', {
+            **context,
+            'title': make_title(_('聯絡我們')),
+            'keys': _keys,
+            'values': values,
+            'errors': errors,
+            'status': status,
+            'sent': sent,
+        })
 
-    if sent:
-        resp.delete_cookie(key=_CONTACT_KEY, path=request.path, samesite='Strict')
+        if sent:
+            resp.delete_cookie(key=_CONTACT_KEY, path=request.path, samesite='Strict')
 
-    if failed:
-        resp.status_code = 400
+        if failed:
+            resp.status_code = 400
 
-    return resp
+        return resp
+
+    return wrap(request, lang)
