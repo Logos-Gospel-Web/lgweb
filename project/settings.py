@@ -235,6 +235,12 @@ PIPELINE = {
             ),
             'output_filename': 'styles/richtext.css',
         },
+        'noscript': {
+            'source_filenames': (
+                'styles/noscript.scss',
+            ),
+            'output_filename': 'styles/noscript.css',
+        },
     },
     'JAVASCRIPT': {
         'site': {

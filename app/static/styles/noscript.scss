@@ -1,0 +1,18 @@
+.sidebar-container {
+    max-width: 1080px;
+    display: block;
+
+    .sidebar {
+        display: none;
+    }
+
+    .body {
+        display: block;
+        padding-right: 0;
+        width: auto;
+    }
+}
+
+.toolbar {
+    display: none;
+}
