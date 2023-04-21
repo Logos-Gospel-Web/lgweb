@@ -3,14 +3,14 @@
     text-decoration: underline;
 }
 
-.link--hoverable,
+.link--hover,
 .link--hidden {
     color: inherit;
     text-decoration: none;
 }
 
 .link,
-.link--hoverable {
+.link--hover {
     &:hover {
         color: #2ebcfc;
         text-decoration: underline;

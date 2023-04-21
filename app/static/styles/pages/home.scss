@@ -81,10 +81,6 @@
     color: #999;
 }
 
-.latest__link {
-    @extend .link--hoverable;
-}
-
 @media not screen and (min-width: 720px) {
     .latest__date span {
         display: block;

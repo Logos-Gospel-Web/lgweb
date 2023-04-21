@@ -52,14 +52,6 @@
     margin: 2em 0;
 }
 
-.message__copyright,
-.message__distribution,
-.message__refer {
+.message__footer {
     font-size: 0.9em;
-}
-
-.message__refer {
-    .url {
-        @extend .link;
-    }
 }

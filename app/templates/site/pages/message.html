@@ -34,9 +34,9 @@
         </div>
         <article class="richtext">{{ message.content|localize|safe }}</article>
         <div class="message__ended">{% translate '完' %}</div>
-        <div class="message__copyright">{% blocktranslate with year=message.publish|date:'Y' %}© {{ year }} LOGOS福音網。版權所有。{% endblocktranslate %}</div>
-        <div class="message__distribution">{% translate '歡迎轉載，但須註明出處及鏈接 (URL) 並保持信息完整。' %}</div>
-        <div class="message__refer">{% translate '鏈接：' %}<a href="{{ path }}" class="url">{{ full_url }}</a></div>
+        <div class="message__footer">{% blocktranslate with year=message.publish|date:'Y' %}© {{ year }} LOGOS福音網。版權所有。{% endblocktranslate %}</div>
+        <div class="message__footer">{% translate '歡迎轉載，但須註明出處及鏈接 (URL) 並保持信息完整。' %}</div>
+        <div class="message__footer">{% translate '鏈接：' %}<a href="{{ path }}" class="link">{{ full_url }}</a></div>
     </div>
     {% include '../components/sidebar.html' %}
 </main>

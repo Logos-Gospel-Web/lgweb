@@ -5,11 +5,12 @@
     border: none;
     text-align: center;
 
+    & a {
+        @extend .link--hover;
+    }
+
     & td {
         padding: 0.5em;
-        & a {
-            @extend .link--hoverable;
-        }
     }
 
     & > thead {

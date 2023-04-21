@@ -7,11 +7,11 @@
                 <div class="banner__cell"{% if banner.offset_x > 0 %} style="width:{{ banner.offset_x }}%"{% endif %}></div>
                 <div class="banner__cell">
                     {% if link %}
-                        <a class="banner__title" href="{{ link }}" style="font-size:{{ banner.font_size }}px">
+                        <a class="link--hidden" href="{{ link }}" style="font-size:{{ banner.font_size }}px">
                             <span class="banner__text" style="{{ banner|banner_text_style }}">{{ banner.title }}</span>
                         </a>
                     {% else %}
-                        <span class="banner__title" style="font-size:{{ banner.font_size }}px">
+                        <span style="font-size:{{ banner.font_size }}px">
                             <span class="banner__text" style="{{ banner|banner_text_style }}">{{ banner.title }}</span>
                         </span>
                     {% endif %}

@@ -32,7 +32,7 @@
 }
 
 .error__back {
-    @extend .link--hoverable;
+    @extend .link--hover;
     display: block;
     color: #333333;
     margin-top: 1.25em;

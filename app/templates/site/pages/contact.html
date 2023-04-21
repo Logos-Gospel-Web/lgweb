@@ -21,7 +21,7 @@
         <h1 class="title">{% translate '聯絡我們' %}</h1>
         <div class="content">
             <span>{% blocktranslate %}若有任何意見或問題，歡迎您反饋給我們。您可以選擇發送電郵至{% endblocktranslate %} </span>
-            <a href="mailto:{{ contact_email }}">{{ contact_email }}</a>
+            <a class="link" href="mailto:{{ contact_email }}">{{ contact_email }}</a>
             <span>{% blocktranslate %}，或者填寫以下表格表達您的意見。{% endblocktranslate %}</span>
         </div>
         <form class="contact__form" method="POST" novalidate>

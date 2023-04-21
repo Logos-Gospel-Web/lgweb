@@ -39,10 +39,6 @@
     vertical-align: middle;
 }
 
-a.banner__title {
-    @extend .link--hidden;
-}
-
 .banner__text {
     @media screen and (min-width: 720px) {
         font-size: 1.4em;

@@ -24,10 +24,6 @@
     line-height: 1.5;
 }
 
-.email {
-    @extend .link--hoverable;
-}
-
 .main {
     max-width: 1080px;
     margin: 0 auto;
