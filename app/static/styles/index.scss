@@ -1,8 +1,4 @@
-*, *::before, *::after {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+@import "./reset";
 
 .inline-block-fix {
     line-height: 0 !important;
@@ -38,10 +34,6 @@
     display: block;
 }
 
-.main--large {
-    max-width: 1440px;
-}
-
 .body {
     padding: 24px;
 }
@@ -51,7 +43,10 @@
     margin: 0 auto;
 }
 
-@import "./common";
+article {
+    margin-top: 1em;
+}
+
 @import "./icons/icons";
 @import "./richtext";
 @import "./components/audioplayer";

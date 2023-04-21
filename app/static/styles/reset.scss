@@ -1,9 +1,10 @@
-* {
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
 }
 
 body {
-    margin: 0;
     font-family: Verdana, Arial, Helvetica, "Microsoft JhengHei", "Segoe UI Semibold", "Segoe UI", "Lucida Grande", sans-serif
 }
 
@@ -15,8 +16,4 @@ textarea {
 
 table {
     border-collapse: collapse;
-}
-
-article {
-    margin-top: 1em;
 }
