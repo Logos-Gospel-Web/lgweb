@@ -29,7 +29,7 @@ function registerFontsizeButton() {
         min: 80,
         max: 160,
         value: initialValue,
-        onChange(val) {
+        onChange: function(val) {
             localStorage.setItem(localStorageKey, val + "")
             main.style.fontSize = (val / 100).toFixed(2) + "em"
         },

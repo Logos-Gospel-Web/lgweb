@@ -18,7 +18,7 @@ function createRangeSlider(options) {
 
     var slider = document.createElement("div")
     slider.className = "slider"
-    slider.append(range)
+    slider.appendChild(range)
 
     var pending = null
 

@@ -14,7 +14,6 @@ function delegate(selector, event, listener, passive) {
         if (el) {
             el = el.closest(selector)
             if (el) {
-                console.log(el)
                 var newEvt = Object.create(evt)
                 Object.defineProperties(newEvt, {
                     target: { value: evt.target },

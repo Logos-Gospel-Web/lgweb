@@ -33,13 +33,13 @@ function createAudioPlayer(player) {
 
     var controlSlider = createRangeSlider({
         max: 1000,
-        onActive() {
+        onActive: function() {
             wasPlaying = !player.paused
             if (wasPlaying) {
                 pause()
             }
         },
-        onInactive(val) {
+        onInactive: function(val) {
             if (ended) {
                 ended = val >= 1000
                 if (!ended) {
@@ -50,7 +50,7 @@ function createAudioPlayer(player) {
                 play()
             }
         },
-        onChange(val) {
+        onChange: function(val) {
             if (player.paused) {
                 var v = (val * player.duration) / 1000
                 if (v === v) player.currentTime = v
@@ -84,7 +84,7 @@ function createAudioPlayer(player) {
         volumeSlider = createRangeSlider({
             max: 1,
             value: 1,
-            onChange(val) {
+            onChange: function(val) {
                 if (val === 0) {
                     volumeIcon.className = "icon icon--volume-mute"
                 } else if (val < 0.3) {
@@ -96,7 +96,7 @@ function createAudioPlayer(player) {
                 }
                 player.volume = val
             },
-            onInactive(val) {
+            onInactive: function(val) {
                 if (val) {
                     prevVolume = val
                 }
