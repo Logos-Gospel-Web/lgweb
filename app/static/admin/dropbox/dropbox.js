@@ -8,7 +8,7 @@ function initializeExistingDropbox() {
     }
 }
 
-function listenForDynamicForm() {
+function listenForDynamicDropbox() {
     const items = document.querySelectorAll(".grp-items")
     const observer = new MutationObserver(() => initializeExistingDropbox())
     for (const item of Array.from(items)) {
@@ -31,5 +31,5 @@ function initializeDropbox(elem) {
 
 addEventListener('DOMContentLoaded', () => {
     initializeExistingDropbox()
-    listenForDynamicForm()
+    listenForDynamicDropbox()
 })

@@ -8,7 +8,7 @@ function initializeExistingTextarea() {
     }
 }
 
-function listenForDynamicForm() {
+function listenForDynamicTextarea() {
     const items = document.querySelectorAll(".grp-items")
     const observer = new MutationObserver(() => initializeExistingTextarea())
     for (const item of Array.from(items)) {
@@ -337,5 +337,5 @@ function registerPlugins() {
 addEventListener('DOMContentLoaded', () => {
     registerPlugins()
     initializeExistingTextarea()
-    listenForDynamicForm()
+    listenForDynamicTextarea()
 })
