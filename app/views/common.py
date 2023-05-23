@@ -34,7 +34,7 @@ def parse_preferred_language(accept: str) -> str:
     return _DEFAULT_LANG
 
 def view_func(fn):
-    @cache_control(must_revalidate=True, max_age=0)
+    @cache_control(max_age=60)
     def wrap(request, *args, **kwargs):
         if 'lang' in kwargs:
             lang = kwargs['lang']
