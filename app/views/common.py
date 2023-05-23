@@ -13,7 +13,7 @@ from os import environ
 from ..services.random_string import random_string
 from ..services.ip import get_client_ip
 from ..services.queries import get_menu
-from ..models import LANGUAGES, to_locale, Analytics
+from ..models import LANGUAGES, to_locale, to_lang_tag, Analytics
 
 contact_email = environ.get('CONTACT_EMAIL')
 
@@ -109,6 +109,7 @@ def _get_base_context(request, lang):
         'menu': get_menu(),
         'language': lang,
         'locale': to_locale(lang),
+        'lang_tag': to_lang_tag(lang),
     }
 
 def make_title(title: str) -> str:

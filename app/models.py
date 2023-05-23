@@ -22,8 +22,16 @@ _FROM_LOCALE = {
     'zh-cn': 'sc',
 }
 
+_TO_LANG_TAG = {
+    'tc': 'zh-yue',
+    'sc': 'zh-cmn',
+}
+
 def to_locale(lang: str) -> str:
     return _TO_LOCALE[lang]
+
+def to_lang_tag(lang: str) -> str:
+    return _TO_LANG_TAG[lang]
 
 def to_lang(locale: str) -> str:
     return _FROM_LOCALE[locale]
