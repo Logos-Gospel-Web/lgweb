@@ -139,6 +139,7 @@ def import_doc(filename: str) -> str | None:
     if res.returncode != 0:
         return None
 
+    html = None
     try:
         html = html_file.read_text()
     finally:
