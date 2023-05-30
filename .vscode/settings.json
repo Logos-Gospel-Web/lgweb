@@ -4,7 +4,7 @@
   "files.exclude": {
     "**/node_modules": true,
     "**/__pycache__": true,
-    "venv": true,
+    "**/venv": true,
   },
   "files.associations": {
     ".env*": "dotenv",
@@ -19,7 +19,7 @@
     "**/__pycache__": true,
     "**/*.min.js": true,
     "static": true,
-    "venv": true,
+    "**/venv": true,
   },
   "python.analysis.typeCheckingMode": "off",
   "files.trimTrailingWhitespace": true,
