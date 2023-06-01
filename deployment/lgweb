@@ -1,0 +1,57 @@
+server {
+    server_name www.lgweb.net;
+
+    server_tokens off;
+    gzip on;
+    gzip_proxied any;
+    gzip_types text/plain text/css application/json application/javascript;
+    etag on;
+    client_max_body_size 256M;
+
+    proxy_set_header Host www.lgweb.net;
+    proxy_set_header X-Forwarded-Proto https;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-Host www.lgweb.net;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_hide_header X-Powered-By;
+
+    location = /robots.txt {
+        alias /opt/lgweb/static/robots.txt;
+    }
+
+    location = /favicon.ico {
+        alias /opt/lgweb/static/favicon.ico;
+    }
+
+    location / {
+        proxy_pass http://localhost:8000;
+    }
+
+    listen [::]:443 http2 ssl ipv6only=on;
+    listen 443 http2 ssl;
+    ssl_certificate /etc/letsencrypt/live/lgweb.net/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/lgweb.net/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+}
+
+server {
+    server_name lgweb.net;
+
+    listen [::]:443 http2 ssl ipv6only=on;
+    listen 443 http2 ssl;
+    ssl_certificate /etc/letsencrypt/live/lgweb.net/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/lgweb.net/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+    return 301 https://www.lgweb.net$request_uri;
+}
+
+
+server {
+    server_name lgweb.net www.lgweb.net;
+    listen [::]:80;
+    listen 80;
+    return 301 https://www.lgweb.net$request_uri;
+}
