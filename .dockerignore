@@ -8,15 +8,17 @@
 *.md
 *.log
 **/.env
-/infrastructure/*/docker-compose.yml
-/infrastructure/*/Dockerfile
-/infrastructure/*/main.ps1
-/infrastructure/*/main.sh
+**/.env.*
+deployment
+infrastructure/*/docker-compose.yml
+infrastructure/*/Dockerfile
+infrastructure/*/main.ps1
+infrastructure/*/main.sh
 
-__pycache__/
-/venv/
-/uploads/
-/static/
+**/__pycache__/
+venv/
+uploads/
+static/
 *.mo
 *.sqlite3
 node_modules/

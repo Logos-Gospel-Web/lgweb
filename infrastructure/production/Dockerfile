@@ -2,7 +2,7 @@ FROM python:3.11-alpine
 
 WORKDIR /lgweb
 
-RUN apk add --no-cache 'abiword=~3' 'build-base' 'nginx' 'supervisor=~4' 'gettext' 'uglify-js' &&\
+RUN apk add --no-cache 'abiword=~3' 'build-base' 'nginx' 'supervisor=~4' 'gettext' 'uglify-js' 'sassc' &&\
     pip install wheel gunicorn
 
 ADD requirements.txt /lgweb/
