@@ -102,7 +102,6 @@ class MessageForm(forms.ModelForm):
         model = Message
         widgets = {
             'type': HiddenInput(attrs={'value': 'message'}),
-            'position': HiddenInput(),
             'title_tc': TextInput(),
             'title_sc': TextInput(),
             'author_tc': TextInput(),
@@ -132,6 +131,11 @@ class MessageInline(admin.StackedInline):
         'document', 'audio', 'content', 'preview',
         collapsed=True
     )
+
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        if db_field.name == self.sortable_field_name:
+            kwargs["widget"] = HiddenInput()
+        return super(MessageInline, self).formfield_for_dbfield(db_field, request, **kwargs)
 
 class TopicForm(forms.ModelForm):
     class Meta:
