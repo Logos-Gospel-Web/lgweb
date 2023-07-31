@@ -23,7 +23,10 @@ function initializeDropbox(elem) {
         folderselect: false,
         linkType: "preview",
         success: function(files) {
-            elem.nextElementSibling.value = files[0].link.replace("?dl=0", "")
+            const link = files[0].link
+            const parsed = new URL(link)
+            parsed.searchParams.delete('dl')
+            elem.nextElementSibling.value = parsed.toString()
         }
     })
     elem.appendChild(button)
