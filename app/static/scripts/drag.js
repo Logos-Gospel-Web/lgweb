@@ -5,19 +5,19 @@ function getPoint(ev) {
 function createDrag(options) {
     var elem = options.elem
 
-    var unregisterMouse = { f: noop }
+    var unregisterMouse = noop
     var mousedown = listen(elem, "mousedown", function(ev) {
         function onMouseMove(ev) {
             options.onMove(getPoint(ev), function () { ev.preventDefault() })
         }
         function onMouseUp(ev) {
             options.onEnd(function () { ev.preventDefault() })
-            unregisterMouse.f()
-            unregisterMouse.f = noop
+            unregisterMouse()
+            unregisterMouse = noop
         }
         var mousemove = listen(document, "mousemove", onMouseMove)
         var mouseup = listen(document, "mouseup", onMouseUp)
-        unregisterMouse.f = function() {
+        unregisterMouse = function() {
             mousemove()
             mouseup()
         }
@@ -25,7 +25,7 @@ function createDrag(options) {
     })
 
     var touches = 0
-    var unregisterTouch = { f: noop }
+    var unregisterTouch = noop
     var touchstart = listen(elem, "touchstart", function(ev) {
         var p = getPoint(ev.touches[0])
         if (touches) {
@@ -37,14 +37,14 @@ function createDrag(options) {
                     options.onMove(getPoint(ev.touches[0], function () { ev.preventDefault() }))
                 } else {
                     options.onEnd(function () { ev.preventDefault() })
-                    unregisterTouch.f()
-                    unregisterTouch.f = noop
+                    unregisterTouch()
+                    unregisterTouch = noop
                 }
             }
             var touchmove = listen(document, "touchmove", onTouchChange)
             var touchend = listen(document, "touchend", onTouchChange)
             var touchcancel = listen(document, "touchcancel", onTouchChange)
-            unregisterTouch.f = function() {
+            unregisterTouch = function() {
                 touchmove()
                 touchend()
                 touchcancel()
@@ -57,7 +57,7 @@ function createDrag(options) {
     return function() {
         touchstart()
         mousedown()
-        unregisterTouch.f()
-        unregisterMouse.f()
+        unregisterTouch()
+        unregisterMouse()
     }
 }
