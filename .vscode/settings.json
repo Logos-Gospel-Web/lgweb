@@ -23,6 +23,5 @@
   },
   "python.analysis.typeCheckingMode": "off",
   "files.trimTrailingWhitespace": true,
-  "python.linting.enabled": true,
-  "python.linting.pylintArgs": ["--load-plugins", "pylint_django"],
+  "pylint.args": ["--load-plugins=pylint_django", " --django-settings-module=project.settings"],
 }
