@@ -215,9 +215,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Django Pipeline
 
 PIPELINE = {
-    'SASS_BINARY': 'sassc -t compressed',
     'COMPILERS': (
-       'pipeline.compilers.sass.SASSCompiler',
+       'project.style_compiler.StyleCompiler',
        'project.script_compiler.ScriptCompiler',
     ),
     'CSS_COMPRESSOR': 'pipeline.compressors.NoopCompressor',

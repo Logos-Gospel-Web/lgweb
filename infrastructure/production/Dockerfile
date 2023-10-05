@@ -2,7 +2,7 @@ FROM alpine:3.18
 
 WORKDIR /lgweb
 
-RUN apk add --no-cache 'abiword=~3' 'build-base' 'nginx' 'supervisor=~4' 'gettext' 'sassc' 'nodejs=~18' 'npm=~9' 'python3=~3.11' 'py3-pip=~23' &&\
+RUN apk add --no-cache 'abiword=~3' 'build-base' 'nginx' 'supervisor=~4' 'gettext' 'nodejs=~18' 'npm=~9' 'python3=~3.11' 'py3-pip=~23' &&\
     ln -sf /usr/bin/python3 /usr/bin/python &&\
     ln -sf /usr/bin/pip3 /usr/bin/pip &&\
     pip install wheel gunicorn
