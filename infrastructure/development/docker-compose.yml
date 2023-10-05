@@ -4,6 +4,8 @@ volumes:
     static: {}
     uploads: {}
     db: {}
+    cache: {}
+    nodemodules: {}
 services:
     lgweb-dev:
         ports:
@@ -21,6 +23,7 @@ services:
             - STATIC_ROOT=/static
             - MEDIA_ROOT=/uploads
             - LOCALE_PATH=/locales
+            - CACHE_DIR=/cache
             - DB_ROOT=/db/db.sqlite3
             - CONTACT_DB_ROOT=/db/contact.sqlite3
             - ANALYTICS_DB_ROOT=/db/analytics.sqlite3
@@ -30,18 +33,21 @@ services:
             - static:/static/
             - uploads:/uploads/
             - db:/db/
+            - cache:/cache/
+            - nodemodules:/lgweb/node_modules/
         entrypoint:
             - /bin/sh
             - -c
             - >-
+                npm ci --omit=dev &&
                 python -m venv /venv &&
                 source /venv/bin/activate &&
                 pip install wheel &&
                 pip install -r requirements.txt &&
                 cp -R ./locales /locales &&
-                ./manage.py migrate &&
-                ./manage.py migrate --database contact &&
-                ./manage.py migrate --database analytics &&
-                ./manage.py seed &&
-                ./manage.py compilemessages &&
-                ./manage.py runserver 0.0.0.0:8000
+                python manage.py migrate &&
+                python manage.py migrate --database contact &&
+                python manage.py migrate --database analytics &&
+                python manage.py seed &&
+                python manage.py compilemessages &&
+                python manage.py runserver 0.0.0.0:8000

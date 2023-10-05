@@ -1,5 +1,5 @@
 /* eslint-disable */
-var QRCode = (function () {
+export var QRCode = (function () {
     //---------------------------------------------------------------------
     // QRCode for JavaScript
     //

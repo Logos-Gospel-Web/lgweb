@@ -1,0 +1,30 @@
+version: '3.3'
+volumes:
+    db: {}
+    uploads: {}
+services:
+    lgweb-staging:
+        ports:
+            - '8000:80'
+        container_name: lgweb-staging
+        image: lgweb-staging
+        env_file:
+            - .env
+        environment:
+            - ALLOWED_HOSTS=*
+        build:
+            dockerfile: ./infrastructure/production/Dockerfile
+            context: ../..
+        volumes:
+            - db:/db/
+            - uploads:/uploads/
+        entrypoint:
+            - /bin/sh
+            - -c
+            - >-
+                mkdir -p /reports &&
+                python ./manage.py migrate &&
+                python ./manage.py migrate --database contact &&
+                python ./manage.py migrate --database analytics &&
+                python ./manage.py seed &&
+                supervisord -c /supervisor.conf

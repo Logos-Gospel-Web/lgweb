@@ -218,10 +218,10 @@ PIPELINE = {
     'SASS_BINARY': 'sassc -t compressed',
     'COMPILERS': (
        'pipeline.compilers.sass.SASSCompiler',
+       'project.script_compiler.ScriptCompiler',
     ),
     'CSS_COMPRESSOR': 'pipeline.compressors.NoopCompressor',
-    'JS_COMPRESSOR': 'pipeline.compressors.uglifyjs.UglifyJSCompressor',
-    'UGLIFYJS_ARGUMENTS': '--compress --mangle --ie',
+    'JS_COMPRESSOR': 'pipeline.compressors.NoopCompressor',
     'STYLESHEETS': {
         'site': {
             'source_filenames': (
@@ -245,18 +245,7 @@ PIPELINE = {
     'JAVASCRIPT': {
         'site': {
             'source_filenames': (
-                'scripts/polyfill.js',
-                'scripts/common.js',
-                'scripts/constants.js',
-                'scripts/events.js',
-                'scripts/drag.js',
-                'scripts/header.js',
-                'scripts/slideshow.js',
-                'scripts/rangeslider.js',
-                'scripts/audioplayer.js',
-                'scripts/sidebar.js',
-                'scripts/qrcode.js',
-                'scripts/toolbar.js',
+                'scripts/index.ts',
             ),
             'output_filename': 'scripts/index.js',
         }
