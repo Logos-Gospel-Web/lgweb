@@ -1,4 +1,4 @@
-import { QRCode } from './qrcode'
+import { getQRCode } from './qrcode'
 import { createRangeSlider } from './rangeslider'
 
 function registerFullscreenButton() {
@@ -71,7 +71,7 @@ function registerQrcodeButton() {
         .querySelector('.toolbar--qrcode')!
         .addEventListener('click', function () {
             if (image.childNodes.length === 0) {
-                const svg = QRCode(location.href)
+                const svg = getQRCode(location.href)
                 image.appendChild(svg)
             }
             const qrcodeSize =
