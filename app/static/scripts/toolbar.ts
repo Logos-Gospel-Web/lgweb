@@ -4,7 +4,7 @@ import { createRangeSlider } from './rangeslider'
 function registerFullscreenButton() {
     document
         .querySelector('.toolbar--fullscreen')!
-        .addEventListener('click', function () {
+        .addEventListener('click', () => {
             if (document.body.classList.contains('fullscreen')) {
                 document.body.classList.remove('fullscreen')
                 if (document.exitFullscreen) {
@@ -17,7 +17,7 @@ function registerFullscreenButton() {
                 }
             }
         })
-    document.documentElement.addEventListener('fullscreenchange', function () {
+    document.documentElement.addEventListener('fullscreenchange', () => {
         if (document.fullscreenElement) {
             document.body.classList.add('fullscreen')
         } else {
@@ -34,7 +34,7 @@ function registerFontsizeButton() {
         min: 80,
         max: 160,
         value: initialValue,
-        onChange: function (val) {
+        onChange(val) {
             localStorage.setItem(localStorageKey, val + '')
             main.style.fontSize = (val / 100).toFixed(2) + 'em'
         },
@@ -46,19 +46,19 @@ function registerFontsizeButton() {
 
     document
         .querySelector('.fontsize__button--plus')!
-        .addEventListener('click', function () {
+        .addEventListener('click', () => {
             slider.val(slider.val() + 10)
         })
 
     document
         .querySelector('.fontsize__button--minus')!
-        .addEventListener('click', function () {
+        .addEventListener('click', () => {
             slider.val(slider.val() - 10)
         })
 
     document
         .querySelector('.toolbar--fontsize')!
-        .addEventListener('click', function () {
+        .addEventListener('click', () => {
             popup.classList.toggle('fontsize--hidden')
         })
 }
@@ -69,7 +69,7 @@ function registerQrcodeButton() {
     const image = document.querySelector('.qrcode__image')!
     document
         .querySelector('.toolbar--qrcode')!
-        .addEventListener('click', function () {
+        .addEventListener('click', () => {
             if (image.childNodes.length === 0) {
                 const svg = getQRCode(location.href)
                 image.appendChild(svg)
@@ -82,24 +82,20 @@ function registerQrcodeButton() {
             popup.style.height = qrcodeSize
             container.classList.remove('qrcode--hidden')
         })
-    document
-        .querySelector('.qrcode__close')!
-        .addEventListener('click', function () {
-            container.classList.add('qrcode--hidden')
-        })
+    document.querySelector('.qrcode__close')!.addEventListener('click', () => {
+        container.classList.add('qrcode--hidden')
+    })
 }
 
 function registerShareButton() {
-    document
-        .querySelector('.toolbar--share')!
-        .addEventListener('click', function () {
-            if (window.navigator && typeof navigator.share === 'function') {
-                navigator.share({
-                    url: location.href,
-                    title: document.title,
-                })
-            }
-        })
+    document.querySelector('.toolbar--share')!.addEventListener('click', () => {
+        if (window.navigator && typeof navigator.share === 'function') {
+            navigator.share({
+                url: location.href,
+                title: document.title,
+            })
+        }
+    })
 }
 
 registerFullscreenButton()

@@ -1,8 +1,9 @@
+import { noop } from './common'
 import { createRangeSlider } from './rangeslider'
 
 function createAudioPlayer(player: HTMLAudioElement) {
     const playerParent = player.parentElement
-    if (!playerParent) return function () {}
+    if (!playerParent) return noop
 
     function timeString(t: number) {
         const m = Math.floor(t / 60)
@@ -36,13 +37,13 @@ function createAudioPlayer(player: HTMLAudioElement) {
 
     const controlSlider = createRangeSlider({
         max: 1000,
-        onActive: function () {
+        onActive() {
             wasPlaying = !player.paused
             if (wasPlaying) {
                 pause()
             }
         },
-        onInactive: function (val) {
+        onInactive(val) {
             if (ended) {
                 ended = val >= 1000
                 if (!ended) {
@@ -53,7 +54,7 @@ function createAudioPlayer(player: HTMLAudioElement) {
                 play()
             }
         },
-        onChange: function (val) {
+        onChange(val) {
             if (player.paused) {
                 const v = (val * player.duration) / 1000
                 if (v === v) player.currentTime = v
@@ -87,7 +88,7 @@ function createAudioPlayer(player: HTMLAudioElement) {
     const volumeSlider = createRangeSlider({
         max: 1,
         value: 1,
-        onChange: function (val) {
+        onChange(val) {
             if (val === 0) {
                 volumeIcon.className = 'icon icon--volume-mute'
             } else if (val < 0.3) {
@@ -99,7 +100,7 @@ function createAudioPlayer(player: HTMLAudioElement) {
             }
             player.volume = val
         },
-        onInactive: function (val) {
+        onInactive(val) {
             if (val) {
                 prevVolume = val
             }
@@ -107,7 +108,7 @@ function createAudioPlayer(player: HTMLAudioElement) {
     })
     volumeContainer.appendChild(volumeSlider.element)
 
-    volume.addEventListener('click', function () {
+    volume.addEventListener('click', () => {
         const v = volumeSlider.val()
         if (v) {
             prevVolume = v
@@ -117,7 +118,7 @@ function createAudioPlayer(player: HTMLAudioElement) {
         }
     })
 
-    player.addEventListener('timeupdate', function () {
+    player.addEventListener('timeupdate', () => {
         const currentTime = player.currentTime
         const duration = player.duration
         current.textContent = timeString(currentTime)
@@ -126,13 +127,13 @@ function createAudioPlayer(player: HTMLAudioElement) {
         }
     })
 
-    player.addEventListener('ended', function () {
+    player.addEventListener('ended', () => {
         pause()
         controlSlider.val(1000)
         ended = true
     })
 
-    player.addEventListener('loadedmetadata', function () {
+    player.addEventListener('loadedmetadata', () => {
         total.textContent = timeString(player.duration)
     })
 
@@ -147,7 +148,7 @@ function createAudioPlayer(player: HTMLAudioElement) {
         player.pause()
     }
 
-    playpause.addEventListener('click', function () {
+    playpause.addEventListener('click', () => {
         if (player.readyState) {
             if (player.paused) {
                 play()
@@ -159,7 +160,7 @@ function createAudioPlayer(player: HTMLAudioElement) {
 
     playerParent.insertBefore(root, player)
 
-    return function () {
+    return () => {
         controlSlider.unregister()
         volumeSlider.unregister()
     }

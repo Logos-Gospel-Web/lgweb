@@ -102,7 +102,7 @@ function registerSidebar(sidebar: HTMLElement) {
     }
     onScroll()
 
-    return function () {
+    return () => {
         if (close) {
             close.removeEventListener('click', onClose)
         }

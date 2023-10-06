@@ -48,7 +48,7 @@ export function createRangeSlider(options: RangeSliderOptions): RangeSlider {
         if (v === value) return
         if (pending === null) {
             value = v
-            setTimeout(function () {
+            setTimeout(() => {
                 if (pending !== null && value !== pending) {
                     value = pending
                     sync()
@@ -67,14 +67,14 @@ export function createRangeSlider(options: RangeSliderOptions): RangeSlider {
 
     const unregister = createDrag({
         elem: slider,
-        onStart: function (p) {
+        onStart(p) {
             if (onActive) onActive(value!)
             setValueByPosition(p.x)
         },
-        onMove: function (p) {
+        onMove(p) {
             setValueByPosition(p.x)
         },
-        onEnd: function () {
+        onEnd() {
             if (onInactive) onInactive(value!)
         },
     })
@@ -84,7 +84,7 @@ export function createRangeSlider(options: RangeSliderOptions): RangeSlider {
     return {
         element: slider,
         unregister: unregister,
-        val: function (v?: number) {
+        val(v?: number) {
             if (v !== undefined) {
                 setValue(v)
             }

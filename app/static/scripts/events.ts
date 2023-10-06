@@ -1,4 +1,4 @@
-import { supportPassiveListener } from '@/constants'
+import { supportPassiveListener } from './constants'
 
 export function listen<K extends keyof DocumentEventMap>(
     elem: Document,
@@ -27,7 +27,7 @@ export function listen(
     const options =
         supportPassiveListener && passive !== undefined ? { passive } : false
     elem.addEventListener(event, listener, options)
-    return function () {
+    return () => {
         elem.removeEventListener(event, listener, false)
     }
 }
@@ -39,7 +39,7 @@ export function delegate<K extends keyof HTMLElementEventMap>(
     listener: (ev: HTMLElementEventMap[K]) => void,
     passive?: boolean,
 ) {
-    const fn = function (evt: Event) {
+    const fn = (evt: Event) => {
         let el = evt.target as HTMLElement | null
 
         if (el) {
@@ -50,7 +50,7 @@ export function delegate<K extends keyof HTMLElementEventMap>(
                     target: { value: evt.target },
                     currentTarget: { value: el },
                     preventDefault: {
-                        value: function () {
+                        value() {
                             evt.preventDefault()
                         },
                     },

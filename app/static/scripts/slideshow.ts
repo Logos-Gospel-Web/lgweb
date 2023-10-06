@@ -37,7 +37,7 @@ function registerSlideshow(slideshow: HTMLElement) {
         cursor += by
         filler.style.transitionDuration = '.3s'
         sync()
-        setTimeout(function () {
+        setTimeout(() => {
             filler.style.transitionDuration = ''
             if (cursor === count) {
                 cursor = 0
@@ -52,11 +52,11 @@ function registerSlideshow(slideshow: HTMLElement) {
 
     function startMotion() {
         if (interval > 0) {
-            return setInterval(function () {
+            return setInterval(() => {
                 move(1)
             }, interval)
         } else if (interval < 0) {
-            return setInterval(function () {
+            return setInterval(() => {
                 move(-1)
             }, -interval)
         } else {
@@ -115,16 +115,16 @@ function registerSlideshow(slideshow: HTMLElement) {
 
     const unregister = createDrag({
         elem: slideshow,
-        onStart: function (p) {
+        onStart(p) {
             if (moving || holding) return
             startSlide(p.x)
         },
-        onMove: function (p) {
+        onMove(p) {
             if (!holding) return
             dx = p.x - startX
             slide()
         },
-        onEnd: function (preventDefault) {
+        onEnd(preventDefault) {
             if (!holding) return
             if (Math.abs(dx) > 10) preventDefault()
             stopSlide()

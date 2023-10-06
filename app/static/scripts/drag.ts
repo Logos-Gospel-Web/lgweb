@@ -8,8 +8,8 @@ type Point = {
 
 type DragOptions = {
     elem: HTMLElement
-    onStart: (point: Point, preventDefault: () => void) => void
-    onMove: (point: Point, preventDefault: () => void) => void
+    onStart: (point: Point) => void
+    onMove: (point: Point) => void
     onEnd: (preventDefault: () => void) => void
 }
 
@@ -21,14 +21,12 @@ export function createDrag(options: DragOptions): () => void {
     const elem = options.elem
 
     let unregisterMouse = noop
-    const mousedown = listen(elem, 'mousedown', function (ev) {
+    const mousedown = listen(elem, 'mousedown', (ev) => {
         function onMouseMove(ev: MouseEvent) {
-            options.onMove(getPoint(ev), function () {
-                ev.preventDefault()
-            })
+            options.onMove(getPoint(ev))
         }
         function onMouseUp(ev: MouseEvent) {
-            options.onEnd(function () {
+            options.onEnd(() => {
                 ev.preventDefault()
             })
             unregisterMouse()
@@ -36,26 +34,22 @@ export function createDrag(options: DragOptions): () => void {
         }
         const mousemove = listen(document, 'mousemove', onMouseMove)
         const mouseup = listen(document, 'mouseup', onMouseUp)
-        unregisterMouse = function () {
+        unregisterMouse = () => {
             mousemove()
             mouseup()
         }
-        options.onStart(getPoint(ev), function () {
-            ev.preventDefault()
-        })
+        options.onStart(getPoint(ev))
     })
 
     let touches = 0
     let unregisterTouch = noop
-    const touchstart = listen(elem, 'touchstart', function (ev) {
+    const touchstart = listen(elem, 'touchstart', (ev) => {
         function onTouchChange(ev: TouchEvent) {
             touches = ev.touches.length
             if (touches) {
-                options.onMove(getPoint(ev.touches[0]), function () {
-                    ev.preventDefault()
-                })
+                options.onMove(getPoint(ev.touches[0]))
             } else {
-                options.onEnd(function () {
+                options.onEnd(() => {
                     ev.preventDefault()
                 })
                 unregisterTouch()
@@ -64,26 +58,22 @@ export function createDrag(options: DragOptions): () => void {
         }
         const p = getPoint(ev.touches[0])
         if (touches) {
-            options.onMove(p, function () {
-                ev.preventDefault()
-            })
+            options.onMove(p)
         } else {
             const touchmove = listen(document, 'touchmove', onTouchChange)
             const touchend = listen(document, 'touchend', onTouchChange)
             const touchcancel = listen(document, 'touchcancel', onTouchChange)
-            unregisterTouch = function () {
+            unregisterTouch = () => {
                 touchmove()
                 touchend()
                 touchcancel()
             }
-            options.onStart(p, function () {
-                ev.preventDefault()
-            })
+            options.onStart(p)
         }
         touches = ev.touches.length
     })
 
-    return function () {
+    return () => {
         touchstart()
         mousedown()
         unregisterTouch()
