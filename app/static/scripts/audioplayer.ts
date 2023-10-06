@@ -1,5 +1,4 @@
-import { isMobile, isTablet } from './constants'
-import { RangeSlider, createRangeSlider } from './rangeslider'
+import { createRangeSlider } from './rangeslider'
 
 function createAudioPlayer(player: HTMLAudioElement) {
     const playerParent = player.parentElement
@@ -71,59 +70,52 @@ function createAudioPlayer(player: HTMLAudioElement) {
         : '00:00'
     root.appendChild(total)
 
-    let volumeSlider: RangeSlider | undefined
+    const volume = document.createElement('div')
+    volume.className = 'audio__item audio__button audio__volume'
+    root.appendChild(volume)
 
-    if (!isMobile && !isTablet) {
-        const volume = document.createElement('div')
-        volume.className = 'audio__item audio__button audio__volume'
-        root.appendChild(volume)
+    const volumeIcon = document.createElement('span')
+    volumeIcon.className = 'icon icon--volume-high'
+    volume.appendChild(volumeIcon)
 
-        const volumeIcon = document.createElement('span')
-        volumeIcon.className = 'icon icon--volume-high'
-        volume.appendChild(volumeIcon)
+    const volumeContainer = document.createElement('div')
+    volumeContainer.className =
+        'audio__item audio__slider audio__slider--volume'
+    root.appendChild(volumeContainer)
 
-        const volumeContainer = document.createElement('div')
-        volumeContainer.className =
-            'audio__item audio__slider audio__slider--volume'
-        root.appendChild(volumeContainer)
-
-        let prevVolume = 0
-        volumeSlider = createRangeSlider({
-            max: 1,
-            value: 1,
-            onChange: function (val) {
-                if (val === 0) {
-                    volumeIcon.className = 'icon icon--volume-mute'
-                } else if (val < 0.3) {
-                    volumeIcon.className = 'icon icon--volume-low'
-                } else if (val < 0.7) {
-                    volumeIcon.className = 'icon icon--volume-medium'
-                } else {
-                    volumeIcon.className = 'icon icon--volume-high'
-                }
-                player.volume = val
-            },
-            onInactive: function (val) {
-                if (val) {
-                    prevVolume = val
-                }
-            },
-        })
-        volumeContainer.appendChild(volumeSlider.element)
-
-        volume.addEventListener('click', function () {
-            if (!volumeSlider) return
-            const v = volumeSlider.val()
-            if (v) {
-                prevVolume = v
-                volumeSlider.val(0)
+    let prevVolume = 0
+    const volumeSlider = createRangeSlider({
+        max: 1,
+        value: 1,
+        onChange: function (val) {
+            if (val === 0) {
+                volumeIcon.className = 'icon icon--volume-mute'
+            } else if (val < 0.3) {
+                volumeIcon.className = 'icon icon--volume-low'
+            } else if (val < 0.7) {
+                volumeIcon.className = 'icon icon--volume-medium'
             } else {
-                volumeSlider.val(prevVolume || 1)
+                volumeIcon.className = 'icon icon--volume-high'
             }
-        })
-    } else {
-        player.volume = 1
-    }
+            player.volume = val
+        },
+        onInactive: function (val) {
+            if (val) {
+                prevVolume = val
+            }
+        },
+    })
+    volumeContainer.appendChild(volumeSlider.element)
+
+    volume.addEventListener('click', function () {
+        const v = volumeSlider.val()
+        if (v) {
+            prevVolume = v
+            volumeSlider.val(0)
+        } else {
+            volumeSlider.val(prevVolume || 1)
+        }
+    })
 
     player.addEventListener('timeupdate', function () {
         const currentTime = player.currentTime
@@ -169,9 +161,7 @@ function createAudioPlayer(player: HTMLAudioElement) {
 
     return function () {
         controlSlider.unregister()
-        if (volumeSlider) {
-            volumeSlider.unregister()
-        }
+        volumeSlider.unregister()
     }
 }
 
