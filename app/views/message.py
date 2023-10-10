@@ -57,10 +57,11 @@ def message(request, lang, slug, pos):
     page = get_message(slug, position, lang, now)
     breadcrumb = get_breadcrumb(page.parent, context['menu'], lang)
     sidebar = get_sidebar(page.parent)
+    banner = page.banner[lang]
     return render(request, 'site/pages/message.html', {
         **context,
         'title': make_title(page.title[lang]),
-        'fonts': set((b.subfont for b in page.banner.values() if b and b.subfont)),
+        'fonts': [banner.subfont] if banner and banner.subfont else None,
         'message': page,
         'breadcrumb': breadcrumb,
         'sidebar': sidebar,

@@ -30,7 +30,7 @@ def home(request, lang):
         **context,
         'title': make_title(_('首頁')),
         'banners': banners,
-        'fonts': [b.banner.subfont for b in banners if b.banner.subfont],
+        'fonts': set((b.banner.subfont for b in banners if b.banner.subfont)),
         'latest_messages': get_latest_messages(lang, context['now']),
         'promotions': get_promotions(lang),
     })

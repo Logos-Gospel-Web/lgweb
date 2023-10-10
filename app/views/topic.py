@@ -32,10 +32,11 @@ def topic(request, lang, slug):
             'topic': page,
             'children': children[::-1],
         }
+    banner = page.banner[lang]
     return render(request, f'site/pages/{template}', {
         **context,
         'title': make_title(page.title[lang]),
-        'fonts': set((b.subfont for b in page.banner.values() if b and b.subfont)),
+        'fonts': [banner.subfont] if banner and banner.subfont else None,
         'topic': page,
         'has_audio': has_audio,
         'sidebar': sidebar,
