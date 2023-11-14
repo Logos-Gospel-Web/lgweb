@@ -15,7 +15,6 @@
   - name: Ensure all required packages are installed
     apt:
       name:
-        - nginx
         - ca-certificates
         - curl
         - gnupg
@@ -56,9 +55,3 @@
       name: docker
       state: started
     become: true
-
-  - name: Ensure certbot is installed
-    community.general.snap:
-      name:
-        - certbot
-      classic: yes

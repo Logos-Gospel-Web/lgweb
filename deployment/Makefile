@@ -6,7 +6,7 @@ venv/pyvenv.cfg:
 	python3 -m venv venv
 
 play:
-	ansible-playbook base.yml -i inventory.yml
+	ansible-playbook base.yml
 
 install:
 	pip install -U pip
