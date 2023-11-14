@@ -1,0 +1,12 @@
+User-agent: *
+Disallow: /admin
+
+# Baidu
+User-agent: BaiduSpider
+Disallow: /tc
+# 360
+User-agent: 360Spider
+Disallow: /tc
+# Sogou
+User-agent: Sogouspider
+Disallow: /tc

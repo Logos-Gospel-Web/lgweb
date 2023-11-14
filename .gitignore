@@ -8,6 +8,9 @@ dist/
 !.vscode/*.code-snippets
 
 .env
+.env.*
+!.env.sample
+!.env.*.sample
 __pycache__/
 venv/
 /uploads/

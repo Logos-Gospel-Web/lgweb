@@ -1,30 +1,47 @@
 version: '3.3'
 volumes:
+    caddy_data: {}
     db: {}
     uploads: {}
+    static: {}
+    reports: {}
 services:
-    lgweb-staging:
+    builder:
+        build: &build
+            dockerfile: ./infrastructure/production/Dockerfile
+            target: builder
+            context: ../..
+        volumes: &volumes
+            - db:/db/
+            - uploads:/uploads/
+            - static:/static/
+            - reports:/reports/
+    server:
         ports:
-            - '8000:80'
-        container_name: lgweb-staging
-        image: lgweb-staging
+            - '8000:8000'
+            - '8001:8001'
+        build:
+            <<: *build
+            target: server
+        environment:
+            - MAIN_URL=main:8000
+            - WEB_DOMAIN=:8001
+            - WEB_HOST=:8000
+            - WEB_URL=http://localhost:8000
+        volumes:
+            - uploads:/uploads/
+            - static:/static/
+            - caddy_data:/data/
+    main:
+        depends_on:
+            builder:
+                condition: service_completed_successfully
         env_file:
             - .env
         environment:
             - ALLOWED_HOSTS=*
         build:
-            dockerfile: ./infrastructure/production/Dockerfile
-            context: ../..
-        volumes:
-            - db:/db/
-            - uploads:/uploads/
-        entrypoint:
-            - /bin/sh
-            - -c
-            - >-
-                mkdir -p /reports &&
-                python ./manage.py migrate &&
-                python ./manage.py migrate --database contact &&
-                python ./manage.py migrate --database analytics &&
-                python ./manage.py seed &&
-                supervisord -c /supervisor.conf
+            <<: *build
+            target: main
+        volumes: *volumes
+

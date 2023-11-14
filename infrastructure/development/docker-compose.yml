@@ -7,7 +7,7 @@ volumes:
     cache: {}
     nodemodules: {}
 services:
-    lgweb-dev:
+    main:
         ports:
             - '8000:8000'
         container_name: lgweb-dev

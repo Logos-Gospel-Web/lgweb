@@ -1,17 +1,42 @@
 version: '3.3'
+volumes:
+    caddy_data: {}
+    static: {}
 services:
-    lgweb:
-        ports:
-            - '8000:80'
-        container_name: lgweb
-        image: lgweb
+    builder:
+        build: &build
+            dockerfile: ./infrastructure/production/Dockerfile
+            target: builder
+            context: ../..
+        volumes: &volumes
+            - /opt/lgweb/db/:/db/
+            - /opt/lgweb/reports/:/reports/
+            - /opt/lgweb/uploads/:/uploads/
+            - static:/static/
+    server:
         restart: unless-stopped
+        ports:
+            - '80:80'
+            - '443:443'
+        build:
+            <<: *build
+            target: server
+        env_file:
+            - .env.server
+        environment:
+            - MAIN_URL=main:8000
+        volumes:
+            - /opt/lgweb/uploads/:/uploads/
+            - static:/static/
+            - caddy_data:/data/
+    main:
+        restart: unless-stopped
+        depends_on:
+            builder:
+                condition: service_completed_successfully
         env_file:
             - .env
         build:
-            dockerfile: ./infrastructure/production/Dockerfile
-            context: ../..
-        volumes:
-            - /opt/lgweb/db/:/db/
-            - /opt/lgweb/uploads/:/uploads/
-            - /opt/lgweb/reports/:/reports/
+            <<: *build
+            target: main
+        volumes: *volumes
