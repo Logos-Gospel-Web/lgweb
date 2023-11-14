@@ -4,9 +4,8 @@ from django.db import IntegrityError
 from django.conf import settings
 from django.core.files.base import File
 from ...models import LANGUAGES, HomePage, Topic, Message, ParentMenuItem, ChildMenuItem, Promotion, Banner, HomeBanner
+from ...services.random_string import random_string
 import urllib.request
-import random
-import string
 import datetime
 import ssl
 ssl._create_default_https_context = ssl._create_unverified_context
@@ -36,7 +35,7 @@ def add_sample_data():
         return
 
     def random_image_name():
-        return ''.join(random.choices(string.ascii_letters, k=20)) + '.jpeg'
+        return random_string() + '.jpeg'
 
     def download_random_image(width, height):
         url = f'https://picsum.photos/{width}/{height}'

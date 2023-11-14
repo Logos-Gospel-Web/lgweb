@@ -1,6 +1,4 @@
 from pathlib import Path
-import random
-import string
 from django.conf import settings
 from django.core.cache import caches
 from django.db.models import signals
@@ -8,12 +6,14 @@ from django.dispatch import receiver
 from .models import Banner, Contact, Analytics
 from .services.subfont import make_subfont
 
+from .services.random_string import random_string
+
 _subfont_base_path = Path('banner') / 'subfont'
 
 @receiver(signals.pre_save, sender=Banner)
 def banner_pre_save(sender, instance, **kwargs):
     if instance.font and not instance.subfont:
-        name = ''.join(random.choices(string.ascii_letters, k=20)) + Path(instance.font.name).suffix
+        name = random_string() + Path(instance.font.name).suffix
         instance.subfont.name = str(_subfont_base_path / name)
     elif instance.subfont and not instance.font:
         instance.subfont.name = None

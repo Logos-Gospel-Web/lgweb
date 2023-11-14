@@ -5,12 +5,11 @@ from django.http import HttpResponse
 from django.conf import settings
 from base64 import b64encode
 from hashlib import sha256
-import random
-import string
 
 from .models import Topic, to_locale
 from .services.links import message_link
 from .services.import_doc import save_to_tmp_file, import_doc, process_doc
+from .services.random_string import random_string
 
 def adminapi(fn):
     def wrap(request, *args, **kwargs):
@@ -32,7 +31,7 @@ def upload_doc_image_api(request):
     ext = Path(file.name).suffix
 
     message_image_dir.mkdir(parents=True, exist_ok=True)
-    tmp_name = ''.join(random.choices(string.ascii_letters, k=20)) + ext
+    tmp_name = random_string() + ext
     tmp_file = message_image_dir / tmp_name
     m = sha256()
 
