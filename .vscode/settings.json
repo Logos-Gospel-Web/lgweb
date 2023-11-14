@@ -10,8 +10,9 @@
     ".env*": "dotenv",
     "*.html": "django-html",
   },
+  "editor.formatOnSave": false,
   "editor.codeActionsOnSave": {
-    "source.fixAll": true
+    "source.fixAll.eslint": true
   },
   "search.exclude": {
     ".vscode": true,
@@ -23,5 +24,8 @@
   },
   "python.analysis.typeCheckingMode": "off",
   "files.trimTrailingWhitespace": true,
-  "pylint.args": ["--load-plugins=pylint_django", " --django-settings-module=project.settings"],
+  "pylint.args": [
+    "--load-plugins=pylint_django",
+    "--django-settings-module=project.settings"
+  ],
 }

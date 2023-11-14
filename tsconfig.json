@@ -1,9 +1,5 @@
 {
     "compilerOptions": {
-        "baseUrl": "./app/static/scripts",
-        "paths": {
-            "@/*": ["*"]
-        },
         "target": "esnext",
         "module": "esnext",
         "experimentalDecorators": true,
@@ -15,7 +11,6 @@
         "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
         "strict": true,
-        "allowJs": true,
         "noImplicitAny": true,
         "strictNullChecks": true,
         "strictFunctionTypes": true,
@@ -29,5 +24,6 @@
         "noImplicitOverride": true,
         "noErrorTruncation": true,
         "useDefineForClassFields": false
-    }
+    },
+    "include": ["./app/static/scripts/**/*"]
 }
