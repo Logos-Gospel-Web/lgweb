@@ -16,6 +16,7 @@ from ..services.queries import get_menu
 from ..models import LANGUAGES, to_locale, to_lang_tag, Analytics
 
 contact_email = environ.get('CONTACT_EMAIL')
+force_https = environ.get('FORCE_HTTPS')
 
 _DEFAULT_LANG = 'sc'
 
@@ -93,7 +94,7 @@ def use_etag(key = None):
     return etag(etag_func)
 
 def get_base_url(request):
-    return f'{request.scheme}://{request.get_host()}'
+    return f'{request.scheme if not force_https else "https"}://{request.get_host()}'
 
 def _get_base_context(request, lang):
     now = datetime.now()
