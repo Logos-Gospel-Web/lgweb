@@ -35,7 +35,7 @@
             <input class="contact__input" type="email" name="{{ keys.email }}" size="50" maxlength="100" value="{{ values.email }}">
             {% translate '內容' as label %}
             {% include '../components/contact_label.html' with label=label error=errors.comment %}
-            <textarea class="contact__input contact__textarea" type="text" name="{{ keys.comment }}" rows="12">{{ values.comment }}</textarea>
+            <textarea class="contact__input contact__textarea" name="{{ keys.comment }}" rows="12">{{ values.comment }}</textarea>
             <button type="submit" class="contact__submit">{% translate '提交' %}</button>
         </form>
     </div>
