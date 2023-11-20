@@ -23,8 +23,8 @@ _FROM_LOCALE = {
 }
 
 _TO_LANG_TAG = {
-    'tc': 'zh-yue',
-    'sc': 'zh-cmn',
+    'tc': 'zh-hant',
+    'sc': 'zh-hans',
 }
 
 def to_locale(lang: str) -> str:
