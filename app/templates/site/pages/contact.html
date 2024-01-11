@@ -28,7 +28,7 @@
             {% csrf_token %}
             {% translate '您的姓名' as label %}
             {% include '../components/contact_label.html' with label=label error=errors.name %}
-            <input class="contact__input--first" type="tel" name="{{ keys.fake }}" size="50" maxlength="50" tabindex="-1">
+            <input class="contact__input--first" type="text" name="{{ keys.fake }}" size="50" maxlength="50" tabindex="-1">
             <input class="contact__input" type="text" name="{{ keys.name }}" size="50" maxlength="50" value="{{ values.name }}">
             {% translate '您的電子郵箱地址' as label %}
             {% include '../components/contact_label.html' with label=label error=errors.email %}
