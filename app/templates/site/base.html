@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 {% spaceless %}
-{% load pipeline %}
+{% load static %}
 <html lang="{{ lang_tag }}">
 <head>
     <meta charset="UTF-8">
@@ -8,8 +8,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ title }}</title>
     <link rel="canonical" href="{{ full_url }}" >
-    {% stylesheet 'site' %}
-    <noscript>{% stylesheet 'noscript' %}</noscript>
+    <link href="{% static 'compiled/index.css' %}" rel="stylesheet">
+    <noscript>
+        <link href="{% static 'compiled/noscript.css' %}" rel="stylesheet">
+    </noscript>
     {% include './components/banner_style.html' %}
 </head>
 <body>
@@ -18,7 +20,7 @@
         {% block content %}{% endblock %}
         {% include './components/footer.html' %}
     </div>
-    {% javascript 'site' %}
+    <script src="{% static 'compiled/index.js' %}"></script>
 </body>
 </html>
 {% endspaceless %}

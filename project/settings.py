@@ -58,7 +58,6 @@ CACHES = {
 # Application definition
 
 INSTALLED_APPS = [
-    'pipeline',
     'app.apps.Config',
     'grappelli',
     'django.contrib.admin',
@@ -200,53 +199,11 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATIC_ROOT = environ.get('STATIC_ROOT') or BASE_DIR / 'static'
-STATICFILES_STORAGE = 'pipeline.storage.PipelineStorage'
-STATICFILES_FINDERS = (
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'pipeline.finders.PipelineFinder',
-)
+if DEBUG:
+    STATICFILES_DIRS = [STATIC_ROOT]
+    del STATIC_ROOT
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# Django Pipeline
-
-PIPELINE = {
-    'COMPILERS': (
-       'project.style_compiler.StyleCompiler',
-       'project.script_compiler.ScriptCompiler',
-    ),
-    'CSS_COMPRESSOR': 'pipeline.compressors.NoopCompressor',
-    'JS_COMPRESSOR': 'pipeline.compressors.NoopCompressor',
-    'STYLESHEETS': {
-        'site': {
-            'source_filenames': (
-                'styles/index.scss',
-            ),
-            'output_filename': 'styles/index.css',
-        },
-        'richtext': {
-            'source_filenames': (
-                'styles/richtext.scss',
-            ),
-            'output_filename': 'styles/richtext.css',
-        },
-        'noscript': {
-            'source_filenames': (
-                'styles/noscript.scss',
-            ),
-            'output_filename': 'styles/noscript.css',
-        },
-    },
-    'JAVASCRIPT': {
-        'site': {
-            'source_filenames': (
-                'scripts/index.ts',
-            ),
-            'output_filename': 'scripts/index.js',
-        }
-    },
-}

@@ -73,7 +73,7 @@ async function initializeTinymce(textarea) {
             throw new Error("Cannot upload image")
         },
         body_class: "richtext",
-        content_css: "/static/styles/richtext.css",
+        content_css: "/static/compiled/richtext.css",
         fontsize_formats: "0.6em 0.65em 0.7em 0.75em 0.8em 0.9em 1em 1.25em 1.5em 1.75em 2em 2.25em 2.5em 3em 4em 5em 6em 8em",
         style_formats: [
             { title: "Paragraph", format: "paragraph" },

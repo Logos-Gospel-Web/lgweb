@@ -7,7 +7,6 @@ from django.forms.widgets import Input, TextInput, HiddenInput
 from django.templatetags.static import static
 from django.utils.html import format_html, html_safe
 from django.utils.safestring import mark_safe
-from pipeline.forms import PipelineFormMedia
 from .models import LANGUAGES, with_lang, Banner, HomePage, HomeBanner, Promotion, Message, Topic, ChildMenuItem, ParentMenuItem, Contact
 
 def make_multilingual_fields(*fields: str, collapsed: bool = False):
@@ -19,10 +18,7 @@ def make_multilingual_fields(*fields: str, collapsed: bool = False):
 class RichTextInput(Input):
     input_type = 'text'
     template_name = 'forms/widgets/richtext.html'
-    class Media(PipelineFormMedia):
-        css_packages = {
-            'all': ('richtext',)
-        }
+    class Media:
         css = {
             'all': (
                 'admin/richtext/tinymce/skins/ui/oxide/skin.min.css',
@@ -68,7 +64,7 @@ JS = html_safe(JS)
 class DropboxInput(Input):
     input_type = 'url'
     template_name = 'forms/widgets/dropbox.html'
-    class Media(PipelineFormMedia):
+    class Media:
         css = {
             'all': (
                 'admin/dropbox/dropbox.css',

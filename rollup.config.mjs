@@ -8,6 +8,14 @@ const isProd = process.env.MODE === 'production'
 export default {
     output: {
         format: 'iife',
+        sourcemap: isProd ? false : 'inline',
+    },
+    watch: {
+        chokidar: {
+            usePolling: true,
+            interval: 500,
+            binaryInterval: 1000,
+        },
     },
     plugins: [
         nodeResolve({

@@ -4,7 +4,6 @@ cssutils==2.10.2
 Django==5.0.4
 django-cleanup==8.1.0
 django-grappelli==4.0.1
-django-pipeline==3.0.0
 django-ratelimit==4.1.0
 fonttools==4.51.0
 lxml==5.2.1

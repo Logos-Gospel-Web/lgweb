@@ -5,16 +5,15 @@ WORKDIR /lgweb
 RUN apk add --no-cache 'abiword=~3' 'build-base' 'nginx' 'supervisor=~4' 'gettext' 'python3=~3.11' 'py3-pip=~23' 'tzdata' &&\
     ln -sf /usr/bin/python3 /usr/bin/python &&\
     ln -sf /usr/bin/pip3 /usr/bin/pip &&\
-    pip install wheel gunicorn
+    pip install gunicorn --break-system-packages
 
 ENV TZ=Asia/Hong_Kong
 
 ADD requirements.txt /lgweb/
 
-RUN pip install -r requirements.txt
+RUN pip install -r requirements.txt --break-system-packages
 
-RUN pip uninstall -y wheel &&\
-    apk del 'build-base' 'py3-pip'
+RUN apk del 'build-base' 'py3-pip'
 
 ENV MODE production
 ENV STATIC_ROOT /static
@@ -34,7 +33,7 @@ RUN npm ci --omit=dev
 
 ADD . /lgweb/
 
-CMD [ "python", "manage.py", "collectstatic", "--no-input" ]
+CMD [ "./infrastructure/production/build" ]
 
 FROM base as main
 

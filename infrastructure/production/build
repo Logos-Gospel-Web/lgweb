@@ -1,0 +1,8 @@
+#!/bin/sh
+
+python manage.py collectstatic --no-input
+npx sass -s compressed --no-source-map app/styles/index.scss $STATIC_ROOT/compiled/index.css
+npx sass -s compressed --no-source-map app/styles/richtext.scss $STATIC_ROOT/compiled/richtext.css
+npx sass -s compressed --no-source-map app/styles/noscript.scss $STATIC_ROOT/compiled/noscript.css
+npx rollup --config rollup.config.mjs --input app/scripts/index.ts --file $STATIC_ROOT/compiled/index.js
+npx rollup --config rollup.config.mjs --input app/scripts/service.worker.ts --file $STATIC_ROOT/compiled/sw.js

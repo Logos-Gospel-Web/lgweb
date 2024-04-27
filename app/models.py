@@ -1,6 +1,5 @@
 from django.db import models
 from django.utils import timezone
-from copy import deepcopy
 import ulid
 
 # Create your models here.
