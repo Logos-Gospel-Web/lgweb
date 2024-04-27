@@ -54,9 +54,11 @@ def model(*, multilingual: list[str] = [], base: type[models.Model] = models.Mod
             return { lang: getattr(self, with_lang(field, lang)) for (lang, _) in LANGUAGES }
 
         definition = getattr(Cls, field)
+        if not callable(definition):
+            raise Exception('multilingual field must be callable')
         for (lang, _) in LANGUAGES:
             name = with_lang(field, lang)
-            setattr(Cls, name, definition(lang) if callable(definition) else deepcopy(definition))
+            setattr(Cls, name, definition(lang))
         setattr(Cls, field, property(getter))
 
     def decorator(Cls):
@@ -155,7 +157,7 @@ class MenuItem:
     position = models.PositiveSmallIntegerField()
     enabled = models.BooleanField('Enabled', default=True)
     page = models.ForeignKey('Page', blank=True, null=True, on_delete=models.SET_NULL)
-    title = models.TextField('Title')
+    title = lambda _: models.TextField('Title')
 
     def __str__(self):
         return print_multilingual(self, 'title')
@@ -184,8 +186,8 @@ class Page:
     type = models.TextField('Type', choices=[(x, x.title()) for x in ('message', 'topic')])
     enabled = models.BooleanField('Enabled', default=True)
     publish = models.DateField('Publish at', blank=True, null=True)
-    title = models.TextField('Title', blank=True)
-    author = models.TextField('Author', blank=True)
+    title = lambda _: models.TextField('Title', blank=True)
+    author = lambda _: models.TextField('Author', blank=True)
     banner = lambda lang: models.ForeignKey('Banner', verbose_name='Banner', related_name=f'page_{lang}_set', blank=True, null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
@@ -198,11 +200,11 @@ class Message:
         ordering = ['parent', 'position']
     position = models.PositiveSmallIntegerField()
     parent = models.ForeignKey('Topic', on_delete=models.CASCADE, related_name='children')
-    prefix = models.TextField('Prefix', blank=True)
-    document = models.FileField('Document', upload_to='message/document/', blank=True)
-    audio = models.URLField('Audio', blank=True)
-    preview = models.TextField('Preview', blank=True)
-    content = models.TextField('Content', blank=True)
+    prefix = lambda _: models.TextField('Prefix', blank=True)
+    document = lambda _: models.FileField('Document', upload_to='message/document/', blank=True)
+    audio = lambda _: models.URLField('Audio', blank=True)
+    preview = lambda _: models.TextField('Preview', blank=True)
+    content = lambda _: models.TextField('Content', blank=True)
 
     def __str__(self):
         return print_multilingual(self, 'title')
@@ -224,8 +226,8 @@ class Topic:
         db_table = 'topic'
     is_blog = models.BooleanField('Blog layout')
     slug = models.SlugField('Slug')
-    end_msg = models.TextField('"End" message', blank=True)
-    description = models.TextField('Description', blank=True)
+    end_msg = lambda _: models.TextField('"End" message', blank=True)
+    description = lambda _: models.TextField('Description', blank=True)
 
     def __str__(self):
         return print_multilingual(self, 'title')
