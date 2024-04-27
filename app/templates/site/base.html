@@ -7,7 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ title }}</title>
-    <link rel="canonical" href="{{ full_url }}" >
+    <link rel="canonical" href="{{ full_url }}">
+    <link rel="manifest" href="/{{ language }}/manifest.json">
     <link href="{% static 'compiled/index.css' %}?{{ build_version }}" rel="stylesheet">
     <noscript>
         <link href="{% static 'compiled/noscript.css' %}?{{ build_version }}" rel="stylesheet">
