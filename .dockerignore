@@ -8,7 +8,6 @@
 *.log
 **/.env
 **/.env.*
-deployment
 infrastructure/*/docker-compose.yml
 infrastructure/*/Dockerfile*
 infrastructure/*/*.ps1
