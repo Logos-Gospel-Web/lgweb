@@ -8,9 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ title }}</title>
     <link rel="canonical" href="{{ full_url }}" >
-    <link href="{% static 'compiled/index.css' %}" rel="stylesheet">
+    <link href="{% static 'compiled/index.css' %}?{{ build_version }}" rel="stylesheet">
     <noscript>
-        <link href="{% static 'compiled/noscript.css' %}" rel="stylesheet">
+        <link href="{% static 'compiled/noscript.css' %}?{{ build_version }}" rel="stylesheet">
     </noscript>
     {% include './components/banner_style.html' %}
 </head>
@@ -20,7 +20,7 @@
         {% block content %}{% endblock %}
         {% include './components/footer.html' %}
     </div>
-    <script src="{% static 'compiled/index.js' %}"></script>
+    <script src="{% static 'compiled/index.js' %}?{{ build_version }}"></script>
 </body>
 </html>
 {% endspaceless %}

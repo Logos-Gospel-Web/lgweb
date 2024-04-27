@@ -1,6 +1,7 @@
 from django.shortcuts import redirect
 from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime
+from django.conf import settings
 from django.core.cache import caches
 from django.utils import translation
 from django.utils.translation import gettext as _
@@ -9,6 +10,7 @@ from django.views.decorators.cache import cache_control
 from django.views.decorators.http import etag
 from hashlib import sha256
 from os import environ
+import ulid
 
 from ..services.random_string import random_string
 from ..services.ip import get_client_ip
@@ -19,6 +21,7 @@ contact_email = environ.get('CONTACT_EMAIL')
 force_https = environ.get('FORCE_HTTPS')
 
 _DEFAULT_LANG = 'sc'
+_BUILD_VERSION = 'dev' if settings.DEBUG else ulid.new().str
 
 class NotFound(Exception):
     pass
@@ -111,6 +114,7 @@ def _get_base_context(request, lang):
         'language': lang,
         'locale': to_locale(lang),
         'lang_tag': to_lang_tag(lang),
+        'build_version': _BUILD_VERSION,
     }
 
 def make_title(title: str) -> str:
