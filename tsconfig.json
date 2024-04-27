@@ -2,9 +2,10 @@
     "compilerOptions": {
         "target": "esnext",
         "module": "esnext",
+        "lib": ["ESNext", "DOM"],
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
-        "moduleResolution": "node",
+        "moduleResolution": "Bundler",
         "resolveJsonModule": true,
         "sourceMap": true,
         "allowSyntheticDefaultImports": true,
@@ -25,5 +26,8 @@
         "noErrorTruncation": true,
         "useDefineForClassFields": false
     },
-    "include": ["./app/static/scripts/**/*"]
+    "include": ["./app/static/scripts/**/*"],
+    "references": [
+        { "path": "./tsconfig.worker.json" },
+    ]
 }

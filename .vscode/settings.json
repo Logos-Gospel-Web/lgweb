@@ -28,4 +28,10 @@
     "--load-plugins=pylint_django",
     "--django-settings-module=project.settings"
   ],
+  "json.schemas": [
+    {
+      "fileMatch": [ "*tsconfig*.json" ],
+      "url": "http://json.schemastore.org/tsconfig",
+    }
+  ],
 }
