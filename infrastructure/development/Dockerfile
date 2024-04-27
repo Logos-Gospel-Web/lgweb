@@ -1,8 +1,8 @@
-FROM alpine:3.18
+FROM alpine:3.19.1
 
 WORKDIR /lgweb
 
-RUN apk add --no-cache 'abiword=~3' 'build-base' 'gettext' 'nodejs=~18' 'npm=~9' 'python3=~3.11' &&\
+RUN apk add --no-cache 'abiword=~3' 'build-base' 'gettext' 'nodejs=~20' 'npm=~10' 'python3=~3.11' &&\
     ln -sf /usr/bin/python3 /usr/bin/python
 
 EXPOSE 8000

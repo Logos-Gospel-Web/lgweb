@@ -1,4 +1,4 @@
-FROM alpine:3.18 as base
+FROM alpine:3.19.1 as base
 
 WORKDIR /lgweb
 
@@ -25,7 +25,7 @@ ENV ANALYTICS_DB_ROOT /db/analytics.sqlite3
 
 FROM base as builder
 
-RUN apk add --no-cache 'nodejs=~18' 'npm=~9'
+RUN apk add --no-cache 'nodejs=~20' 'npm=~10'
 
 ADD package.json /lgweb/
 ADD package-lock.json /lgweb/
