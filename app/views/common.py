@@ -6,6 +6,7 @@ from django.core.cache import caches
 from django.utils import translation
 from django.utils.translation import gettext as _
 from django.utils.translation.trans_real import parse_accept_lang_header
+from django.shortcuts import render
 from django.views.decorators.cache import cache_control
 from django.views.decorators.http import etag
 from hashlib import sha256
@@ -42,10 +43,8 @@ def view_func(fn):
     def wrap(request, *args, **kwargs):
         if 'lang' in kwargs:
             lang = kwargs['lang']
-        elif len(args) > 0:
-            lang = args[0]
         else:
-            lang = None
+            lang = next((v for v in args if is_valid_language(v)), None)
 
         if not is_valid_language(lang):
             lang = parse_preferred_language(request.META.get('HTTP_ACCEPT_LANGUAGE', ''))
@@ -53,12 +52,14 @@ def view_func(fn):
 
         translation.activate(to_locale(lang))
         request.context = _get_base_context(request, lang)
-        _save_analytics(request, lang)
 
         try:
-            return fn(request, *args, **kwargs)
+            resp = fn(request, *args, **kwargs)
+            if resp.status_code < 300:
+                _save_analytics(request, lang)
+            return resp
         except (ObjectDoesNotExist, NotFound):
-            return redirect('home', lang)
+            return render(request, 'site/pages/error404.html', request.context, status=404)
 
     return wrap
 

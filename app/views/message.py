@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.utils.translation import gettext as _
 from django.urls import reverse
 from django.db.models import Prefetch
+from django.http import Http404
 from django.views.decorators.cache import cache_page
 
 from .common import use_etag, view_func, make_title, NotFound

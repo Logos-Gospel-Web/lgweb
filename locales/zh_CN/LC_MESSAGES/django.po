@@ -74,6 +74,15 @@ msgstr "内容"
 msgid "提交"
 msgstr "提交"
 
+msgid "網絡異常，請重新加載"
+msgstr "网络异常，请重新加载"
+
+msgid "返回主頁"
+msgstr "返回主页"
+
+msgid "頁面不存在"
+msgstr "页面不存在"
+
 msgid "下載錄音"
 msgstr "下载录音"
 
