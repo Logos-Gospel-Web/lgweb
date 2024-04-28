@@ -17,6 +17,7 @@ RUN apk del 'build-base' 'py3-pip'
 
 ENV MODE production
 ENV STATIC_ROOT /static
+ENV COMPILED_ROOT /compiled
 ENV MEDIA_ROOT /uploads
 ENV DB_ROOT /db/db.sqlite3
 ENV CONTACT_DB_ROOT /db/contact.sqlite3
@@ -47,5 +48,7 @@ CMD [ "gunicorn", "--bind", "0.0.0.0:8000", "project.wsgi:application" ]
 
 FROM caddy:2-alpine as server
 
-COPY ./infrastructure/production/Caddyfile /etc/caddy/Caddyfile
+ENV CACHE_CONTROL 'max-age=3600'
+
+COPY ./configs/Caddyfile /etc/caddy/Caddyfile
 ADD public /public

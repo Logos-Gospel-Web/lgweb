@@ -8,10 +8,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ title }}</title>
     <link rel="canonical" href="{{ full_url }}">
-    <link rel="manifest" href="/{{ language }}/manifest.json">
-    <link href="{% static 'compiled/index.css' %}?{{ build_version }}" rel="stylesheet">
+    <link rel="manifest" href="/{{ language }}/manifest.json?{{ build_version }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon-180x180.png?{{ build_version }}">
+    <link href="/index.css?{{ build_version }}" rel="stylesheet">
     <noscript>
-        <link href="{% static 'compiled/noscript.css' %}?{{ build_version }}" rel="stylesheet">
+        <link href="/noscript.css?{{ build_version }}" rel="stylesheet">
     </noscript>
     {% include './components/banner_style.html' %}
 </head>
@@ -21,7 +22,7 @@
         {% block content %}{% endblock %}
         {% include './components/footer.html' %}
     </div>
-    <script src="{% static 'compiled/index.js' %}?{{ build_version }}"></script>
+    <script src="/index.js?{{ build_version }}"></script>
 </body>
 </html>
 {% endspaceless %}

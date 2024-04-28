@@ -4,32 +4,31 @@
     "start_url": "/{{ language }}",
     "icons": [
         {
-            "src": "/favicon-16x16.png",
+            "src": "/favicon-{{ language }}-16.png?{{ build_version }}",
             "sizes": "16x16",
             "type": "image/png"
         },
         {
-            "src": "/favicon-32x32.png",
+            "src": "/favicon-{{ language }}-32.png?{{ build_version }}",
             "sizes": "32x32",
             "type": "image/png"
         },
         {
-            "src": "/favicon-180x180.png",
+            "src": "/favicon-{{ language }}-180.png?{{ build_version }}",
             "sizes": "180x180",
             "type": "image/png"
         },
         {
-            "src": "/favicon-192x192.png",
+            "src": "/favicon-{{ language }}-192.png?{{ build_version }}",
             "sizes": "192x192",
             "type": "image/png"
         },
         {
-            "src": "/favicon-512x512.png",
+            "src": "/favicon-{{ language }}-512.png?{{ build_version }}",
             "sizes": "512x512",
             "type": "image/png"
         }
     ],
-    "theme_color": "#AA78B9",
-    "background_color": "#AA78B9",
+    "background_color": "#FFFFFF",
     "display": "standalone"
 }

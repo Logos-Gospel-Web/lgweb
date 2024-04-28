@@ -1,0 +1,26 @@
+{$WEB_HOST} {
+    root * /
+    header -Server
+    header ?Cache-Control {$CACHE_CONTROL}
+    route {
+        file_server {
+            root /public
+            pass_thru
+        }
+        file_server {
+            root /compiled
+            pass_thru
+        }
+        file_server /static/* {
+            pass_thru
+        }
+        file_server /uploads/* {
+            pass_thru
+        }
+        reverse_proxy {$MAIN_URL}
+    }
+}
+
+{$WEB_DOMAIN} {
+    redir {$WEB_URL}{$uri}
+}

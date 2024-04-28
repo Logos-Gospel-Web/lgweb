@@ -2,6 +2,7 @@ version: '3.3'
 volumes:
     caddy_data: {}
     static: {}
+    compiled: {}
 services:
     builder:
         build: &build
@@ -13,6 +14,7 @@ services:
             - /opt/lgweb/reports/:/reports/
             - /opt/lgweb/uploads/:/uploads/
             - static:/static/
+            - compiled:/compiled/
     server:
         restart: unless-stopped
         ports:
@@ -28,6 +30,7 @@ services:
         volumes:
             - /opt/lgweb/uploads/:/uploads/
             - static:/static/
+            - compiled:/compiled/
             - caddy_data:/data/
     main:
         restart: unless-stopped

@@ -4,6 +4,7 @@ volumes:
     db: {}
     uploads: {}
     static: {}
+    compiled: {}
     reports: {}
 services:
     builder:
@@ -15,6 +16,7 @@ services:
             - db:/db/
             - uploads:/uploads/
             - static:/static/
+            - compiled:/compiled/
             - reports:/reports/
     server:
         ports:
@@ -31,6 +33,7 @@ services:
         volumes:
             - uploads:/uploads/
             - static:/static/
+            - compiled:/compiled/
             - caddy_data:/data/
     main:
         depends_on:

@@ -5,9 +5,7 @@ function registerServiceWorker() {
     if (!src) return
     const index = src.indexOf('?')
     if (index === -1) return
-    navigator.serviceWorker.register(
-        '/static/compiled/sw.js' + src.slice(index),
-    )
+    navigator.serviceWorker.register('/sw.js' + src.slice(index))
 }
 
 if ('serviceWorker' in navigator) {
