@@ -11,4 +11,5 @@ def manifest(request, lang):
     context = request.context
     return render(request, 'site/manifest.json', {
         **context,
+        'base_title': _("聖道福音網"),
     }, content_type='application/json; charset=utf-8')

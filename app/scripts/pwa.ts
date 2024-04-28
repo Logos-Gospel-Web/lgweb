@@ -1,11 +1,6 @@
 function registerServiceWorker() {
-    const script = document.currentScript
-    if (!script) return
-    const src = script.getAttribute('src')
-    if (!src) return
-    const index = src.indexOf('?')
-    if (index === -1) return
-    navigator.serviceWorker.register('/sw.js' + src.slice(index))
+    const pwaVersion = '?v1'
+    navigator.serviceWorker.register('/sw.js' + pwaVersion)
 }
 
 if ('serviceWorker' in navigator) {

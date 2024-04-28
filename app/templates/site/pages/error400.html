@@ -1,11 +1,13 @@
-{% extends '../base.html' %}
+{% extends '../error_base.html' %}
 
 {% load i18n %}
 
+{% block title %}
+{% translate '網絡異常，請重新加載' %}
+{% endblock title %}
+
 {% block content %}
-<div class="error">
-    <div class="error__code">400</div>
-    <div class="error__text">{% translate '網絡異常，請重新加載' %}</div>
-    <a class="error__back" href="{% url 'home' language %}">← {% translate '返回主頁' %}</a>
-</div>
+<div class="error__code">400</div>
+<div class="error__text">{% translate '網絡異常，請重新加載' %}</div>
+<a class="error__back" href="{% url 'home' language %}">← {% translate '返回主頁' %}</a>
 {% endblock content %}

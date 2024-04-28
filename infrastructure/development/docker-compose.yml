@@ -95,6 +95,14 @@ services:
             - -c
             - >-
                 npx sass -s expanded --watch --poll app/styles/noscript.scss $$COMPILED_ROOT/noscript.css
+    css-error:
+        <<: *base
+        depends_on: *depends_on
+        entrypoint:
+            - /bin/sh
+            - -c
+            - >-
+                npx sass -s expanded --watch --poll app/styles/error.scss $$COMPILED_ROOT/error.css
     js-site:
         <<: *base
         depends_on: *depends_on

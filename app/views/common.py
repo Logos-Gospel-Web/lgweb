@@ -116,7 +116,6 @@ def _get_base_context(request, lang):
         'locale': to_locale(lang),
         'lang_tag': to_lang_tag(lang),
         'build_version': _BUILD_VERSION,
-        'base_title': _("聖道福音網"),
     }
 
 def make_title(title: str) -> str:
