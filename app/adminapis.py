@@ -8,7 +8,7 @@ from hashlib import sha256
 
 from .models import Topic, to_locale
 from .services.links import message_link
-from .services.import_doc import save_to_tmp_file, import_doc, process_doc
+from .services.import_doc import import_doc, process_doc
 from .services.random_string import random_string
 
 def adminapi(fn):
@@ -53,12 +53,7 @@ def upload_doc_image_api(request):
 @adminapi
 def import_doc_api(request):
     file = request.FILES['file']
-    tmp_file = save_to_tmp_file(file)
-
-    try:
-        html = import_doc(tmp_file)
-    finally:
-        tmp_file.unlink()
+    html = import_doc(file)
 
     if html is None:
         return HttpResponse(status=400)

@@ -1,5 +1,8 @@
+import tempfile
+import os
 from typing import List
 from django.conf import settings
+from django.core.files.uploadedfile import UploadedFile
 from django.utils.translation import gettext as _
 from pathlib import Path
 import subprocess
@@ -7,10 +10,6 @@ import sys
 import re
 from bs4 import BeautifulSoup, NavigableString
 from cssutils import parseStyle
-
-from .random_string import random_string
-
-import_doc_dir = Path(settings.MEDIA_ROOT) / 'import_doc'
 
 class Block:
     def __init__(self, content: str):
@@ -119,33 +118,22 @@ class Document:
 
         return str(root)
 
-def save_to_tmp_file(file: str) -> str:
+def import_doc(file: UploadedFile) -> str | None:
     ext = Path(file.name).suffix
-
-    import_doc_dir.mkdir(parents=True, exist_ok=True)
-    tmp_file = import_doc_dir / (random_string() + ext)
-
-    with tmp_file.open('wb') as f:
+    with tempfile.NamedTemporaryFile(suffix=ext, dir=settings.FILE_UPLOAD_TEMP_DIR) as input_file:
         for chunk in file.chunks():
-            f.write(chunk)
-
-    return tmp_file
-
-def import_doc(filename: str) -> str | None:
-    import_doc_dir.mkdir(parents=True, exist_ok=True)
-    html_file = import_doc_dir / (random_string() + '.html')
-
-    res = subprocess.run(['abiword', '-t', 'html', '-o', html_file, filename], stdout=sys.stdout, stderr=sys.stderr)
-    if res.returncode != 0:
-        return None
-
-    html = None
-    try:
-        html = html_file.read_text()
-    finally:
-        html_file.unlink()
-
-    return html
+            input_file.write(chunk)
+        fd, output_file_name = tempfile.mkstemp(suffix='.html', dir=settings.FILE_UPLOAD_TEMP_DIR, text=True)
+        os.close(fd)
+        try:
+            res = subprocess.run(['abiword', '-t', 'html', '-o', output_file_name, input_file.name], stdout=sys.stdout, stderr=sys.stderr)
+            if res.returncode != 0:
+                return None
+            with open(output_file_name) as output_file:
+                html = output_file.read()
+                return html
+        finally:
+            os.unlink(output_file_name)
 
 _html_regexp_filters = [
     (re.compile(r'>\s+<'), r'><'),
