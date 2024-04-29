@@ -61,20 +61,6 @@ class JS:
 
 JS = html_safe(JS)
 
-class DropboxInput(Input):
-    input_type = 'url'
-    template_name = 'forms/widgets/dropbox.html'
-    class Media:
-        css = {
-            'all': (
-                'admin/dropbox/dropbox.css',
-            )
-        }
-        js = (
-            JS('https://www.dropbox.com/static/api/2/dropins.js', { 'id': 'dropboxjs', 'data-app-key': environ.get('DROPBOX_APP_KEY', '')}),
-            'admin/dropbox/dropbox.js',
-        )
-
 class ColorInput(TextInput):
     input_type = 'color'
 
