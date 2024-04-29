@@ -1,6 +1,7 @@
+import os
 from pathlib import Path
-from django.conf import settings
 from django.core.cache import caches
+from django.core.files.uploadedfile import TemporaryUploadedFile, UploadedFile
 from django.db.models import signals
 from django.dispatch import receiver
 from .models import Banner, Contact, Analytics
@@ -8,21 +9,20 @@ from .services.subfont import make_subfont
 
 from .services.random_string import random_string
 
-_subfont_base_path = Path('banner') / 'subfont'
-
 @receiver(signals.pre_save, sender=Banner)
 def banner_pre_save(sender, instance, **kwargs):
-    if instance.font and not instance.subfont:
-        name = random_string() + Path(instance.font.name).suffix
-        instance.subfont.name = str(_subfont_base_path / name)
-    elif instance.subfont and not instance.font:
-        instance.subfont.name = None
-
-@receiver(signals.post_save, sender=Banner)
-def banner_post_save(sender, instance, **kwargs):
     if instance.subfont:
-        (Path(settings.MEDIA_ROOT) / _subfont_base_path).mkdir(parents=True, exist_ok=True)
-        make_subfont(instance.font.path, instance.subfont.path, instance.title)
+        instance.subfont.delete(save=False)
+
+    if instance.font and isinstance(instance.font.file, UploadedFile):
+        font_file: UploadedFile = instance.font.file # TemporaryUploadedFile
+        subfont_name = random_string() + Path(instance.font.name).suffix
+        subfont_file = TemporaryUploadedFile(subfont_name, font_file.content_type, 0, font_file.charset, font_file.content_type_extra)
+        make_subfont(font_file.file.name, subfont_file.file.name, instance.title)
+        subfont_file.size = os.path.getsize(subfont_file.file.name)
+        instance.subfont.name = subfont_name
+        instance.subfont.file = subfont_file
+        instance.subfont._committed = False
 
 _module_name = __name__[:__name__.rindex('.') + 1]
 
