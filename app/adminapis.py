@@ -3,6 +3,7 @@ from django.urls import path
 from django.utils import translation
 from django.http import HttpResponse
 from django.conf import settings
+from django.core.files.storage import default_storage
 from base64 import b64encode
 from hashlib import sha256
 
@@ -23,32 +24,19 @@ def adminapi(fn):
 
     return wrap
 
-message_image_dir = Path(settings.MEDIA_ROOT) / 'message' / 'image'
-
 @adminapi
 def upload_doc_image_api(request):
     file = request.FILES['file']
     ext = Path(file.name).suffix
 
-    message_image_dir.mkdir(parents=True, exist_ok=True)
-    tmp_name = random_string() + ext
-    tmp_file = message_image_dir / tmp_name
     m = sha256()
+    for chunk in file.chunks():
+        m.update(chunk)
 
-    with tmp_file.open('wb') as f:
-        for chunk in file.chunks():
-            m.update(chunk)
-            f.write(chunk)
+    final_name = 'message/image/' + m.hexdigest() + ext
+    stored_name = default_storage.save(final_name, file)
 
-    final_name = m.hexdigest() + ext
-    final_file = message_image_dir / final_name
-
-    if final_file.exists():
-        tmp_file.unlink()
-    else:
-        tmp_file.rename(final_file)
-
-    return HttpResponse(status=200, content=settings.MEDIA_URL + 'message/image/' + final_name)
+    return HttpResponse(status=200, content=default_storage.url(stored_name))
 
 @adminapi
 def import_doc_api(request):
