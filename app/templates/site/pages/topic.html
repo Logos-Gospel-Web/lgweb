@@ -32,7 +32,7 @@
             </thead>
             <tbody>
                 {% for child in topic.children.all %}
-                    {% include '../components/topic_item.html' with page=child title=child|full_title:language url=child|page_link:topic.slug is_new=child|is_new:now audio=child.audio|localize document=child.document|file %}
+                    {% include '../components/topic_item.html' with page=child title=child|full_title:language url=child|page_link:topic.slug is_new=child|is_new:now audio=child.audio|file document=child.document|file %}
                 {% endfor %}
             </tbody>
         </table>

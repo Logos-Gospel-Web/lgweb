@@ -6,7 +6,7 @@
 {% load page_link %}
 
 {% block content %}
-{% with audio=message.audio|localize document=message.document|file %}
+{% with audio=message.audio|file document=message.document|file %}
 {% if message.banner|localize != None %}
     <div class="page-banner">
         {% include '../components/banner.html' with banner=message.banner|localize %}
@@ -21,12 +21,12 @@
         <div class="author">{% localize message.author %}</div>
         {% if audio %}
             <audio class="audio__player" controls>
-                <source src="{{ audio|audio_raw }}" type="audio/mpeg">
+                <source src="{{ audio }}" type="audio/mpeg">
             </audio>
         {% endif %}
         <div class="attachments">
             {% if audio %}
-                <a class="attachment attachment--audio" href="{{ audio|audio_dl }}" download>{% translate '下載錄音' %}</a>
+                <a class="attachment attachment--audio" href="{{ audio }}" download>{% translate '下載錄音' %}</a>
             {% endif %}
             {% if document %}
                 <a class="attachment attachment--document" href="{{ document }}" download>{% translate '下載文字檔' %}</a>

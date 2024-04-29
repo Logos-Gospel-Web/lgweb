@@ -1,6 +1,4 @@
 {% load i18n %}
-{% load localize %}
-{% load message %}
 <tr>
     <td>
         <a href="{{ url }}">{{ title }}</a>
@@ -11,7 +9,7 @@
     {% if has_audio %}
         {% if audio %}
             <td>
-                <a href="{{ audio|audio_dl }}" target="_blank" download>{% translate '下載 MP3' %}</a>
+                <a href="{{ audio }}" target="_blank" download>{% translate '下載 MP3' %}</a>
             </td>
         {% else %}
             <td>{% translate '不設錄音' %}</td>

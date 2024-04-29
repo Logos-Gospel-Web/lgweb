@@ -104,8 +104,6 @@ class MessageForm(forms.ModelForm):
             'author_sc': TextInput(),
             'prefix_tc': TextInput(),
             'prefix_sc': TextInput(),
-            'audio_tc': DropboxInput(),
-            'audio_sc': DropboxInput(),
             'preview_tc': RichTextInput(),
             'preview_sc': RichTextInput(),
             'content_tc': RichTextInput(),

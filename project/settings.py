@@ -200,6 +200,22 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATIC_ROOT = environ.get('STATIC_ROOT') or BASE_DIR / 'static'
 
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+        "OPTIONS": {
+            'access_key': environ.get('AWS_S3_ACCESS_KEY_ID'),
+            'secret_key': environ.get('AWS_S3_SECRET_ACCESS_KEY'),
+            'bucket_name': environ.get('AWS_STORAGE_BUCKET_NAME'),
+            'endpoint_url': environ.get('AWS_S3_ENDPOINT_URL'),
+            'custom_domain': environ.get('AWS_S3_CUSTOM_DOMAIN'),
+        },
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 

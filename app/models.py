@@ -201,7 +201,7 @@ class Message:
     parent = models.ForeignKey('Topic', on_delete=models.CASCADE, related_name='children')
     prefix = lambda _: models.TextField('Prefix', blank=True)
     document = lambda _: models.FileField('Document', upload_to='message/document/', blank=True)
-    audio = lambda _: models.URLField('Audio', blank=True)
+    audio = lambda _: models.FileField('Audio', upload_to='message/audio/', blank=True)
     preview = lambda _: models.TextField('Preview', blank=True)
     content = lambda _: models.TextField('Content', blank=True)
 
