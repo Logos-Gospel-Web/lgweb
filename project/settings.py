@@ -17,9 +17,6 @@ from app.services.ip import get_client_ip
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-MEDIA_URL = 'uploads/'
-MEDIA_ROOT = environ.get('MEDIA_ROOT') or BASE_DIR / 'uploads'
-
 LOCALE_PATHS = [environ.get('LOCALE_PATH') or BASE_DIR / 'locales']
 
 GRAPPELLI_ADMIN_TITLE = 'Logos Gospel Web'

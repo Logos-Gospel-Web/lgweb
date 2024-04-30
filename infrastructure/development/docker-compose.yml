@@ -2,7 +2,6 @@ version: '3.3'
 volumes:
     virtualenv: {}
     compiled: {}
-    uploads: {}
     db: {}
     cache: {}
     nodemodules: {}
@@ -20,7 +19,6 @@ services:
             - ALLOWED_HOSTS=*
             - STATIC_ROOT=/static
             - COMPILED_ROOT=/compiled
-            - MEDIA_ROOT=/uploads
             - LOCALE_PATH=/locales
             - CACHE_DIR=/cache
             - DB_ROOT=/db/db.sqlite3
@@ -30,7 +28,6 @@ services:
             - ../../:/lgweb/
             - virtualenv:/venv/
             - compiled:/compiled/
-            - uploads:/uploads/
             - db:/db/
             - cache:/cache/
             - nodemodules:/lgweb/node_modules/
@@ -50,7 +47,6 @@ services:
             - ../../configs/Caddyfile:/etc/caddy/Caddyfile
             - ../../public:/public
             - compiled:/compiled/
-            - uploads:/uploads/
             - caddy_data:/data/
     main:
         <<: *base

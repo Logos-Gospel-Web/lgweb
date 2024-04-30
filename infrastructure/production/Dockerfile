@@ -18,7 +18,6 @@ RUN apk del 'build-base' 'py3-pip'
 ENV MODE production
 ENV STATIC_ROOT /static
 ENV COMPILED_ROOT /compiled
-ENV MEDIA_ROOT /uploads
 ENV DB_ROOT /db/db.sqlite3
 ENV CONTACT_DB_ROOT /db/contact.sqlite3
 ENV ANALYTICS_DB_ROOT /db/analytics.sqlite3

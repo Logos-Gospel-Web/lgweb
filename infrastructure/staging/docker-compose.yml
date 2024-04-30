@@ -2,7 +2,6 @@ version: '3.3'
 volumes:
     caddy_data: {}
     db: {}
-    uploads: {}
     static: {}
     compiled: {}
     reports: {}
@@ -14,7 +13,6 @@ services:
             context: ../..
         volumes: &volumes
             - db:/db/
-            - uploads:/uploads/
             - static:/static/
             - compiled:/compiled/
             - reports:/reports/
@@ -31,7 +29,6 @@ services:
             - WEB_HOST=:8000
             - WEB_URL=http://localhost:8000
         volumes:
-            - uploads:/uploads/
             - static:/static/
             - compiled:/compiled/
             - caddy_data:/data/

@@ -14,9 +14,6 @@
         file_server /static/* {
             pass_thru
         }
-        file_server /uploads/* {
-            pass_thru
-        }
         reverse_proxy {$MAIN_URL}
     }
 }

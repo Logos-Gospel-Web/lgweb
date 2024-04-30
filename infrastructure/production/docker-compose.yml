@@ -12,7 +12,6 @@ services:
         volumes: &volumes
             - /opt/lgweb/db/:/db/
             - /opt/lgweb/reports/:/reports/
-            - /opt/lgweb/uploads/:/uploads/
             - static:/static/
             - compiled:/compiled/
     server:
@@ -28,7 +27,6 @@ services:
         environment:
             - MAIN_URL=main:8000
         volumes:
-            - /opt/lgweb/uploads/:/uploads/
             - static:/static/
             - compiled:/compiled/
             - caddy_data:/data/

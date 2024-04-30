@@ -17,7 +17,6 @@ infrastructure/*/*.sh
 **/*.test.ts
 **/__pycache__/
 venv/
-uploads/
 static/
 *.mo
 *.sqlite3

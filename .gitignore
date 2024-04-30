@@ -13,7 +13,6 @@ dist/
 !.env.*.sample
 __pycache__/
 venv/
-/uploads/
 /static/
 *.mo
 *.sqlite3
