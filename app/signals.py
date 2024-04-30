@@ -11,10 +11,13 @@ from .services.random_string import random_string
 
 @receiver(signals.pre_save, sender=Banner)
 def banner_pre_save(sender, instance, **kwargs):
-    if instance.subfont:
-        instance.subfont.delete(save=False)
+    if instance.font:
+        if not isinstance(instance.font.file, UploadedFile):
+            return
 
-    if instance.font and isinstance(instance.font.file, UploadedFile):
+        if instance.subfont:
+            instance.subfont.delete(save=False)
+
         font_file: UploadedFile = instance.font.file # TemporaryUploadedFile
         subfont_name = random_string() + Path(instance.font.name).suffix
         subfont_file = TemporaryUploadedFile(subfont_name, font_file.content_type, 0, font_file.charset, font_file.content_type_extra)
@@ -23,6 +26,8 @@ def banner_pre_save(sender, instance, **kwargs):
         instance.subfont.name = subfont_name
         instance.subfont.file = subfont_file
         instance.subfont._committed = False
+    elif instance.subfont:
+        instance.subfont.delete(save=False)
 
 _module_name = __name__[:__name__.rindex('.') + 1]
 
