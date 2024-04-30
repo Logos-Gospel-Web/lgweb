@@ -2,7 +2,6 @@ from pathlib import Path
 from django.urls import path
 from django.utils import translation
 from django.http import HttpResponse
-from django.conf import settings
 from django.core.files.storage import default_storage
 from base64 import b64encode
 from hashlib import sha256
@@ -10,7 +9,6 @@ from hashlib import sha256
 from .models import Topic, to_locale
 from .services.links import message_link
 from .services.import_doc import import_doc, process_doc
-from .services.random_string import random_string
 
 def adminapi(fn):
     def wrap(request, *args, **kwargs):

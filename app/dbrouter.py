@@ -1,5 +1,3 @@
-from .models import Contact
-
 _model_names = ['contact', 'analytics']
 
 def _route_db(model_name):
