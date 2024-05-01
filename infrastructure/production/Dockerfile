@@ -45,7 +45,7 @@ ENV ERROR_LOG_FILE /reports/error.log
 
 CMD [ "gunicorn", "--bind", "0.0.0.0:8000", "project.wsgi:application" ]
 
-FROM caddy:2-alpine as server
+FROM caddy:2.7-alpine as server
 
 ENV CACHE_CONTROL 'max-age=3600'
 
