@@ -17,3 +17,11 @@ def file(var):
     lang = to_lang(translation.get_language())
     x = var[lang]
     return x.url if x and x.name else None
+
+@register.filter
+def file_dl(var):
+    lang = to_lang(translation.get_language())
+    x = var[lang]
+    if x and x.name:
+        return x.url + '&dl=1' if '?' in x.url else x.url + '?dl=1'
+    return None
