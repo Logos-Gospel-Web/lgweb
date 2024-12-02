@@ -23,5 +23,14 @@ def absolute(num):
 def font_face(font):
     return f'@font-face{{font-family:"{font_name(font)}";src:url("{font.url}")}}'
 
+@register.filter
+def srcset(banner):
+    srcset = []
+    if banner.image_480:
+        srcset.append({ 'media': '(max-width: 480px)', 'srcset': banner.image_480.url })
+    if banner.image_720:
+        srcset.append({ 'media': '(max-width: 720px)', 'srcset': banner.image_720.url })
+    return srcset
+
 def font_name(font):
     return 'f' + Path(font.name).stem

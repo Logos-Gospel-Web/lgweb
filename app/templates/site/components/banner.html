@@ -1,7 +1,14 @@
 {% load banner %}
+{% with srcset=banner|srcset %}
 <div class="banner">
+    <picture class="banner__picture">
+        {% for item in srcset %}
+            <source media="{{ item.media }}" srcset="{{ item.srcset }}" />
+        {% endfor %}
+        <img class="banner__image" src="{{ banner.image.url }}" />
+    </picture>
     <div class="banner__inner">
-        <div class="banner__table" style="background-image:url('{{ banner.image.url }}')">
+        <div class="banner__table">
             <div class="banner__row"{% if banner.offset_y > 0 %} style="height:{{ banner.offset_y }}%"{% endif %}></div>
             <div class="banner__row">
                 <div class="banner__cell"{% if banner.offset_x > 0 %} style="width:{{ banner.offset_x }}%"{% endif %}></div>
@@ -22,3 +29,4 @@
         </div>
     </div>
 </div>
+{% endwith %}
