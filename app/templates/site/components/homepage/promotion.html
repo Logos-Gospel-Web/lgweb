@@ -1,5 +1,6 @@
 {% load i18n %}
 {% load page_link %}
+{% if promotions %}
 <h2 class="home__title">{% translate '信息推介' %}</h2>
 <div class="promotions">
     {% for promotion in promotions %}
@@ -19,3 +20,4 @@
         </div>
     {% endfor %}
 </div>
+{% endif %}

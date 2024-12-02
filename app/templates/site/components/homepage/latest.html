@@ -1,4 +1,5 @@
 {% load i18n %}
+{% if latest_messages %}
 <h2 class="home__title">{% translate '最新信息' %}</h2>
 <table class="latest">
     <tbody>
@@ -7,3 +8,4 @@
         {% endfor %}
     </tbody>
 </table>
+{% endif %}

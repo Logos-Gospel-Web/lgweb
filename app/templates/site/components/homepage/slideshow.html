@@ -1,4 +1,5 @@
 {% load page_link %}
+{% if banners %}
 <div class="slideshow">
     {% for banner in banners %}
         <div class="slideshow__item">
@@ -6,3 +7,4 @@
         </div>
     {% endfor %}
 </div>
+{% endif %}
