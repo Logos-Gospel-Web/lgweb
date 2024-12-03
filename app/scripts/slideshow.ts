@@ -127,11 +127,27 @@ function registerSlideshow(slideshow: HTMLElement) {
         onEnd(preventDefault) {
             if (!holding) return
             if (Math.abs(dx) > 10) preventDefault()
-            stopSlide()
+            setTimeout(stopSlide, 0)
         },
     })
 
-    return unregister
+    const anchors = slideshow.querySelectorAll('a')
+    const anchorPrevent = (ev: Event) => {
+        if (holding && Math.abs(dx) > 10) {
+            ev.preventDefault()
+            ev.stopPropagation()
+        }
+    }
+    anchors.forEach((a) => {
+        a.addEventListener('click', anchorPrevent)
+    })
+
+    return () => {
+        unregister()
+        anchors.forEach((a) => {
+            a.removeEventListener('click', anchorPrevent)
+        })
+    }
 }
 
 const slideshow = document.querySelector('.slideshow')

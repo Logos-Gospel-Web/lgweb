@@ -7,26 +7,14 @@
         {% endfor %}
         <img class="banner__image" src="{{ banner.image.url }}" />
     </picture>
-    <div class="banner__inner">
-        <div class="banner__table">
-            <div class="banner__row"{% if banner.offset_y > 0 %} style="height:{{ banner.offset_y }}%"{% endif %}></div>
-            <div class="banner__row">
-                <div class="banner__cell"{% if banner.offset_x > 0 %} style="width:{{ banner.offset_x }}%"{% endif %}></div>
-                <div class="banner__cell">
-                    {% if link %}
-                        <a class="link--hidden" href="{{ link }}" style="font-size:{{ banner.font_size }}px">
-                            <span class="banner__text" style="{{ banner|banner_text_style }}">{{ banner.title }}</span>
-                        </a>
-                    {% else %}
-                        <span style="font-size:{{ banner.font_size }}px">
-                            <span class="banner__text" style="{{ banner|banner_text_style }}">{{ banner.title }}</span>
-                        </span>
-                    {% endif %}
-                </div>
-                <div class="banner__cell"{% if banner.offset_x < 0 %} style="width:{{ banner.offset_x|absolute }}%"{% endif %}></div>
-            </div>
-            <div class="banner__row"{% if banner.offset_y < 0 %} style="height:{{ banner.offset_y|absolute }}%"{% endif %}></div>
+    {% if link %}
+        <a href="{{ link }}" draggable="false" class="banner__inner link--hidden">
+            {% include "./banner_content.html" %}
+        </a>
+    {% else %}
+        <div class="banner__inner">
+            {% include "./banner_content.html" %}
         </div>
-    </div>
+    {% endif %}
 </div>
 {% endwith %}
