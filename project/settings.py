@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'dbbackup',
 ]
 
 MIDDLEWARE = [
@@ -158,6 +159,17 @@ DATABASES = {
     },
 }
 
+DBBACKUP_DATABASES = ['default', 'contact']
+
+DBBACKUP_CONNECTORS = {
+    'default': {
+        'CONNECTOR': 'dbbackup.db.sqlite.SqliteCPConnector',
+    },
+    'contact': {
+        'CONNECTOR': 'dbbackup.db.sqlite.SqliteCPConnector',
+    },
+}
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -200,16 +212,27 @@ STORAGES = {
     "default": {
         "BACKEND": "storages.backends.s3.S3Storage",
         "OPTIONS": {
-            'access_key': environ.get('AWS_S3_ACCESS_KEY_ID'),
-            'secret_key': environ.get('AWS_S3_SECRET_ACCESS_KEY'),
-            'bucket_name': environ.get('AWS_STORAGE_BUCKET_NAME'),
-            'endpoint_url': environ.get('AWS_S3_ENDPOINT_URL'),
-            'custom_domain': environ.get('AWS_S3_CUSTOM_DOMAIN'),
+            'access_key': environ.get('S3_ACCESS_KEY_ID'),
+            'secret_key': environ.get('S3_SECRET_ACCESS_KEY'),
+            'bucket_name': environ.get('S3_BUCKET_NAME'),
+            'endpoint_url': environ.get('S3_ENDPOINT_URL'),
+            'custom_domain': environ.get('S3_CUSTOM_DOMAIN'),
         },
     },
     "staticfiles": {
         "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
     },
+    "dbbackup": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+        "OPTIONS": {
+            'access_key': environ.get('S3_ACCESS_KEY_ID'),
+            'secret_key': environ.get('S3_SECRET_ACCESS_KEY'),
+            'bucket_name': environ.get('S3_BACKUP_BUCKET_NAME'),
+            'endpoint_url': environ.get('S3_ENDPOINT_URL'),
+            'default_acl': 'private',
+            'location': 'backup/'
+        },
+    }
 }
 
 # Default primary key field type

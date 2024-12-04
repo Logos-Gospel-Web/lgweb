@@ -51,3 +51,11 @@ ENV CACHE_CONTROL 'max-age=3600'
 
 COPY ./configs/Caddyfile /etc/caddy/Caddyfile
 ADD public /public
+
+FROM main as cron
+
+RUN cp ./infrastructure/production/crontab /etc/crontabs/root &&\
+    chmod 600 /etc/crontabs/root &&\
+    chmod 700 ./cron/*
+
+CMD [ "crond", "-f", "-d", "6" ]

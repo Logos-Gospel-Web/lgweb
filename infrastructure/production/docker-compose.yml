@@ -44,3 +44,14 @@ services:
             <<: *build
             target: main
         volumes: *volumes
+    cron:
+        restart: unless-stopped
+        depends_on:
+            builder:
+                condition: service_completed_successfully
+        env_file:
+            - .env
+        build:
+            <<: *build
+            target: cron
+        volumes: *volumes
