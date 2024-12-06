@@ -227,7 +227,7 @@ STORAGES = {
         "OPTIONS": {
             'access_key': environ.get('S3_ACCESS_KEY_ID'),
             'secret_key': environ.get('S3_SECRET_ACCESS_KEY'),
-            'bucket_name': environ.get('S3_BACKUP_BUCKET_NAME'),
+            'bucket_name': environ.get('S3_BACKUP_BUCKET_NAME', environ.get('S3_BUCKET_NAME')),
             'endpoint_url': environ.get('S3_ENDPOINT_URL'),
             'default_acl': 'private',
             'location': 'backup/'

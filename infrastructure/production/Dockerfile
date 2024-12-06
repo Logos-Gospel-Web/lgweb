@@ -56,6 +56,6 @@ FROM main as cron
 
 RUN cp ./infrastructure/production/crontab /etc/crontabs/root &&\
     chmod 600 /etc/crontabs/root &&\
-    chmod 700 ./cron/*
+    chmod 700 ./infrastructure/production/cron/*
 
 CMD [ "crond", "-f", "-d", "6" ]
