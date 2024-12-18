@@ -8,7 +8,7 @@
         <img class="banner__image" src="{{ banner.image.url }}" />
     </picture>
     {% if link %}
-        <a href="{{ link }}" draggable="false" class="banner__inner link--hidden">
+        <a href="{{ link }}" draggable="false" title="{{ banner.title }}" class="banner__inner link--hidden">
             {% include "./banner_content.html" %}
         </a>
     {% else %}
