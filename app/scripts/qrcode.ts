@@ -9,10 +9,12 @@ type Matrix = [
     version: Version,
 ]
 
+/* eslint-disable @typescript-eslint/no-unused-vars */
 const L = 0
 const M = 1
 const Q = 2
 const H = 3
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
 type ErrorLevel = typeof L | typeof M | typeof Q | typeof H
 
@@ -445,7 +447,7 @@ function getData(
 
     for (let j = 0; j < textLength; ++j) {
         const byte = content.charCodeAt(j)
-        data[i] |= byte >> rightShift
+        data[i]! |= byte >> rightShift
         data[++i] = (byte & andMask) << leftShift
     }
 

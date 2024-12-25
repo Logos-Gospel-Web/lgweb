@@ -11,7 +11,7 @@ export const supportPassiveListener = (() => {
         const fn = noop
         window.addEventListener('test', fn, opts)
         window.removeEventListener('test', fn, opts)
-    } catch (e) {
+    } catch (_e) {
         // ignored
     }
     return supportsPassiveOption
