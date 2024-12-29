@@ -7,7 +7,7 @@ from django.utils.translation import gettext as _
 from pathlib import Path
 import subprocess
 import sys
-import re
+import regex as re
 from bs4 import BeautifulSoup, NavigableString
 from cssutils import parseStyle
 
@@ -151,9 +151,21 @@ _html_regexp_filters = [
     (re.compile(r'[­ᐨ᠆‐-―⎯─━⸺⸻﹘﹣－]'), r'－'),
 ]
 
-def process_doc(html: str) -> Document:
-    for (regex, replaced) in _html_regexp_filters:
+_content_regexp_filters = [
+    (re.compile(r'(\p{Han}[^a-zA-Z0-9\s\p{Han}]*)\s*,\s*'), r'\1，'),
+    (re.compile(r'(\p{Han}[^a-zA-Z0-9\s\p{Han}]*)\s*;\s*'), r'\1；'),
+    (re.compile(r'(\p{Han}[^a-zA-Z0-9\s\p{Han}]*)\s*\?\s*'), r'\1？'),
+    (re.compile(r'(\p{Han}[^a-zA-Z0-9\s\p{Han}]*)\s*!\s*'), r'\1！'),
+    (re.compile(r'(\p{Han}[^a-zA-Z0-9\s\p{Han}]*)\s*:\s*'), r'\1：'),
+]
+
+def _apply_regex_filters(filters, html: str) -> str:
+    for (regex, replaced) in filters:
         html = regex.sub(replaced, html)
+    return html
+
+def process_doc(html: str) -> Document:
+    html = _apply_regex_filters(_html_regexp_filters, html)
 
     def is_author(el, index):
         if el.name != 'p':
@@ -288,10 +300,10 @@ def process_doc(html: str) -> Document:
         elif is_title(child, index):
             title = child.get_text().strip()
         elif is_subtitle(child, index):
-            contents.append(Subtitle(child.get_text().strip()))
+            contents.append(Subtitle(_apply_regex_filters(_content_regexp_filters, child.get_text().strip())))
         elif is_remark(child, index):
-            contents.append(Remark(to_string(child)))
+            contents.append(Remark(_apply_regex_filters(_content_regexp_filters, to_string(child))))
         elif not is_footer(child, index):
-            contents.append(Paragraph(to_string(child)))
+            contents.append(Paragraph(_apply_regex_filters(_content_regexp_filters, to_string(child))))
 
     return Document(title=title, author=author, contents=contents)
