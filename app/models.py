@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 import ulid
+from app.services.convert_search_text import convert_search_text
 
 # Create your models here.
 
@@ -195,7 +196,7 @@ class Page:
     def __str__(self):
         return f'({self.type.title()}) {print_multilingual(self, "title")}'
 
-@model(multilingual=['prefix', 'document', 'audio', 'preview', 'content'], base=Page)
+@model(multilingual=['prefix', 'document', 'audio', 'preview', 'content', 'search'], base=Page)
 class Message:
     class Meta:
         db_table = 'message'
@@ -207,6 +208,7 @@ class Message:
     audio = lambda _: models.FileField('Audio', upload_to='message/audio/', blank=True)
     preview = lambda _: models.TextField('Preview', blank=True)
     content = lambda _: models.TextField('Content', blank=True)
+    search = lambda _: models.TextField(blank=True)
 
     def __str__(self):
         return print_multilingual(self, 'title')
@@ -221,6 +223,11 @@ class Message:
 
     def is_new(self, now):
         return self.publish is not None and now.year == self.publish.year and now.month == self.publish.month
+
+    def save(self, *args, **kwargs):
+        self.search_tc = convert_search_text(self.title_tc, self.content_tc)
+        self.search_sc = convert_search_text(self.title_sc, self.content_sc)
+        super(Message, self).save(*args, **kwargs)
 
 @model(multilingual=['end_msg', 'description'], base=Page)
 class Topic:
