@@ -1,6 +1,8 @@
 {% load i18n %}
 <form class="search__form" method="POST" action="{{ search_form_url }}">
     {% csrf_token %}
-    <input class="search__input" name="q" type="text" value="{{ keyword }}" required>
-    <button class="search__button">{% translate '搜索' %}</button>
+    <div class="search__wrapper">
+        <input class="search__input" name="q" type="search" value="{{ keyword }}" required>
+    </div>
+    <button class="search__button icon"></button>
 </form>

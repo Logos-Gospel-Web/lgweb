@@ -105,3 +105,8 @@
         content: "\ea82";
     }
 }
+@mixin icon-search {
+    &::before {
+        content: "\f002";
+    }
+}

@@ -1,8 +1,8 @@
 {
   "metadata": {
     "name": "lgweb",
-    "lastOpened": 1680934160177,
-    "created": 1680932363549
+    "lastOpened": 0,
+    "created": 1735810277393
   },
   "iconSets": [
     {
@@ -46,7 +46,10 @@
         {
           "name": "search",
           "id": 6,
-          "order": 0
+          "order": 25,
+          "prevSize": 28,
+          "code": 61442,
+          "tempChar": ""
         },
         {
           "name": "envelope-o",
@@ -104,7 +107,7 @@
           "order": 11,
           "prevSize": 28,
           "code": 61453,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "name": "search-plus",
@@ -452,7 +455,7 @@
           "order": 10,
           "prevSize": 28,
           "code": 61527,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "name": "success",
@@ -460,7 +463,7 @@
           "order": 9,
           "prevSize": 28,
           "code": 61528,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "name": "question-circle",
@@ -598,7 +601,7 @@
           "order": 12,
           "prevSize": 28,
           "code": 61560,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "name": "retweet",
@@ -986,7 +989,7 @@
           "order": 13,
           "prevSize": 28,
           "code": 61655,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "name": "caret-up",
@@ -13999,7 +14002,7 @@
           "id": 57,
           "prevSize": 32,
           "code": 59704,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "ligatures": "ticket, theater",
@@ -14488,7 +14491,7 @@
           "id": 138,
           "prevSize": 32,
           "code": 59785,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "ligatures": "shrink, collapse",
@@ -14497,7 +14500,7 @@
           "id": 139,
           "prevSize": 32,
           "code": 59786,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "ligatures": "enlarge2, expand2",
@@ -15382,7 +15385,7 @@
           "id": 285,
           "prevSize": 32,
           "code": 59932,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "ligatures": "pause2, player9",
@@ -15391,7 +15394,7 @@
           "id": 286,
           "prevSize": 32,
           "code": 59933,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "ligatures": "stop2, player10",
@@ -15448,7 +15451,7 @@
           "id": 295,
           "prevSize": 32,
           "code": 59942,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "ligatures": "volume-medium, volume2",
@@ -15457,7 +15460,7 @@
           "id": 296,
           "prevSize": 32,
           "code": 59943,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "ligatures": "volume-low, volume3",
@@ -15466,7 +15469,7 @@
           "id": 297,
           "prevSize": 32,
           "code": 59944,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "ligatures": "volume-mute, volume4",
@@ -15475,7 +15478,7 @@
           "id": 298,
           "prevSize": 32,
           "code": 59945,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "ligatures": "volume-mute2, volume5",
@@ -15814,7 +15817,7 @@
           "id": 354,
           "prevSize": 32,
           "code": 60001,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "ligatures": "bold, wysiwyg4",
@@ -16015,7 +16018,7 @@
           "id": 387,
           "prevSize": 32,
           "code": 60034,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "ligatures": "mail2, contact2",
@@ -24163,7 +24166,8 @@
       "useClassSelector": true,
       "color": 0,
       "bgColor": 16777215,
-      "classSelector": ".icon"
+      "classSelector": ".icon",
+      "name": "icomoon"
     },
     "historySize": 50,
     "showCodes": true,

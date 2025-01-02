@@ -137,3 +137,6 @@ msgstr "上一页"
 
 msgid "下一頁"
 msgstr "下一页"
+
+msgid "找不到相關信息"
+msgstr "找不到相关信息"
