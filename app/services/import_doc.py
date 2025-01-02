@@ -145,7 +145,6 @@ _html_regexp_filters = [
     (re.compile(r'[ꜝ︕﹗]'), r'！'),
     (re.compile(r'[˸܃܄꞉︓﹕：]'), r'：'),
     (re.compile(r'[﹒．｡]'), r'。'),
-    (re.compile(r'[﹒．｡]'), r'。'),
     (re.compile(r'\s*[⁽₍❨❪﴾﹙（]'), r' ('),
     (re.compile(r'[⁾₎❩❫﴿﹚）]\s*'), r') '),
     (re.compile(r'[­ᐨ᠆‐-―⎯─━⸺⸻﹘﹣－]'), r'⎯'),
