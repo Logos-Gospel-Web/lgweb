@@ -99,6 +99,7 @@ services:
     js-site:
         <<: *base
         depends_on: *depends_on
+        tty: true
         entrypoint:
             - /bin/sh
             - -c
@@ -107,6 +108,7 @@ services:
     js-worker:
         <<: *base
         depends_on: *depends_on
+        tty: true
         entrypoint:
             - /bin/sh
             - -c

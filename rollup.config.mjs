@@ -11,6 +11,7 @@ export default {
         sourcemap: isProd ? false : 'inline',
     },
     watch: {
+        clearScreen: false,
         chokidar: {
             usePolling: true,
             interval: 500,
