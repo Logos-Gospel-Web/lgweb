@@ -69,7 +69,7 @@ class Document:
         return root.decode_contents()
 
     def to_doc(self, url: str, year: str):
-        root = BeautifulSoup('<div></div>', 'lxml')
+        root = BeautifulSoup('', 'lxml')
 
         # title
         tag = root.new_tag('p', style='line-height:20pt; font-size:14pt; margin:12pt 0 0 0; text-align:center; font-weight:bold;')
