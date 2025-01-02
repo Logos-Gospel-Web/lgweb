@@ -280,8 +280,12 @@ def process_doc(html: str) -> Document:
                 del x['style']
 
     for x in body.find_all('span'):
+        if not x.has_attr('style'):
+            x.unwrap()
+
+    for x in body.find_all('span'):
         prev = x.previous_sibling
-        if prev and prev.name == 'span' and ('style' in x and x['style']) == ('style' in prev and prev['style']):
+        if prev and prev.name == 'span' and x['style'] == prev['style']:
             prev.extend(x.contents)
             x.decompose()
 
