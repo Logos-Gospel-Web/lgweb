@@ -148,7 +148,7 @@ _html_regexp_filters = [
     (re.compile(r'[﹒．｡]'), r'。'),
     (re.compile(r'\s*[⁽₍❨❪﴾﹙（]'), r' ('),
     (re.compile(r'[⁾₎❩❫﴿﹚）]\s*'), r') '),
-    (re.compile(r'[­ᐨ᠆‐-―⎯─━⸺⸻﹘﹣－]'), r'－'),
+    (re.compile(r'[­ᐨ᠆‐-―⎯─━⸺⸻﹘﹣－]'), r'⎯'),
 ]
 
 _content_regexp_filters = [
