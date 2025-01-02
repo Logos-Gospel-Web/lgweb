@@ -89,6 +89,13 @@ msgstr "下载录音"
 msgid "下載文字檔"
 msgstr "下载文字档"
 
+msgid "搜索"
+msgstr "搜索"
+
+#, python-format
+msgid "共%(total)s項結果"
+msgstr "共%(total)s项结果"
+
 msgid "網上閱讀/收聽"
 msgstr "网上阅读/收听"
 
@@ -124,3 +131,9 @@ msgstr "您的讯息已经成功发出。"
 
 msgid "首頁"
 msgstr "首页"
+
+msgid "上一頁"
+msgstr "上一页"
+
+msgid "下一頁"
+msgstr "下一页"

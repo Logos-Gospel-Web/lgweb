@@ -1,0 +1,14 @@
+{% extends '../base.html' %}
+
+{% load i18n %}
+{% load localize %}
+{% load page_link %}
+
+{% block content %}
+<main class="main">
+    <div class="body">
+        {% include '../components/search_form.html' %}
+        No result
+    </div>
+</main>
+{% endblock content %}

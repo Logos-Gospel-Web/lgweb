@@ -1,5 +1,7 @@
 User-agent: *
 Disallow: /admin
+Disallow: /tc/search
+Disallow: /sc/search
 
 # Baidu
 User-agent: BaiduSpider
