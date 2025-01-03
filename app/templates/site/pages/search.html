@@ -12,6 +12,7 @@
         <div class="search__count">{% blocktranslate %}共{{ total }}項結果{% endblocktranslate %}</div>
         {% for child in messages %}
             <a class="search__item" href="{{ child|page_link }}">
+                <div class="search__topic">{% localize child.parent.title %}</div>
                 {{ child|search_title:keyword|safe }}
                 <div class="search__content richtext">{{ child|search_result:keyword|safe }}</div>
             </a>
