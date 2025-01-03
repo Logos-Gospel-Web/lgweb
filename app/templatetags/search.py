@@ -51,11 +51,6 @@ def search_result(page, input):
     soup = BeautifulSoup(content, 'lxml')
     for div in soup.find_all('div', class_='box'):
         div.decompose()
-    for a in soup.find_all('a'):
-        a.attrs.pop('href', None)
-        a.attrs.pop('rel', None)
-        a.attrs.pop('target', None)
-        a.name = 'span'
     root = soup.body
     selected = None
     selected_count = 0
@@ -80,6 +75,12 @@ def search_result(page, input):
 
     if not selected:
         return ''
+
+    for a in selected.find_all('a'):
+        a.attrs.pop('href', None)
+        a.attrs.pop('rel', None)
+        a.attrs.pop('target', None)
+        a.name = 'span'
 
     wrap_input(soup, input, selected)
 
