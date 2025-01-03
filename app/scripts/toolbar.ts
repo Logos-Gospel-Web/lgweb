@@ -98,7 +98,25 @@ function registerShareButton() {
     })
 }
 
+function registerSearchButton() {
+    const container = document.querySelector('.search-bar')!
+    const input = container.querySelector('.search__input') as HTMLInputElement
+    document.querySelector('.toolbar--search')!.addEventListener('click', () => {
+        container.classList.remove('search-bar--hidden')
+        input.focus()
+    })
+    container.addEventListener('click', (ev) => {
+        if (ev.target === ev.currentTarget) {
+            container.classList.add('search-bar--hidden')
+        }
+    })
+    document.querySelector('.search-bar__close')!.addEventListener('click', () => {
+        container.classList.add('search-bar--hidden')
+    })
+}
+
 registerFullscreenButton()
 registerFontsizeButton()
 registerQrcodeButton()
 registerShareButton()
+registerSearchButton()

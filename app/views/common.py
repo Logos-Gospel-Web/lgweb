@@ -3,6 +3,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime
 from django.conf import settings
 from django.core.cache import caches
+from django.urls import reverse
 from django.utils import translation
 from django.utils.translation import gettext as _
 from django.utils.translation.trans_real import parse_accept_lang_header
@@ -103,6 +104,7 @@ def get_base_url(request):
 def _get_base_context(request, lang):
     now = datetime.now()
     base_url = get_base_url(request)
+    search_form_url = reverse('search_form', args=(lang,))
     return {
         'now': now,
         'ip': get_client_ip(request),
@@ -116,6 +118,7 @@ def _get_base_context(request, lang):
         'locale': to_locale(lang),
         'lang_tag': to_lang_tag(lang),
         'build_version': _BUILD_VERSION,
+        'search_form_url': search_form_url,
     }
 
 def make_title(title: str) -> str:

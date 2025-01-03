@@ -31,6 +31,11 @@
     @include icons.icon-font-size;
 }
 
+.toolbar--search {
+    left: 84px;
+    @include icons.icon-search;
+}
+
 .toolbar--qrcode {
     right: 44px;
     @include icons.icon-qrcode;
@@ -163,4 +168,34 @@
 
 .qrcode__image {
     height: 100%;
+}
+
+.search-bar {
+    z-index: 10;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    line-height: 100vh;
+    text-align: center;
+    background-color: rgba(0, 0, 0, .9);
+    padding: 0 12px;
+}
+
+.search-bar--hidden {
+    display: none;
+}
+
+.search-bar__container {
+    margin: 100px auto 0;
+    height: 40px;
+    max-width: 600px;
+}
+
+.search-bar__close {
+    @extend .qrcode__close;
+
+    top: 20px;
+    right: 12px;
 }

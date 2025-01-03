@@ -1,6 +1,6 @@
 import math
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.utils.translation import gettext as _
 from django.urls import reverse
 
@@ -57,13 +57,13 @@ def search(request, lang, input, page=1):
     message_count = matched_messages.count()
     end_index = page * _PAGE_SIZE
     start_index = end_index - _PAGE_SIZE
-    search_form_url = reverse('search_form', args=(lang,))
-    if message_count == 0 or end_index <= 0 or start_index >= message_count:
+    if message_count == 0:
         return render(request, 'site/pages/search_empty.html', {
             **context,
             'keyword': input,
-            'search_form_url': search_form_url,
         })
+    if end_index <= 0 or start_index >= message_count:
+        return redirect('search', lang=lang, input=input, page=1)
     messages = sorted(matched_messages, key=lambda msg: getattr(msg, field_name).count(input), reverse=True)[start_index:end_index]
     page_count = math.ceil(message_count / _PAGE_SIZE)
     return render(request, 'site/pages/search.html', {
@@ -72,7 +72,6 @@ def search(request, lang, input, page=1):
         'messages': messages,
         'total': message_count,
         'pagination': get_pagination(page, page_count),
-        'search_form_url': search_form_url,
     })
 
 @view_func

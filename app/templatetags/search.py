@@ -10,7 +10,8 @@ def _wrap_input(replacement: list, soup: BeautifulSoup, input: str, input_len: i
     if isinstance(el, NavigableString):
         output = []
         prev_end = 0
-        index = el.find(input)
+        lower_str = el.lower()
+        index = lower_str.find(input)
         while index != -1:
             end = index + input_len
             if index > prev_end:
@@ -19,7 +20,7 @@ def _wrap_input(replacement: list, soup: BeautifulSoup, input: str, input_len: i
             tag.string = el[index:end]
             output.append(tag)
             prev_end = end
-            index = el.find(input, end)
+            index = lower_str.find(input, end)
         if len(el) > prev_end:
             output.append(el[prev_end:])
         replacement.append((el, output))
@@ -29,7 +30,7 @@ def _wrap_input(replacement: list, soup: BeautifulSoup, input: str, input_len: i
 
 def wrap_input(soup: BeautifulSoup, input: str, el: PageElement):
     replacement = []
-    _wrap_input(replacement, soup, input, len(input), el)
+    _wrap_input(replacement, soup, input.lower(), len(input), el)
 
     for el, output in replacement:
         el.replace_with(*output)
@@ -50,10 +51,16 @@ def search_result(page, input):
     soup = BeautifulSoup(content, 'lxml')
     for div in soup.find_all('div', class_='box'):
         div.decompose()
+    for a in soup.find_all('a'):
+        del a.attrs['href']
+        del a.attrs['rel']
+        del a.attrs['target']
+        a.name = 'span'
     root = soup.body
     selected = None
     selected_count = 0
     selected_priority = 0
+    lower_input = input.lower()
     for child in root.children:
         text = child.text
         if child.name == 'p':
@@ -65,7 +72,7 @@ def search_result(page, input):
                 priority = 4
         else:
             priority = 3
-        count = text.count(input) / len(text)
+        count = text.lower().count(lower_input) / len(text)
         if count > 0 and (priority > selected_priority or count > selected_count):
             selected = child
             selected_count = count

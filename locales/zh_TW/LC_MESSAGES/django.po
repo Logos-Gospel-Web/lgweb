@@ -140,3 +140,6 @@ msgstr "下一頁"
 
 msgid "找不到相關信息"
 msgstr "找不到相關信息"
+
+msgid "請輸入關鍵字"
+msgstr "請輸入關鍵字"

@@ -1,6 +1,7 @@
 {% load i18n %}
 <div class="icon toolbar toolbar--fullscreen"></div>
 <div class="icon toolbar toolbar--fontsize"></div>
+<div class="icon toolbar toolbar--search"></div>
 <div class="icon toolbar toolbar--qrcode"></div>
 <div class="icon toolbar toolbar--share"></div>
 <div class="fontsize fontsize--hidden">
@@ -15,5 +16,11 @@
     <div class="qrcode__container">
         <div class="icon qrcode__close"></div>
         <div class="qrcode__image"></div>
+    </div>
+</div>
+<div class="search-bar search-bar--hidden">
+    <div class="search-bar__container">
+        <div class="icon search-bar__close"></div>
+        {% include './search_form.html' with keyword='' %}
     </div>
 </div>

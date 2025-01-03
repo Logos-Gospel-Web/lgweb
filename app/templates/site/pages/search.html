@@ -11,10 +11,10 @@
         {% include '../components/search_form.html' %}
         <div class="search__count">{% blocktranslate %}共{{ total }}項結果{% endblocktranslate %}</div>
         {% for child in messages %}
-            <div class="search__item">
+            <a class="search__item" href="{{ child|page_link }}">
                 {{ child|search_title:keyword|safe }}
                 <div class="search__content richtext">{{ child|search_result:keyword|safe }}</div>
-            </div>
+            </a>
         {% endfor %}
         {% if pagination %}
             <div class="search__pagination">
