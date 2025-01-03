@@ -39,7 +39,7 @@ def wrap_input(soup: BeautifulSoup, input: str, el: PageElement):
 def search_title(page, input):
     lang = to_lang(translation.get_language())
     title = getattr(page, f'title_{lang}')
-    soup = BeautifulSoup(f'<h2 class="search__title">{title}</h2>')
+    soup = BeautifulSoup(f'<h2 class="search__title">{title}</h2>', 'lxml')
     el = soup.h2
     wrap_input(soup, input, el)
     return el
@@ -52,9 +52,9 @@ def search_result(page, input):
     for div in soup.find_all('div', class_='box'):
         div.decompose()
     for a in soup.find_all('a'):
-        del a.attrs['href']
-        del a.attrs['rel']
-        del a.attrs['target']
+        a.attrs.pop('href', None)
+        a.attrs.pop('rel', None)
+        a.attrs.pop('target', None)
         a.name = 'span'
     root = soup.body
     selected = None

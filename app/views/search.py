@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 from django.utils.translation import gettext as _
 from django.urls import reverse
 
-from .common import view_func
+from .common import make_title, view_func
 from ..services.queries import get_messages
 
 _PAGE_SIZE = 10
@@ -57,9 +57,11 @@ def search(request, lang, input, page=1):
     message_count = matched_messages.count()
     end_index = page * _PAGE_SIZE
     start_index = end_index - _PAGE_SIZE
+    page_title = make_title(_('搜尋結果：「%(keyword)s」的%(count)d項結果') % { 'keyword': input, 'count': message_count })
     if message_count == 0:
         return render(request, 'site/pages/search_empty.html', {
             **context,
+            'title': page_title,
             'keyword': input,
         })
     if end_index <= 0 or start_index >= message_count:
@@ -68,13 +70,19 @@ def search(request, lang, input, page=1):
     page_count = math.ceil(message_count / _PAGE_SIZE)
     return render(request, 'site/pages/search.html', {
         **context,
+        'title': page_title,
         'keyword': input,
         'messages': messages,
         'total': message_count,
+        'start_index': start_index + 1,
+        'end_index': end_index,
         'pagination': get_pagination(page, page_count),
     })
 
 @view_func
 def search_form(request, lang):
     input = request.POST.get('q', '')
-    return HttpResponseSeeOther(reverse('search', args=(lang, input, 1)))
+    if input:
+        return HttpResponseSeeOther(reverse('search', args=(lang, input, 1)))
+    else:
+        return redirect('home', lang)

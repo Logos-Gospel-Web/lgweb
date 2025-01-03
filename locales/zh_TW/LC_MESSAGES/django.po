@@ -93,8 +93,8 @@ msgid "搜索"
 msgstr "搜索"
 
 #, python-format
-msgid "共%(total)s項結果"
-msgstr "共%(total)s項結果"
+msgid "共%(total)s項結果，現正顯示第%(start_index)d至%(end_index)d項"
+msgstr "共%(total)s項結果，現正顯示第%(start_index)d至%(end_index)d項"
 
 msgid "網上閱讀/收聽"
 msgstr "網上閱讀/收聽"
@@ -143,3 +143,7 @@ msgstr "找不到相關信息"
 
 msgid "請輸入關鍵字"
 msgstr "請輸入關鍵字"
+
+#, python-format
+msgid "搜尋結果：「%(keyword)s」的%(count)d項結果"
+msgstr "搜尋結果：「%(keyword)s」的%(count)d項結果"
