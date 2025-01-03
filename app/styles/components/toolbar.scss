@@ -1,3 +1,5 @@
+@use "../icons";
+
 .toolbar {
     position: fixed;
     bottom: 4px;
@@ -17,26 +19,26 @@
 
 .toolbar--fullscreen {
     left: 4px;
-    @include icon-enlarge;
+    @include icons.icon-enlarge;
     .fullscreen & {
         position: fixed;
-        @include icon-shrink;
+        @include icons.icon-shrink;
     }
 }
 
 .toolbar--fontsize {
     left: 44px;
-    @include icon-font-size;
+    @include icons.icon-font-size;
 }
 
 .toolbar--qrcode {
     right: 44px;
-    @include icon-qrcode;
+    @include icons.icon-qrcode;
 }
 
 .toolbar--share {
     right: 4px;
-    @include icon-share;
+    @include icons.icon-share;
 }
 
 .fontsize {
@@ -99,11 +101,11 @@
 }
 
 .fontsize__button--plus {
-    @include icon-plus;
+    @include icons.icon-plus;
 }
 
 .fontsize__button--minus {
-    @include icon-minus;
+    @include icons.icon-minus;
 }
 
 .qrcode {
@@ -152,7 +154,7 @@
     line-height: 1.5;
     cursor: pointer;
 
-    @include icon-close;
+    @include icons.icon-close;
 
     &:hover {
         background-color: #999;

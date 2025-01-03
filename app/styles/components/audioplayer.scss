@@ -1,3 +1,5 @@
+@use '../icons';
+
 .audio {
     margin-top: 1em;
     display: table;
@@ -83,26 +85,26 @@
 }
 
 .icon--play {
-    @include icon-play;
+    @include icons.icon-play;
 }
 
 .icon--pause {
-    @include icon-pause;
+    @include icons.icon-pause;
 }
 
 .icon--volume-high {
-    @include icon-volume-high;
+    @include icons.icon-volume-high;
 }
 
 .icon--volume-medium {
-    @include icon-volume-medium;
+    @include icons.icon-volume-medium;
 }
 
 .icon--volume-low {
-    @include icon-volume-low;
+    @include icons.icon-volume-low;
 }
 
 .icon--volume-mute {
-    @include icon-volume-mute;
+    @include icons.icon-volume-mute;
 }
 

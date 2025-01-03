@@ -1,0 +1,15 @@
+@mixin no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+.inline-block-fix {
+    line-height: 0 !important;
+    & > * {
+        line-height: 1.5;
+    }
+}

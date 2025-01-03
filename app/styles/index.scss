@@ -1,62 +1,18 @@
-@import "./reset";
-
-.inline-block-fix {
-    line-height: 0 !important;
-    & > * {
-        line-height: 1.5;
-    }
-}
-
-@mixin no-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-
-    &::-webkit-scrollbar {
-        display: none;
-    }
-}
-
-#app {
-    width: 100%;
-    background-color: #f5fafd;
-    min-height: 100vh;
-    position: relative;
-    line-height: 1.5;
-}
-
-.main {
-    max-width: 1080px;
-    margin: 0 auto;
-    display: block;
-}
-
-.body {
-    padding: 24px;
-}
-
-.page-banner {
-    max-width: 1080px;
-    margin: 0 auto;
-}
-
-article {
-    margin-top: 1em;
-}
-
-@import "./icons";
-@import "./richtext";
-@import "./components/audioplayer";
-@import "./components/author";
-@import "./components/banner";
-@import "./components/breadcrumb";
-@import "./components/footer";
-@import "./components/header";
-@import "./components/rangeslider";
-@import "./components/sidebar";
-@import "./components/title";
-@import "./components/toolbar";
-@import "./pages/contact";
-@import "./pages/home";
-@import "./pages/message";
-@import "./pages/search";
-@import "./pages/topic";
+@use "./reset";
+@use "./base";
+@use "./richtext";
+@use "./components/audioplayer";
+@use "./components/author";
+@use "./components/banner";
+@use "./components/breadcrumb";
+@use "./components/footer";
+@use "./components/header";
+@use "./components/rangeslider";
+@use "./components/sidebar";
+@use "./components/title";
+@use "./components/toolbar";
+@use "./pages/contact";
+@use "./pages/home";
+@use "./pages/message";
+@use "./pages/search";
+@use "./pages/topic";

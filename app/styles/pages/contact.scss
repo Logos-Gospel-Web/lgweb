@@ -1,3 +1,5 @@
+@use "../icons";
+
 .contact__input {
     font: inherit;
     max-width: 100%;
@@ -63,13 +65,13 @@
 }
 
 .contact__success__icon {
-    @include icon-success;
+    @include icons.icon-success;
     display: inline-block;
     margin-right: 0.5em;
 }
 
 .contact__alert__icon {
-    @include icon-error;
+    @include icons.icon-error;
     display: inline-block;
     margin-right: 0.5em;
 }

@@ -1,0 +1,26 @@
+#app {
+    width: 100%;
+    background-color: #f5fafd;
+    min-height: 100vh;
+    position: relative;
+    line-height: 1.5;
+}
+
+.main {
+    max-width: 1080px;
+    margin: 0 auto;
+    display: block;
+}
+
+.body {
+    padding: 24px;
+}
+
+.page-banner {
+    max-width: 1080px;
+    margin: 0 auto;
+}
+
+article {
+    margin-top: 1em;
+}

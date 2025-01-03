@@ -1,3 +1,5 @@
+@use "../icons";
+
 .sidebar {
     display: none;
 }
@@ -70,7 +72,7 @@
 }
 
 .sidebar__close {
-    @include icon-close;
+    @include icons.icon-close;
     display: table-cell;
     text-align: center;
     vertical-align: middle;

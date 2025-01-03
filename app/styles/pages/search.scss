@@ -1,3 +1,6 @@
+@use "../icons";
+@use '../link';
+
 .search__match {
     font-weight: bold;
     color: #b85042;
@@ -27,7 +30,7 @@
 }
 
 .search__button {
-    @include icon-search;
+    @include icons.icon-search;
     display: table-cell;
     height: 100%;
     padding: 0 8px;

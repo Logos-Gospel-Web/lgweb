@@ -1,3 +1,6 @@
+@use '../link';
+@use "../mixins";
+
 .slideshow {
     white-space: nowrap;
     overflow: hidden;
