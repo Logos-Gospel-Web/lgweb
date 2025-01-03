@@ -66,7 +66,15 @@ def search(request, lang, input, page=1):
         })
     if end_index <= 0 or start_index >= message_count:
         return redirect('search', lang=lang, input=input, page=1)
-    messages = sorted(matched_messages, key=lambda msg: getattr(msg, field_name).count(input), reverse=True)[start_index:end_index]
+
+    title_field_name = f'title_{lang}'
+    lower_input = input.lower()
+    def get_score(msg):
+        # Score more for title containing input
+        content = getattr(msg, field_name)
+        return (getattr(msg, title_field_name).lower().count(lower_input) * 20 + content.lower().count(lower_input)) / len(content)
+
+    messages = sorted(matched_messages, key=get_score, reverse=True)[start_index:end_index]
     page_count = math.ceil(message_count / _PAGE_SIZE)
     return render(request, 'site/pages/search.html', {
         **context,
