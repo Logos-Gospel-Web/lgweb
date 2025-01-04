@@ -89,7 +89,7 @@ def search(request, lang, input, page=1):
 
 @view_func
 def search_form(request, lang):
-    input = request.POST.get('q', '')
+    input = request.GET.get('q', '')
     if input:
         return HttpResponseSeeOther(reverse('search', args=(lang, input, 1)))
     else:
