@@ -88,7 +88,6 @@ def search(request, lang, input, page=1):
         'pagination': get_pagination(page, page_count),
     })
 
-@view_func
 def search_form(request, lang):
     input = request.GET.get('q', '')
     if input:
