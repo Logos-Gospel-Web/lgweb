@@ -72,7 +72,8 @@ def search(request, lang, input, page=1):
     def get_score(msg):
         # Score more for title containing input
         content = getattr(msg, field_name)
-        return (getattr(msg, title_field_name).lower().count(lower_input) * 20 + content.lower().count(lower_input)) / len(content)
+        title = getattr(msg, title_field_name)
+        return title.lower().count(lower_input) / len(title) + content.lower().count(lower_input) / len(content)
 
     messages = sorted(matched_messages, key=get_score, reverse=True)[start_index:end_index]
     page_count = math.ceil(message_count / _PAGE_SIZE)

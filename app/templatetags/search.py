@@ -1,3 +1,4 @@
+import math
 from bs4 import BeautifulSoup, PageElement, NavigableString
 from django import template
 from django.utils import translation
@@ -67,7 +68,7 @@ def search_result(page, input):
                 priority = 4
         else:
             priority = 3
-        count = text.lower().count(lower_input) / len(text)
+        count = text.lower().count(lower_input) / math.log10(len(text))
         if count > 0 and (priority > selected_priority or count > selected_count):
             selected = child
             selected_count = count
