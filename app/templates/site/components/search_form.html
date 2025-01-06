@@ -1,5 +1,5 @@
 {% load i18n %}
-<form class="search__form" method="GET" action="{{ search_form_url }}">
+<form class="search__form" action="{{ search_form_url }}">
     <input class="search__input" name="q" type="search" value="{{ keyword }}" required placeholder="{% translate '請輸入關鍵字' %}">
     <button class="search__button icon"></button>
 </form>
