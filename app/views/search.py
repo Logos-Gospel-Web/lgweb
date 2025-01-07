@@ -84,7 +84,7 @@ def search(request, lang, input, page=1):
         'messages': messages,
         'total': message_count,
         'start_index': start_index + 1,
-        'end_index': end_index,
+        'end_index': min(message_count, end_index),
         'pagination': get_pagination(page, page_count),
     })
 
