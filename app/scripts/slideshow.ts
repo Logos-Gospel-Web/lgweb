@@ -110,7 +110,9 @@ function registerSlideshow(slideshow: HTMLElement) {
         } else {
             move(0)
         }
-        motion = startMotion()
+        if (motion === null) {
+            motion = startMotion()
+        }
     }
 
     const unregister = createDrag({
