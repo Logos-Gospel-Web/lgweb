@@ -5,7 +5,7 @@
   "type": "module",
   "license": "GPL-3.0-only",
   "scripts": {
-    "test": "jest ./app/static/scripts"
+    "test": "jest ./app/scripts"
   },
   "dependencies": {
     "@babel/core": "^7.26.0",

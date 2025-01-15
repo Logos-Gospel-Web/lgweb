@@ -50,7 +50,7 @@ function div(a: number, b: number) {
 function polyMul(
     poly1: Uint8Array | number[],
     poly2: Uint8Array | number[],
-): Uint8Array {
+): Uint8Array<ArrayBuffer> {
     const coeffs = new Uint8Array(poly1.length + poly2.length - 1)
 
     // Instead of executing all the steps in the example, we can jump to
