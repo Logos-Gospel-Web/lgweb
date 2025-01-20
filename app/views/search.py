@@ -16,7 +16,7 @@ def get_pagination(current: int, count: int):
     if current > 1:
         # has prev page
         output.append({ 'text': _('上一頁'), 'page': current - 1 })
-    if count < 9:
+    if count <= 9:
         # show all page options
         for i in range(1, count + 1):
             output.append({ 'text': str(i), 'page': i, 'current': i == current })
