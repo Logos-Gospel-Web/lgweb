@@ -10,12 +10,12 @@ from django.utils.translation.trans_real import parse_accept_lang_header
 from django.shortcuts import render
 from django.views.decorators.cache import cache_control
 from django.views.decorators.http import etag
+from ipware import get_client_ip
 from hashlib import sha256
 from os import environ
 import ulid
 
 from ..services.random_string import random_string
-from ..services.ip import get_client_ip
 from ..services.queries import get_menu
 from ..models import LANGUAGES, to_locale, to_lang_tag, Analytics
 
@@ -107,7 +107,7 @@ def _get_base_context(request, lang):
     search_form_url = reverse('search_form', args=(lang,))
     return {
         'now': now,
-        'ip': get_client_ip(request),
+        'ip': get_client_ip(request)[0] or '',
         'fingerprint': _get_fingerprint(request),
         'base_url': base_url,
         'path': request.path,

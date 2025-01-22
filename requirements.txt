@@ -6,6 +6,7 @@ cssutils==2.11.1
 Django==5.1.4
 django-dbbackup==4.2.1
 django-grappelli==4.0.1
+django-ipware==7.0.1
 django-ratelimit==4.1.0
 django-storages==1.14.4
 fonttools==4.55.3
