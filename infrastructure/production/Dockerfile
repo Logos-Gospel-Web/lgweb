@@ -26,18 +26,18 @@ FROM base as builder
 
 RUN apk add --no-cache 'nodejs=~20' 'npm=~10'
 
-ADD package.json /lgweb/
-ADD package-lock.json /lgweb/
+COPY package.json /lgweb/
+COPY package-lock.json /lgweb/
 
 RUN npm ci --omit=dev
 
-ADD . /lgweb/
+COPY . /lgweb/
 
 CMD [ "./infrastructure/production/build" ]
 
 FROM base as main
 
-ADD . /lgweb/
+COPY . /lgweb/
 
 RUN python manage.py compilemessages
 
@@ -50,9 +50,13 @@ FROM caddy:2.7-alpine as server
 ENV CACHE_CONTROL 'max-age=3600'
 
 COPY ./configs/Caddyfile /etc/caddy/Caddyfile
-ADD public /public
+COPY public /public
 
 FROM main as cron
+
+RUN apk add --no-cache 'nodejs=~20' 'npm=~10'
+
+RUN cd lib/isbot && npm ci --omit=dev
 
 RUN cp ./infrastructure/production/crontab /etc/crontabs/root &&\
     chmod 600 /etc/crontabs/root &&\

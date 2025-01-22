@@ -261,6 +261,9 @@ class Contact:
 class Analytics:
     class Meta:
         db_table = 'analytics'
+        indexes = [
+            models.Index(fields=['isbot', 'created_at'], name='analytics_query_idx'),
+        ]
     id = make_id_field()
     created_at = models.DateTimeField(auto_now_add=True)
     ip = models.CharField('IP', max_length=45)
@@ -269,6 +272,8 @@ class Analytics:
     url = models.TextField()
     user_agent = models.TextField()
     referrer = models.TextField()
+    isbot = models.BooleanField(null=True, default=None)
+    country = models.TextField(blank=True)
 
     def __str__(self):
         return f'{self.ip} ({self.created_at.strftime(r"%Y-%m-%d %H:%M:%S")})'
