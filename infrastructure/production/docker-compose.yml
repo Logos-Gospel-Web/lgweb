@@ -54,3 +54,7 @@ services:
             <<: *build
             target: cron
         volumes: *volumes
+        deploy:
+            resources:
+                limits:
+                    cpus: '0.5'

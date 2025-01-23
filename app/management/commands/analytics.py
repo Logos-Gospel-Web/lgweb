@@ -27,8 +27,10 @@ def get_country(ips):
     finally:
         return output
 
+limits = 10000
+
 def generate_isbot():
-    qs = Analytics.objects.filter(isbot__isnull=True).all()
+    qs = Analytics.objects.filter(isbot__isnull=True).all()[:limits]
     agents = dict()
     for item in qs:
         if item.user_agent not in agents:
@@ -51,7 +53,7 @@ def generate_isbot():
         p.terminate()
 
 def generate_country():
-    qs = Analytics.objects.filter(isbot=False, country='').all()
+    qs = Analytics.objects.filter(isbot=False, country='').all()[:limits]
     ips = dict()
     for item in qs:
         if item.ip not in ips:
