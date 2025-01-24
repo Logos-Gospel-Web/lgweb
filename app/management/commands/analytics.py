@@ -6,14 +6,15 @@ import urllib.request
 import json
 
 from django.core.management.base import BaseCommand
+from django.db.models import Value
 from app.models import Analytics
 
-def chunks(lst, n):
+def _chunks(lst, n):
     """Yield successive n-sized chunks from lst."""
     for i in range(0, len(lst), n):
         yield lst[i:i + n]
 
-def get_country(ips):
+def _get_country(ips):
     output = dict()
     try:
         prefix = 'https://get.geojs.io/v1/ip/country.json?ip='
@@ -27,10 +28,8 @@ def get_country(ips):
     finally:
         return output
 
-limits = 10000
-
-def generate_isbot():
-    qs = Analytics.objects.filter(isbot__isnull=True).all()[:limits]
+def _generate_isbot():
+    qs = Analytics.objects.filter(isbot__isnull=True).all()
     agents = dict()
     for item in qs:
         if item.user_agent not in agents:
@@ -39,7 +38,7 @@ def generate_isbot():
 
     if len(agents) > 0:
         p = subprocess.Popen(['node', 'index.mjs'], cwd='lib/isbot', stdin=subprocess.PIPE, stdout=subprocess.PIPE)
-        for chunk in chunks(list(agents.keys()), 100):
+        for chunk in _chunks(list(agents.keys()), 100):
             for agent in chunk:
                 p.stdin.write(agent.encode() + b'\n')
             p.stdin.flush()
@@ -52,8 +51,8 @@ def generate_isbot():
                 Analytics.objects.bulk_update(items, ['isbot'])
         p.terminate()
 
-def generate_country():
-    qs = Analytics.objects.filter(isbot=False, country='').all()[:limits]
+def _generate_country():
+    qs = Analytics.objects.filter(isbot=Value(0), country=Value('')).all()
     ips = dict()
     for item in qs:
         if item.ip not in ips:
@@ -61,8 +60,8 @@ def generate_country():
         ips[item.ip].append(item)
 
     if len(ips) > 0:
-        for chunk in chunks(list(ips.keys()), 100):
-            result = get_country(chunk)
+        for chunk in _chunks(list(ips.keys()), 100):
+            result = _get_country(chunk)
             for ip in chunk:
                 items = ips[ip]
                 for item in items:
@@ -74,5 +73,5 @@ class Command(BaseCommand):
     help = "Generate isbot and country"
 
     def handle(self, *args, **options):
-        generate_isbot()
-        generate_country()
+        _generate_isbot()
+        _generate_country()

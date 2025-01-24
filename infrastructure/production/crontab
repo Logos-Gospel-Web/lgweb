@@ -1,3 +1,3 @@
 # min   hour    day     month   weekday command
 0       5       7       *       *       /lgweb/infrastructure/production/cron/dbbackup
-5/10    5       *       *       *       /lgweb/infrastructure/production/cron/analytics
+5       5       *       *       *       /lgweb/infrastructure/production/cron/analytics
