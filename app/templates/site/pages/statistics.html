@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+{% spaceless %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistics | Logos Gospel Web</title>
+    <link href="/statistics.css?{{ build_version }}" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <header>
+            <a href="?year={{ prev_year }}">&lt; {{ prev_year }}</a>
+            <h1>Statistics of {{ year }}</h1>
+            <a href="?year={{ next_year }}">{{ next_year }} &gt;</a>
+        </header>
+        {% include '../components/statistics_table.html' with items=by_month table_name='Month' %}
+        {% include '../components/statistics_table.html' with items=by_country table_name='Country' %}
+    </div>
+</body>
+</html>
+{% endspaceless %}

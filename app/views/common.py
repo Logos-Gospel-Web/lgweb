@@ -101,6 +101,9 @@ def use_etag(key = None):
 def get_base_url(request):
     return f'{request.scheme if not force_https else "https"}://{request.get_host()}'
 
+def get_build_version():
+    return _BUILD_VERSION
+
 def _get_base_context(request, lang):
     now = datetime.now()
     base_url = get_base_url(request)

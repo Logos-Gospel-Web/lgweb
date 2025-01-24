@@ -8,5 +8,6 @@ npx sass -s compressed --no-source-map app/styles/index.scss $COMPILED_ROOT/inde
 npx sass -s compressed --no-source-map app/styles/richtext.scss $COMPILED_ROOT/richtext.css
 npx sass -s compressed --no-source-map app/styles/noscript.scss $COMPILED_ROOT/noscript.css
 npx sass -s compressed --no-source-map app/styles/error.scss $COMPILED_ROOT/error.css
+npx sass -s compressed --no-source-map app/styles/statistics.scss $COMPILED_ROOT/statistics.css
 npx rollup --config rollup.config.mjs --input app/scripts/index.ts --file $COMPILED_ROOT/index.js
 npx rollup --config rollup.config.mjs --input app/scripts/service.worker.ts --file $COMPILED_ROOT/sw.js

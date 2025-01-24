@@ -1,0 +1,19 @@
+<h2>By {{ table_name }}</h2>
+<table>
+    <thead>
+        <tr>
+            <td>{{ table_name }}</td>
+            <td>Visitors</td>
+            <td>Views</td>
+        </tr>
+    </thead>
+    <tbody>
+        {% for visitors, views, name in items %}
+        <tr>
+            <td>{{ name }}</td>
+            <td>{{ visitors }}</td>
+            <td>{{ views }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

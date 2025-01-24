@@ -8,10 +8,12 @@ from .views.index import index
 from .views.manifest import manifest
 from .views.error import error400, error404
 from .views.search import search, search_form
+from .views.statistics import statistics
 
 urlpatterns = [
     path('', include('app.views.sitemap'), name='sitemap'),
     path('adminapi/', include('app.adminapis'), name='adminapi'),
+    path('statistics', statistics, name='statistics'),
     path('<slug:lang>/error/400', error400, name='error400'),
     path('<slug:lang>/error/404', error404, name='error404'),
     path('<slug:lang>/manifest.json', manifest, name='manifest'),
