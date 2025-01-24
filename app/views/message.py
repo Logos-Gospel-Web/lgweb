@@ -42,7 +42,7 @@ def get_sidebar(topic):
         'children': children,
     }
 
-@view_func
+@view_func()
 @use_etag()
 @cache_page(None)
 def message(request: HttpRequest, lang, slug, pos) -> HttpResponse:

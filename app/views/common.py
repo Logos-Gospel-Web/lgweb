@@ -39,30 +39,33 @@ def parse_preferred_language(accept: str) -> str:
             return 'sc'
     return _DEFAULT_LANG
 
-def view_func(fn):
-    @cache_control(max_age=60)
-    def wrap(request, *args, **kwargs):
-        if 'lang' in kwargs:
-            lang = kwargs['lang']
-        else:
-            lang = next((v for v in args if is_valid_language(v)), None)
+def view_func(skip_analytics = False):
+    def wrapper(fn):
+        @cache_control(max_age=60)
+        def wrap(request, *args, **kwargs):
+            if 'lang' in kwargs:
+                lang = kwargs['lang']
+            else:
+                lang = next((v for v in args if is_valid_language(v)), None)
 
-        if not is_valid_language(lang):
-            lang = parse_preferred_language(request.META.get('HTTP_ACCEPT_LANGUAGE', ''))
-            return redirect('home', lang)
+            if not is_valid_language(lang):
+                lang = parse_preferred_language(request.META.get('HTTP_ACCEPT_LANGUAGE', ''))
+                return redirect('home', lang)
 
-        translation.activate(to_locale(lang))
-        request.context = _get_base_context(request, lang)
+            translation.activate(to_locale(lang))
+            request.context = _get_base_context(request, lang)
 
-        try:
-            resp = fn(request, *args, **kwargs)
-            if resp.status_code < 300:
-                _save_analytics(request, lang)
-            return resp
-        except (ObjectDoesNotExist, NotFound):
-            return render(request, 'site/pages/error404.html', request.context, status=404)
+            try:
+                resp = fn(request, *args, **kwargs)
+                if not skip_analytics and resp.status_code < 300:
+                    _save_analytics(request, lang)
+                return resp
+            except (ObjectDoesNotExist, NotFound):
+                return render(request, 'site/pages/error404.html', request.context, status=404)
 
-    return wrap
+        return wrap
+
+    return wrapper
 
 def _save_analytics(request, lang):
     if request.method != 'GET':

@@ -47,7 +47,7 @@ def get_pagination(current: int, count: int):
 class HttpResponseSeeOther(HttpResponseRedirect):
     status_code = 303
 
-@view_func
+@view_func()
 def search(request: HttpRequest, lang, input, page=1) -> HttpResponse:
     context = request.context
     field_name = f'search_{lang}'

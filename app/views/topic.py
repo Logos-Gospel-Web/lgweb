@@ -16,7 +16,7 @@ def get_topic_by_slug(slug, lang, now, with_children=True):
 
     return res.get(slug=slug, enabled=True, publish__lte=now)
 
-@view_func
+@view_func()
 @use_etag()
 @cache_page(None)
 def topic(request, lang, slug):

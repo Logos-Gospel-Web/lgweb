@@ -21,7 +21,7 @@ def get_promotions(lang):
         .with_page_url()\
         .filter(language=lang)
 
-@view_func
+@view_func()
 @use_etag()
 @cache_page(None)
 def home(request: HttpRequest, lang) -> HttpResponse:

@@ -72,7 +72,7 @@ def submit_form(values, **kwargs):
 
 _CONTACT_KEY = 'contact_success'
 
-@view_func
+@view_func()
 def contact(request: HttpRequest, lang) -> HttpResponse:
     context = request.context
     status = ''
