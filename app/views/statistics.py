@@ -37,7 +37,7 @@ def statistics(request: HttpRequest) -> HttpResponse:
     by_country_visitors = defaultdict(set)
     by_country_views = Counter()
 
-    for item in qs:
+    for item in qs.iterator():
         created_at = item.created_at.astimezone(tz)
         month = created_at.strftime("%B")
         by_month_views[month] += 1
