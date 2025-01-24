@@ -21,6 +21,7 @@ LOCALE_PATHS = [environ.get('LOCALE_PATH') or BASE_DIR / 'locales']
 
 GRAPPELLI_ADMIN_TITLE = 'Logos Gospel Web'
 GRAPPELLI_CLEAN_INPUT_TYPES = False
+GRAPPELLI_INDEX_DASHBOARD = 'project.dashboard.CustomIndexDashboard'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
@@ -56,6 +57,7 @@ CACHES = {
 
 INSTALLED_APPS = [
     'app.apps.Config',
+    'grappelli.dashboard',
     'grappelli',
     'django.contrib.admin',
     'django.contrib.auth',
