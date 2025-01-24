@@ -1,0 +1,30 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout current branch
+        uses: actions/checkout@v4
+
+      - name: Set up docker context over SSH authentication
+        uses: amirmarmul/docker-context-ssh-action@v1
+        with:
+          ssh-host: ${{ secrets.SSH_HOST }}
+          ssh-username: ${{ secrets.SSH_USERNAME }}
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          context-use: true
+
+      - name: Write .env files
+        shell: sh
+        run: echo "$ENV_FILE" > ./infrastructure/production/.env && echo "$ENV_SERVER_FILE" > ./infrastructure/production/.env.server
+        env:
+          ENV_FILE: "${{ secrets.ENV_FILE }}"
+          ENV_SERVER_FILE: "${{ secrets.ENV_SERVER_FILE }}"
+
+      - name: Deploy
+        shell: sh
+        run: docker compose -p lgweb -f ./infrastructure/production/docker-compose.yml up -d --build
