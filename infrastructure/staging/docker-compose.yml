@@ -24,6 +24,7 @@ services:
             target: server
         environment:
             - MAIN_URL=main:8000
+            - ADMIN_URL=admin:8000
             - WEB_DOMAIN=:8001
             - WEB_HOST=:8000
             - WEB_URL=http://localhost:8000
@@ -31,7 +32,7 @@ services:
             - static:/static/
             - compiled:/compiled/
             - caddy_data:/data/
-    main:
+    main: &main
         depends_on:
             builder:
                 condition: service_completed_successfully
@@ -43,4 +44,15 @@ services:
             <<: *build
             target: main
         volumes: *volumes
-
+    admin: *main
+    cron:
+        restart: unless-stopped
+        depends_on:
+            builder:
+                condition: service_completed_successfully
+        env_file:
+            - .env
+        build:
+            <<: *build
+            target: cron
+        volumes: *volumes

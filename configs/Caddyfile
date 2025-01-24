@@ -14,6 +14,8 @@
         file_server /static/* {
             pass_thru
         }
+        reverse_proxy /statistics {$ADMIN_URL}
+        reverse_proxy /admin/* {$ADMIN_URL}
         reverse_proxy {$MAIN_URL}
     }
 }

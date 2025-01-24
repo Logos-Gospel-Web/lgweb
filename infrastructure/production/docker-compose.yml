@@ -26,11 +26,12 @@ services:
             - .env.server
         environment:
             - MAIN_URL=main:8000
+            - ADMIN_URL=admin:8000
         volumes:
             - static:/static/
             - compiled:/compiled/
             - caddy_data:/data/
-    main:
+    main: &main
         restart: unless-stopped
         depends_on:
             builder:
@@ -43,6 +44,12 @@ services:
             <<: *build
             target: main
         volumes: *volumes
+    admin:
+        <<: *main
+        deploy:
+            resources:
+                limits:
+                    cpus: '0.5'
     cron:
         restart: unless-stopped
         depends_on:
