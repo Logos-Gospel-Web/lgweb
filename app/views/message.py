@@ -1,3 +1,4 @@
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.utils.translation import gettext as _
 from django.urls import reverse
@@ -44,7 +45,7 @@ def get_sidebar(topic):
 @view_func
 @use_etag()
 @cache_page(None)
-def message(request, lang, slug, pos):
+def message(request: HttpRequest, lang, slug, pos) -> HttpResponse:
     context = request.context
     if len(pos) == 2:
         try:

@@ -1,5 +1,5 @@
 import math
-from django.http import HttpResponseRedirect
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.utils.translation import gettext as _
 from django.urls import reverse
@@ -48,7 +48,7 @@ class HttpResponseSeeOther(HttpResponseRedirect):
     status_code = 303
 
 @view_func
-def search(request, lang, input, page=1):
+def search(request: HttpRequest, lang, input, page=1) -> HttpResponse:
     context = request.context
     field_name = f'search_{lang}'
     matched_messages = get_messages(lang, context['now'])\
@@ -88,7 +88,7 @@ def search(request, lang, input, page=1):
         'pagination': get_pagination(page, page_count),
     })
 
-def search_form(request, lang):
+def search_form(request: HttpRequest, lang) -> HttpResponse:
     input = request.GET.get('q', '')
     if input:
         return HttpResponseSeeOther(reverse('search', args=(lang, input, 1)))

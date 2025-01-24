@@ -1,7 +1,7 @@
 from datetime import datetime
 from django.urls import path, reverse
 from django.shortcuts import redirect
-from django.http import HttpResponse
+from django.http import HttpRequest, HttpResponse
 from .common import is_valid_language, get_base_url
 from ..models import LANGUAGES, Message
 from ..services.links import topic_link, message_link
@@ -49,7 +49,7 @@ def print_sitemap(pages):
         ''.join([print_page(page) for page in pages]) +\
         '</urlset>'
 
-def sitemap_with_lang(request, lang):
+def sitemap_with_lang(request: HttpRequest, lang) -> HttpResponse:
     if not is_valid_language(lang):
         return redirect('sitemap')
     base_url = get_base_url(request)
@@ -59,7 +59,7 @@ def sitemap_with_lang(request, lang):
     resp = HttpResponse(status=200, content=content, content_type='application/xml; charset=utf-8')
     return resp
 
-def sitemap(request):
+def sitemap(request: HttpRequest) -> HttpResponse:
     base_url = get_base_url(request)
     pages = get_all_pages(base_url)
     content = print_sitemap(pages)

@@ -1,3 +1,4 @@
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.utils.translation import gettext as _
 from django.views.decorators.cache import cache_page
@@ -23,7 +24,7 @@ def get_promotions(lang):
 @view_func
 @use_etag()
 @cache_page(None)
-def home(request, lang):
+def home(request: HttpRequest, lang) -> HttpResponse:
     context = request.context
     banners = get_home_banners(lang)
     return render(request, 'site/pages/home.html', {
