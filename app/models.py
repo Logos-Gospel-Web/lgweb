@@ -258,6 +258,22 @@ class Contact:
         return f'{self.name} ({timezone.localtime(self.submitted_at).strftime(r"%Y-%m-%d %H:%M:%S")})'
 
 @model()
+class AnalyticsTemp:
+    class Meta:
+        db_table = 'analytics_temp'
+    id = make_id_field()
+    created_at = models.DateTimeField(auto_now_add=True)
+    ip = models.CharField('IP', max_length=45)
+    fingerprint = models.CharField(max_length=64)
+    language = models.TextField(choices=LANGUAGES)
+    url = models.TextField()
+    user_agent = models.TextField()
+    referrer = models.TextField()
+
+    def __str__(self):
+        return f'{self.ip} ({self.created_at.strftime(r"%Y-%m-%d %H:%M:%S")})'
+
+@model()
 class Analytics:
     class Meta:
         db_table = 'analytics'
@@ -265,7 +281,7 @@ class Analytics:
             models.Index(fields=['isbot', 'created_at'], name='analytics_query_idx'),
         ]
     id = make_id_field()
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField()
     ip = models.CharField('IP', max_length=45)
     fingerprint = models.CharField(max_length=64)
     language = models.TextField(choices=LANGUAGES)

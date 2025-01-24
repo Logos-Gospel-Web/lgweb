@@ -4,6 +4,7 @@ python manage.py collectstatic --no-input
 python manage.py migrate --no-input
 python manage.py migrate --database contact --no-input
 python manage.py migrate --database analytics --no-input
+python manage.py migrate --database analytics_temp --no-input
 npx sass -s compressed --no-source-map app/styles/index.scss $COMPILED_ROOT/index.css
 npx sass -s compressed --no-source-map app/styles/richtext.scss $COMPILED_ROOT/richtext.css
 npx sass -s compressed --no-source-map app/styles/noscript.scss $COMPILED_ROOT/noscript.css

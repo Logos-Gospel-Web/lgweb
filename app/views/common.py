@@ -17,7 +17,7 @@ import ulid
 
 from ..services.random_string import random_string
 from ..services.queries import get_menu
-from ..models import LANGUAGES, to_locale, to_lang_tag, Analytics
+from ..models import LANGUAGES, to_locale, to_lang_tag, AnalyticsTemp
 
 contact_email = environ.get('CONTACT_EMAIL')
 force_https = environ.get('FORCE_HTTPS')
@@ -71,7 +71,7 @@ def _save_analytics(request, lang):
     if request.method != 'GET':
         return
     headers = request.headers
-    Analytics(
+    AnalyticsTemp(
         ip=request.context['ip'],
         fingerprint=request.context['fingerprint'],
         language=lang,

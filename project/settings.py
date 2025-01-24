@@ -159,6 +159,10 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': environ.get('ANALYTICS_DB_ROOT') or BASE_DIR / 'analytics.sqlite3',
     },
+    'analytics_temp': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': environ.get('ANALYTICS_TEMP_DB_ROOT') or BASE_DIR / 'analytics_temp.sqlite3',
+    },
 }
 
 DBBACKUP_DATABASES = ['default', 'contact']

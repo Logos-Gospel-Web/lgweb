@@ -6,8 +6,10 @@ import urllib.request
 import json
 
 from django.core.management.base import BaseCommand
+from django.db import transaction
 from django.db.models import Value
-from app.models import Analytics
+
+from app.models import Analytics, AnalyticsTemp
 
 def _chunks(lst, n):
     """Yield successive n-sized chunks from lst."""
@@ -68,10 +70,19 @@ def _generate_country():
                     item.country = result[item.ip]
                 Analytics.objects.bulk_update(items, ['country'])
 
+_analytics_fields = ['id', 'created_at', 'ip', 'fingerprint', 'language', 'url', 'user_agent', 'referrer']
+
+@transaction.atomic
+def _move_analytics():
+    qs = AnalyticsTemp.objects.all()
+    items = [Analytics(**{ k: getattr(item, k) for k in _analytics_fields }) for item in qs]
+    Analytics.objects.bulk_create(items)
+    qs.delete()
 
 class Command(BaseCommand):
-    help = "Generate isbot and country"
+    help = "Move analytics and generate isbot and country"
 
     def handle(self, *args, **options):
+        _move_analytics()
         _generate_isbot()
         _generate_country()

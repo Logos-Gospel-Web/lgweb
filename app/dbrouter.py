@@ -1,9 +1,11 @@
-_model_names = ['contact', 'analytics']
+_model_names = {
+    'contact': 'contact',
+    'analytics': 'analytics',
+    'analyticstemp': 'analytics_temp',
+}
 
 def _route_db(model_name):
-    if model_name in _model_names:
-        return model_name
-    return None
+    return _model_names.get(model_name, None)
 
 class DbRouter:
     def db_for_read(self, model, **hints):
