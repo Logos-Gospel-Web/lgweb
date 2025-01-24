@@ -12,6 +12,7 @@ infrastructure/*/docker-compose.yml
 infrastructure/*/Dockerfile*
 infrastructure/*/*.ps1
 infrastructure/*/*.sh
+configs/icomoon.json
 
 **/*.test.js
 **/*.test.ts
