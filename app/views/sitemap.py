@@ -17,7 +17,7 @@ def get_all_messages(base_url):
     topics = dict()
     output = []
     for msg in msgs:
-        if msg.parent.id not in topics:
+        if msg.parent.id not in topics and msg.parent.slug != 'test':
             topics[msg.parent.id] = [(lang, base_url + topic_link(msg.parent.slug, lang)) for lang, _ in LANGUAGES if msg.parent.title[lang]]
         output.append(
             [(lang, base_url + message_link(msg.parent.slug, msg.position, lang)) for lang, _ in LANGUAGES if msg.title[lang] and msg.parent.title[lang]]
