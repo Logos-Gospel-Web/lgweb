@@ -147,3 +147,6 @@ msgstr "請輸入關鍵字"
 #, python-format
 msgid "搜尋結果：「%(keyword)s」的%(count)d項結果"
 msgstr "搜尋結果：「%(keyword)s」的%(count)d項結果"
+
+msgid "Language"
+msgstr "简"

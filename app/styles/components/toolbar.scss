@@ -1,4 +1,5 @@
 @use "../icons";
+@use "../link";
 
 .toolbar {
     position: fixed;
@@ -6,6 +7,7 @@
     width: 36px;
     height: 36px;
     text-align: center;
+    font-size: 16px;
     line-height: 36px;
     border-radius: 100%;
     color: #fff;
@@ -17,13 +19,9 @@
     }
 }
 
-.toolbar--fullscreen {
+.toolbar--language {
     left: 4px;
-    @include icons.icon-enlarge;
-    .fullscreen & {
-        position: fixed;
-        @include icons.icon-shrink;
-    }
+    @extend .link--hidden;
 }
 
 .toolbar--fontsize {
@@ -37,13 +35,22 @@
 }
 
 .toolbar--qrcode {
-    right: 44px;
+    right: 84px;
     @include icons.icon-qrcode;
 }
 
 .toolbar--share {
-    right: 4px;
+    right: 44px;
     @include icons.icon-share;
+}
+
+.toolbar--fullscreen {
+    right: 4px;
+    @include icons.icon-enlarge;
+    .fullscreen & {
+        position: fixed;
+        @include icons.icon-shrink;
+    }
 }
 
 .fontsize {

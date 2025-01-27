@@ -1,9 +1,11 @@
 {% load i18n %}
-<div class="icon toolbar toolbar--fullscreen"></div>
+{% load page_link %}
+<a class="toolbar toolbar--language" href="{{ request.path|switch_language }}">{% translate 'Language' %}</a>
 <div class="icon toolbar toolbar--fontsize"></div>
 <div class="icon toolbar toolbar--search"></div>
 <div class="icon toolbar toolbar--qrcode"></div>
 <div class="icon toolbar toolbar--share"></div>
+<div class="icon toolbar toolbar--fullscreen"></div>
 <div class="fontsize fontsize--hidden">
     <div class="fontsize__title">{% translate '字體大小' %}</div>
     <div class="fontsize__editor">
