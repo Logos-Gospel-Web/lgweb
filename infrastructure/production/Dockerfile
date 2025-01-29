@@ -15,13 +15,13 @@ RUN pip install -r requirements.txt --break-system-packages
 
 RUN apk del 'build-base' 'py3-pip'
 
-ENV MODE production
-ENV STATIC_ROOT /static
-ENV COMPILED_ROOT /compiled
-ENV DB_ROOT /db/db.sqlite3
-ENV CONTACT_DB_ROOT /db/contact.sqlite3
-ENV ANALYTICS_DB_ROOT /db/analytics.sqlite3
-ENV ANALYTICS_TEMP_DB_ROOT /db/analytics_temp.sqlite3
+ENV MODE=production
+ENV STATIC_ROOT=/static
+ENV COMPILED_ROOT=/compiled
+ENV DB_ROOT=/db/db.sqlite3
+ENV CONTACT_DB_ROOT=/db/contact.sqlite3
+ENV ANALYTICS_DB_ROOT=/db/analytics.sqlite3
+ENV ANALYTICS_TEMP_DB_ROOT=/db/analytics_temp.sqlite3
 
 FROM base AS builder
 
@@ -42,13 +42,13 @@ COPY . /lgweb/
 
 RUN python manage.py compilemessages
 
-ENV ERROR_LOG_FILE /reports/error.log
+ENV ERROR_LOG_FILE=/reports/error.log
 
 CMD [ "gunicorn", "--bind", "0.0.0.0:8000", "project.wsgi:application" ]
 
 FROM caddy:2.7-alpine AS server
 
-ENV CACHE_CONTROL 'max-age=3600'
+ENV CACHE_CONTROL='max-age=3600'
 
 COPY ./configs/Caddyfile /etc/caddy/Caddyfile
 COPY public /public
