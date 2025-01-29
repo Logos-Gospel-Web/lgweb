@@ -9,9 +9,11 @@
     </picture>
     {% if link %}
         <a href="{{ link }}" draggable="false" title="{{ banner.title }}" class="banner__inner link--hidden">
-            {% include "./banner_content.html" %}
+            {% if not banner.hide_title %}
+                {% include "./banner_content.html" %}
+            {% endif %}
         </a>
-    {% else %}
+    {% elif not banner.hide_title %}
         <div class="banner__inner">
             {% include "./banner_content.html" %}
         </div>

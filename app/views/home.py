@@ -31,7 +31,7 @@ def home(request: HttpRequest, lang) -> HttpResponse:
         **context,
         'title': make_title(_('首頁')),
         'banners': banners,
-        'fonts': set((b.banner.subfont for b in banners if b.banner.subfont)),
+        'fonts': set((b.banner.subfont for b in banners if b.banner.subfont and not b.banner.hide_title)),
         'latest_messages': get_latest_messages(lang, context['now']),
         'promotions': get_promotions(lang),
     })

@@ -36,7 +36,7 @@ def topic(request, lang, slug):
     return render(request, f'site/pages/{template}', {
         **context,
         'title': make_title(page.title[lang]),
-        'fonts': [banner.subfont] if banner and banner.subfont else None,
+        'fonts': [banner.subfont] if banner and banner.subfont and not banner.hide_title else None,
         'topic': page,
         'has_audio': has_audio,
         'sidebar': sidebar,

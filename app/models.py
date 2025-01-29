@@ -100,6 +100,7 @@ class Banner:
     # break points when screen width smaller than the specified number
     image_480 = models.ImageField(upload_to='banner/image/', blank=True)
     image_720 = models.ImageField(upload_to='banner/image/', blank=True)
+    hide_title = models.BooleanField('Hide Title', default=False)
     font = models.FileField(upload_to='banner/font/', blank=True)
     subfont = models.FileField(upload_to='banner/subfont/', blank=True)
     font_size = models.IntegerField(default=28)

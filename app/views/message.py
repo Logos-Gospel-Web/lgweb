@@ -62,7 +62,7 @@ def message(request: HttpRequest, lang, slug, pos) -> HttpResponse:
     return render(request, 'site/pages/message.html', {
         **context,
         'title': make_title(page.title[lang]),
-        'fonts': [banner.subfont] if banner and banner.subfont else None,
+        'fonts': [banner.subfont] if banner and banner.subfont and not banner.hide_title else None,
         'message': page,
         'breadcrumb': breadcrumb,
         'sidebar': sidebar,
