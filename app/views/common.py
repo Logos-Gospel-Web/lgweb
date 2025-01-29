@@ -57,7 +57,7 @@ def view_func(skip_analytics = False):
 
             try:
                 resp = fn(request, *args, **kwargs)
-                if not skip_analytics and resp.status_code < 300:
+                if not skip_analytics and resp.status_code < 300 and 'test' not in request.path:
                     _save_analytics(request, lang)
                 return resp
             except (ObjectDoesNotExist, NotFound):
