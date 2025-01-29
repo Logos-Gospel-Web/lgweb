@@ -1,10 +1,9 @@
 import os
 from pathlib import Path
-from django.core.cache import caches
 from django.core.files.uploadedfile import TemporaryUploadedFile, UploadedFile
 from django.db.models import signals
 from django.dispatch import receiver
-from .models import Banner, Contact, Analytics, AnalyticsTemp
+from .models import Banner
 from .services.subfont import make_subfont
 
 from .services.random_string import random_string
@@ -28,11 +27,3 @@ def banner_pre_save(sender, instance, **kwargs):
         instance.subfont._committed = False
     elif instance.subfont:
         instance.subfont.delete(save=False)
-
-_module_name = __name__[:__name__.rindex('.') + 1]
-
-@receiver(signals.post_save)
-def app_post_save(sender, instance, **kwargs):
-    if sender not in (Contact, Analytics, AnalyticsTemp) and getattr(sender, '__module__', None).startswith(_module_name):
-        caches['default'].clear()
-        caches['etag'].clear()

@@ -37,6 +37,12 @@ class CustomIndexDashboard(Dashboard):
             collapsible=False,
             children=[
                 {
+                    'title': 'Purge Cache',
+                    'url': reverse('purge'),
+                    'external': True,
+                    'target': '_blank',
+                },
+                {
                     'title': 'Statistics',
                     'url': reverse('statistics'),
                     'external': True,

@@ -9,10 +9,12 @@ from .views.manifest import manifest
 from .views.error import error400, error404
 from .views.search import search, search_form
 from .views.statistics import statistics
+from .views.purge import purge
 
 urlpatterns = [
     path('', include('app.views.sitemap'), name='sitemap'),
     path('adminapi/', include('app.adminapis'), name='adminapi'),
+    path('purge', purge, name='purge'),
     path('statistics', statistics, name='statistics'),
     path('<slug:lang>/error/400', error400, name='error400'),
     path('<slug:lang>/error/404', error404, name='error404'),
