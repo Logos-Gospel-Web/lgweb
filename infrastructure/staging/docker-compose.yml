@@ -45,14 +45,3 @@ services:
             target: main
         volumes: *volumes
     admin: *main
-    cron:
-        restart: unless-stopped
-        depends_on:
-            builder:
-                condition: service_completed_successfully
-        env_file:
-            - .env
-        build:
-            <<: *build
-            target: cron
-        volumes: *volumes
