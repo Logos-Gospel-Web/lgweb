@@ -1,4 +1,4 @@
-FROM alpine:3.19.1 as base
+FROM alpine:3.19.1 AS base
 
 WORKDIR /lgweb
 
@@ -23,7 +23,7 @@ ENV CONTACT_DB_ROOT /db/contact.sqlite3
 ENV ANALYTICS_DB_ROOT /db/analytics.sqlite3
 ENV ANALYTICS_TEMP_DB_ROOT /db/analytics_temp.sqlite3
 
-FROM base as builder
+FROM base AS builder
 
 RUN apk add --no-cache 'nodejs=~20' 'npm=~10'
 
@@ -36,7 +36,7 @@ COPY . /lgweb/
 
 CMD [ "./infrastructure/production/build" ]
 
-FROM base as main
+FROM base AS main
 
 COPY . /lgweb/
 
@@ -46,14 +46,14 @@ ENV ERROR_LOG_FILE /reports/error.log
 
 CMD [ "gunicorn", "--bind", "0.0.0.0:8000", "project.wsgi:application" ]
 
-FROM caddy:2.7-alpine as server
+FROM caddy:2.7-alpine AS server
 
 ENV CACHE_CONTROL 'max-age=3600'
 
 COPY ./configs/Caddyfile /etc/caddy/Caddyfile
 COPY public /public
 
-FROM main as cron
+FROM main AS cron
 
 RUN apk add --no-cache 'nodejs=~20' 'npm=~10'
 
