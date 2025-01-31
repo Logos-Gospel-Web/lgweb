@@ -6,6 +6,7 @@ To activate your index dashboard add the following to your settings.py::
     GRAPPELLI_INDEX_DASHBOARD = 'project.dashboard.CustomIndexDashboard'
 """
 
+from django.core.files.storage import default_storage
 from django.urls import reverse
 
 from grappelli.dashboard import modules, Dashboard
@@ -39,14 +40,16 @@ class CustomIndexDashboard(Dashboard):
                 {
                     'title': 'Purge Cache',
                     'url': reverse('purge'),
-                    'external': True,
                     'target': '_blank',
                 },
                 {
                     'title': 'Statistics',
                     'url': reverse('statistics'),
-                    'external': True,
                     'target': '_blank',
+                },
+                {
+                    'title': 'Template Doc',
+                    'url': default_storage.url('template.doc', parameters={ 'dl': '1' }),
                 },
             ]
         ))
