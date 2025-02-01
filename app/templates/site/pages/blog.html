@@ -13,7 +13,7 @@
 <main class="main sidebar-container">
     <div class="body">
         {% if topic.banner|localize == None %}
-            <h1 class="title">{% localize topic.title %}</h1>
+            <h1 class="title title--blog">{% localize topic.title %}</h1>
         {% endif %}
         <div class="blog-sidebar__content">
             {% include '../components/sidebar_content.html' %}
