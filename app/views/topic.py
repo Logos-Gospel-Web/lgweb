@@ -40,4 +40,5 @@ def topic(request, lang, slug):
         'topic': page,
         'has_audio': has_audio,
         'sidebar': sidebar,
+        'topic_children': children,
     })

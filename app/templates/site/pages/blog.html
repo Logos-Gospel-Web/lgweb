@@ -15,10 +15,12 @@
         {% if topic.banner|localize == None %}
             <h1 class="title title--blog">{% localize topic.title %}</h1>
         {% endif %}
-        <div class="blog-sidebar__content">
-            {% include '../components/sidebar_content.html' %}
-        </div>
-        {% for child in topic.children.all reversed  %}
+        {% if topic_children|length > 1 %}
+            <div class="blog-sidebar__content">
+                {% include '../components/sidebar_content.html' %}
+            </div>
+        {% endif %}
+        {% for child in topic_children reversed  %}
             {% include '../components/blog_item.html' with page=child slug=topic.slug %}
         {% endfor %}
     </div>
