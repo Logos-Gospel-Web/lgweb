@@ -86,8 +86,3 @@ def search_result(page, input):
     wrap_input(soup, input, selected)
 
     return selected
-
-@register.filter
-def pagination_url(page, input):
-    lang = to_lang(translation.get_language())
-    return reverse('search', args=(lang, input, page))

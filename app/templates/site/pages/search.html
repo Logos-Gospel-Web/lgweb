@@ -23,7 +23,7 @@
                     {% if item.current %}
                         <div class="search__pagination__current">{{ item.text }}</div>
                     {% elif item.page %}
-                        <a class="search__pagination__item" href="{{ item.page|pagination_url:keyword }}">{{ item.text }}</a>
+                        <a class="search__pagination__item" href="{{ item.page }}">{{ item.text }}</a>
                     {% else %}
                         <div class="search__pagination__text">{{ item.text }}</div>
                     {% endif %}
