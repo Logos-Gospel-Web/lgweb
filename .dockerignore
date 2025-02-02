@@ -1,4 +1,5 @@
 .git/
+.github/
 .vscode/
 .dockerignore
 .editorconfig
@@ -18,7 +19,6 @@ configs/icomoon.json
 **/*.test.ts
 **/__pycache__/
 venv/
-static/
 *.mo
 *.sqlite3
 node_modules/
