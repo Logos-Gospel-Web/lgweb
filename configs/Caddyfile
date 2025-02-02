@@ -21,5 +21,6 @@
 }
 
 {$WEB_DOMAIN} {
+    header -Server
     redir {$WEB_URL}{$uri}
 }
