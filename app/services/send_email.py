@@ -7,7 +7,7 @@ _data = {
     'templateId': int(environ.get('CONTACT_FORM_TEMPLATE_ID', '0')),
 }
 
-_api_key = environ.get('SENDINBLUE_API_KEY', '')
+_api_key = environ.get('BREVO_API_KEY', '')
 
 _headers = {
     'accept': 'application/json',
@@ -28,7 +28,7 @@ def send_contact_email(contact_id, base_url):
     })
 
     try:
-        req = request.Request('https://api.sendinblue.com/v3/smtp/email', headers=_headers, data=data.encode())
+        req = request.Request('https://api.brevo.com/v3/smtp/email', headers=_headers, data=data.encode())
         with request.urlopen(req) as resp:
             return resp.status < 300
     except (error.HTTPError, error.URLError):
