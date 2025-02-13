@@ -160,6 +160,9 @@ DATABASES = {
     'analytics_temp': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': environ.get('ANALYTICS_TEMP_DB_ROOT') or BASE_DIR / 'analytics_temp.sqlite3',
+        'OPTIONS': {
+            'transaction_mode': 'IMMEDIATE',
+        },
     },
 }
 
