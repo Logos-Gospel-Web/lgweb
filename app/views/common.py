@@ -125,6 +125,7 @@ def _get_base_context(request, lang):
         'lang_tag': to_lang_tag(lang),
         'build_version': _BUILD_VERSION,
         'search_form_url': search_form_url,
+        'search_max_length': 20,
     }
 
 def make_title(title: str) -> str:

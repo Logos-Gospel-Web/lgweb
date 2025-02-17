@@ -52,6 +52,8 @@ class HttpResponseSeeOther(HttpResponseRedirect):
 @view_func()
 def search(request: HttpRequest, lang: str, input: str, page=1) -> HttpResponse:
     context = request.context
+    if len(input) > context['search_max_length']:
+        return redirect('search', lang=lang, input=input[:context['search_max_length']], page=1)
     field_name = f'search_{lang}'
     keywords = set((x.lower() for x in input.split() if x))
     # Remove keywords that contains in other keywords
