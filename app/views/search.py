@@ -1,4 +1,6 @@
+from functools import reduce
 import math
+from django.db.models import Q
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.utils.translation import gettext as _
@@ -48,16 +50,30 @@ class HttpResponseSeeOther(HttpResponseRedirect):
     status_code = 303
 
 @view_func()
-def search(request: HttpRequest, lang, input, page=1) -> HttpResponse:
+def search(request: HttpRequest, lang: str, input: str, page=1) -> HttpResponse:
     context = request.context
     field_name = f'search_{lang}'
+    keywords = set((x.lower() for x in input.split() if x))
+    # Remove keywords that contains in other keywords
+    keywords = [k for k in keywords if next((False for k2 in keywords if k != k2 and k in k2), True)]
+    title_trans = _('搜尋結果：「%(keyword)s」的%(count)d項結果')
+
+    if not keywords:
+        page_title = make_title(title_trans % { 'keyword': input, 'count': 0 })
+        return render(request, 'site/pages/search_empty.html', {
+            **context,
+            'title': page_title,
+            'keyword': input,
+        })
+
+    message_query = reduce(lambda a, b: a & b, [Q(**{ f'{field_name}__contains': k }) for k in keywords])
     matched_messages = get_messages(lang, context['now'])\
-        .filter(**{ f'{field_name}__icontains': input })\
+        .filter(message_query)\
         .order_by('-publish')
     message_count = matched_messages.count()
     end_index = page * _PAGE_SIZE
     start_index = end_index - _PAGE_SIZE
-    page_title = make_title(_('搜尋結果：「%(keyword)s」的%(count)d項結果') % { 'keyword': input, 'count': message_count })
+    page_title = make_title(title_trans % { 'keyword': input, 'count': message_count })
     if message_count == 0:
         return render(request, 'site/pages/search_empty.html', {
             **context,
@@ -68,12 +84,15 @@ def search(request: HttpRequest, lang, input, page=1) -> HttpResponse:
         return redirect('search', lang=lang, input=input, page=1)
 
     title_field_name = f'title_{lang}'
-    lower_input = input.lower()
+
+    def get_count(text):
+        return sum((text.count(k) for k in keywords)) / len(text)
+
     def get_score(msg):
         # Score more for title containing input
         content = getattr(msg, field_name)
         title = getattr(msg, title_field_name)
-        return title.lower().count(lower_input) / len(title) + content.lower().count(lower_input) / len(content)
+        return get_count(title) + get_count(content)
 
     messages = sorted(matched_messages, key=get_score, reverse=True)[start_index:end_index]
     page_count = math.ceil(message_count / _PAGE_SIZE)
@@ -81,6 +100,7 @@ def search(request: HttpRequest, lang, input, page=1) -> HttpResponse:
         **context,
         'title': page_title,
         'keyword': input,
+        'keywords': keywords,
         'messages': messages,
         'total': message_count,
         'start_index': start_index + 1,

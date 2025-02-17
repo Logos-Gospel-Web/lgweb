@@ -7,46 +7,67 @@ from django.urls import reverse
 
 register = template.Library()
 
-def _wrap_input(replacement: list, soup: BeautifulSoup, input: str, input_len: int, el: PageElement):
+def _wrap_input(replacement: list, soup: BeautifulSoup, keywords: list[str], el: PageElement):
     if isinstance(el, NavigableString):
+        quote_ranges: list[tuple[int, int]] = []
+        lower_str = el.lower()
+        # Find all ranges that should be quoted
+        for keyword in keywords:
+            prev_end = 0
+            keyword_len = len(keyword)
+            index = lower_str.find(keyword)
+            while index != -1:
+                end = index + keyword_len
+                quote_ranges.append((index, end))
+                index = lower_str.find(keyword, end)
+        if not quote_ranges:
+            return
+
+        # Filter all overlapping ranges
+        quote_ranges.sort()
+        ranges = [quote_ranges[0]]
+        for start, end in quote_ranges[1:]:
+            prev_start, prev_end = ranges[-1]
+            if prev_end < start:
+                ranges.append((start, end))
+            elif prev_end < end:
+                ranges[-1] = (prev_start, end)
+
+        # Generate tags
         output = []
         prev_end = 0
-        lower_str = el.lower()
-        index = lower_str.find(input)
-        while index != -1:
-            end = index + input_len
-            if index > prev_end:
-                output.append(el[prev_end:index])
+        for start, end in ranges:
+            if start > prev_end:
+                output.append(el[prev_end:start])
             tag = soup.new_tag('span', attrs={ 'class': 'search__match' })
-            tag.string = el[index:end]
+            tag.string = el[start:end]
             output.append(tag)
             prev_end = end
-            index = lower_str.find(input, end)
         if len(el) > prev_end:
             output.append(el[prev_end:])
         replacement.append((el, output))
     else:
         for child in el.contents:
-            _wrap_input(replacement, soup, input, input_len, child)
+            _wrap_input(replacement, soup, keywords, child)
 
-def wrap_input(soup: BeautifulSoup, input: str, el: PageElement):
+def wrap_input(soup: BeautifulSoup, keywords: list[str], el: PageElement):
     replacement = []
-    _wrap_input(replacement, soup, input.lower(), len(input), el)
+    _wrap_input(replacement, soup, keywords, el)
 
     for el, output in replacement:
         el.replace_with(*output)
 
 @register.filter
-def search_title(page, input):
+def search_title(page, keywords: list[str]):
     lang = to_lang(translation.get_language())
     title = getattr(page, f'title_{lang}')
     soup = BeautifulSoup(f'<h2 class="search__title">{title}</h2>', 'lxml')
     el = soup.h2
-    wrap_input(soup, input, el)
+    wrap_input(soup, keywords, el)
     return el
 
 @register.filter
-def search_result(page, input):
+def search_result(page, keywords: list[str]):
     lang = to_lang(translation.get_language())
     content = getattr(page, f'content_{lang}')
     soup = BeautifulSoup(content, 'lxml')
@@ -56,9 +77,8 @@ def search_result(page, input):
     selected = None
     selected_count = 0
     selected_priority = 0
-    lower_input = input.lower()
     for child in root.children:
-        text = child.text
+        text = child.text.lower()
         if child.name == 'p':
             if child.find('img'):
                 priority = 1
@@ -68,7 +88,7 @@ def search_result(page, input):
                 priority = 4
         else:
             priority = 3
-        count = text.lower().count(lower_input) / math.log10(len(text))
+        count = sum((text.count(k) for k in keywords)) / math.log10(len(text))
         if count > 0 and (priority > selected_priority or count > selected_count):
             selected = child
             selected_count = count
@@ -83,6 +103,6 @@ def search_result(page, input):
         a.attrs.pop('target', None)
         a.name = 'span'
 
-    wrap_input(soup, input, selected)
+    wrap_input(soup, keywords, selected)
 
     return selected
