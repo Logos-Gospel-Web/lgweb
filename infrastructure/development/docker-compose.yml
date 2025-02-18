@@ -2,7 +2,6 @@ volumes:
     virtualenv: {}
     compiled: {}
     db: {}
-    cache: {}
     nodemodules: {}
     caddy_data: {}
 services:
@@ -16,9 +15,7 @@ services:
             - MODE=development
             - ALLOWED_HOSTS=*
             - STATIC_ROOT=/static
-            - COMPILED_ROOT=/compiled
             - LOCALE_PATH=/locales
-            - CACHE_DIR=/cache
             - DB_ROOT=/db/db.sqlite3
             - CONTACT_DB_ROOT=/db/contact.sqlite3
             - ANALYTICS_DB_ROOT=/db/analytics.sqlite3
@@ -28,7 +25,6 @@ services:
             - virtualenv:/venv/
             - compiled:/compiled/
             - db:/db/
-            - cache:/cache/
             - nodemodules:/lgweb/node_modules/
         entrypoint: npm ci --omit=dev
     server:
@@ -66,63 +62,13 @@ services:
                 python manage.py migrate --database analytics_temp &&
                 python manage.py compilemessages &&
                 python manage.py runserver 0.0.0.0:8000
-    css-site:
+    compiler:
         <<: *base
-        depends_on: &depends_on
+        depends_on:
             builder:
                 condition: service_completed_successfully
         entrypoint:
             - /bin/sh
             - -c
             - >-
-                npx sass -s expanded --watch --poll app/styles/index.scss $$COMPILED_ROOT/index.css
-    css-richtext:
-        <<: *base
-        depends_on: *depends_on
-        entrypoint:
-            - /bin/sh
-            - -c
-            - >-
-                npx sass -s expanded --watch --poll app/styles/richtext.scss $$COMPILED_ROOT/richtext.css
-    css-noscript:
-        <<: *base
-        depends_on: *depends_on
-        entrypoint:
-            - /bin/sh
-            - -c
-            - >-
-                npx sass -s expanded --watch --poll app/styles/noscript.scss $$COMPILED_ROOT/noscript.css
-    css-error:
-        <<: *base
-        depends_on: *depends_on
-        entrypoint:
-            - /bin/sh
-            - -c
-            - >-
-                npx sass -s expanded --watch --poll app/styles/error.scss $$COMPILED_ROOT/error.css
-    css-statistics:
-        <<: *base
-        depends_on: *depends_on
-        entrypoint:
-            - /bin/sh
-            - -c
-            - >-
-                npx sass -s expanded --watch --poll app/styles/statistics.scss $$COMPILED_ROOT/statistics.css
-    js-site:
-        <<: *base
-        depends_on: *depends_on
-        tty: true
-        entrypoint:
-            - /bin/sh
-            - -c
-            - >-
-                npx rollup --config rollup.config.mjs --watch --input app/scripts/index.ts --file $$COMPILED_ROOT/index.js
-    js-worker:
-        <<: *base
-        depends_on: *depends_on
-        tty: true
-        entrypoint:
-            - /bin/sh
-            - -c
-            - >-
-                npx rollup --config rollup.config.mjs --watch --input app/scripts/service.worker.ts --file $$COMPILED_ROOT/sw.js
+                npx rspack --mode=development --watch --env output=/compiled

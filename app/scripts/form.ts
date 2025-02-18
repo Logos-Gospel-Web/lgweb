@@ -7,3 +7,5 @@ for (let i = 0, n = fakeInputs.length; i < n; i += 1) {
         ;(fakeInput as HTMLInputElement).value = ''
     }, 1000)
 }
+
+export {}

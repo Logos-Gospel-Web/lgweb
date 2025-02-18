@@ -57,3 +57,5 @@ if (!String.prototype.padStart) {
         return pad + String(this).slice(0)
     }
 }
+
+export {}

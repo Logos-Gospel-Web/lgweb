@@ -1,0 +1,6 @@
+#!/bin/sh
+
+python manage.py migrate --no-input
+python manage.py migrate --database contact --no-input
+python manage.py migrate --database analytics --no-input
+python manage.py migrate --database analytics_temp --no-input

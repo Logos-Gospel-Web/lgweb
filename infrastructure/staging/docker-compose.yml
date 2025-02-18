@@ -1,19 +1,15 @@
 volumes:
     caddy_data: {}
     db: {}
-    static: {}
-    compiled: {}
     reports: {}
 services:
-    builder:
+    migrations:
         build: &build
             dockerfile: ./infrastructure/production/Dockerfile
-            target: builder
+            target: migrations
             context: ../..
         volumes: &volumes
             - db:/db/
-            - static:/static/
-            - compiled:/compiled/
             - reports:/reports/
     server:
         ports:
@@ -29,12 +25,10 @@ services:
             - WEB_HOST=:8000
             - WEB_URL=http://localhost:8000
         volumes:
-            - static:/static/
-            - compiled:/compiled/
             - caddy_data:/data/
     main: &main
         depends_on:
-            builder:
+            migrations:
                 condition: service_completed_successfully
         env_file:
             - .env

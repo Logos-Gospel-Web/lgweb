@@ -1,18 +1,14 @@
 volumes:
     caddy_data: {}
-    static: {}
-    compiled: {}
 services:
-    builder:
+    migrations:
         build: &build
             dockerfile: ./infrastructure/production/Dockerfile
-            target: builder
+            target: migrations
             context: ../..
         volumes: &volumes
             - /opt/lgweb/db/:/db/
             - /opt/lgweb/reports/:/reports/
-            - static:/static/
-            - compiled:/compiled/
     server:
         restart: unless-stopped
         ports:
@@ -28,13 +24,11 @@ services:
             - MAIN_URL=main:8000
             - ADMIN_URL=admin:8000
         volumes:
-            - static:/static/
-            - compiled:/compiled/
             - caddy_data:/data/
     main: &main
         restart: unless-stopped
         depends_on:
-            builder:
+            migrations:
                 condition: service_completed_successfully
         env_file:
             - .env
@@ -51,16 +45,10 @@ services:
                 limits:
                     cpus: '0.5'
     cron:
-        restart: unless-stopped
-        depends_on:
-            builder:
-                condition: service_completed_successfully
-        env_file:
-            - .env
+        <<: *main
         build:
             <<: *build
             target: cron
-        volumes: *volumes
         deploy:
             resources:
                 limits:
