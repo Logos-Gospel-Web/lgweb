@@ -16,7 +16,7 @@ def _count_dict(dict: defaultdict[Any, set], counter: Counter):
     return [(len(v), counter[k], k) for k, v in dict.items()]
 
 def statistics(request: HttpRequest) -> HttpResponse:
-    if not request.user.has_perm('app.can_view_analytics'):
+    if not request.user.has_perm('app.view_analytics'):
         return HttpResponseForbidden()
 
     year = request.GET.get('year', '')

@@ -32,26 +32,32 @@ class CustomIndexDashboard(Dashboard):
             models=('django.contrib.*',),
         ))
 
+        request = context['request']
+        links = []
+
+        links.append({
+            'title': 'Purge Cache',
+            'url': reverse('purge'),
+            'target': '_blank',
+        })
+
+        if request.user.has_perm('app.view_analytics'):
+            links.append({
+                'title': 'Statistics',
+                'url': reverse('statistics'),
+                'target': '_blank',
+            })
+
+        links.append({
+            'title': 'Template Doc',
+            'url': default_storage.url('template.doc', parameters={ 'dl': '1' }),
+        })
+
         self.children.append(modules.LinkList(
             'Additional info',
             column=2,
             collapsible=False,
-            children=[
-                {
-                    'title': 'Purge Cache',
-                    'url': reverse('purge'),
-                    'target': '_blank',
-                },
-                {
-                    'title': 'Statistics',
-                    'url': reverse('statistics'),
-                    'target': '_blank',
-                },
-                {
-                    'title': 'Template Doc',
-                    'url': default_storage.url('template.doc', parameters={ 'dl': '1' }),
-                },
-            ]
+            children=links
         ))
 
         self.children.append(modules.RecentActions(
