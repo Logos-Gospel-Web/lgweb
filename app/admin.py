@@ -105,10 +105,6 @@ class MessageInline(admin.StackedInline):
         (None, {
             'fields': ('type', 'position', 'enabled', 'publish'),
         }),
-    ) + make_multilingual_fields(
-        'title', 'author', 'banner', 'prefix',
-        'document', 'audio', 'content', 'preview',
-        collapsed=True
     )
 
     def formfield_for_dbfield(self, db_field, request, **kwargs):
