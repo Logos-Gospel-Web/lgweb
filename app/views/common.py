@@ -22,6 +22,7 @@ from ..models import LANGUAGES, to_locale, to_lang_tag, AnalyticsTemp
 contact_email = environ.get('CONTACT_EMAIL')
 force_https = environ.get('FORCE_HTTPS')
 
+_PREVIEW_KEY = 'preview'
 _DEFAULT_LANG = 'sc'
 _BUILD_VERSION = 'dev' if settings.DEBUG else ulid.new().str
 
@@ -98,7 +99,7 @@ def _get_fingerprint(request):
 
 def use_etag(key = None):
     def etag_func(request, *args, **kwargs):
-        return caches['etag'].get_or_set(request.path if key is None else key, random_string)
+        return None if _PREVIEW_KEY in request.GET else caches['etag'].get_or_set(request.path if key is None else key, random_string)
     return etag(etag_func)
 
 def get_base_url(request):
@@ -109,6 +110,12 @@ def get_build_version():
 
 def _get_base_context(request, lang):
     now = datetime.now()
+    if _PREVIEW_KEY in request.GET:
+        preview = request.GET[_PREVIEW_KEY]
+        try:
+            now = datetime.fromisoformat(preview)
+        except ValueError:
+            pass
     base_url = get_base_url(request)
     search_form_url = reverse('search_form', args=(lang,))
     return {
