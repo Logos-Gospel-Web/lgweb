@@ -6,7 +6,7 @@ import eslintPluginPrettier from 'eslint-plugin-prettier/recommended'
 /** @type {import('eslint').Linter.Config} */
 export default tseslint.config(
     {
-        ignores: ['dist', 'app/static/**'],
+        ignores: ['dist', 'app/static/admin/richtext/tinymce/**'],
     },
     eslint.configs.recommended,
     tseslint.configs.strict,
