@@ -5,28 +5,6 @@ volumes:
     nodemodules: {}
     caddy_data: {}
 services:
-    builder: &base
-        build:
-            dockerfile: ./infrastructure/development/Dockerfile
-            context: ../..
-        env_file:
-            - .env
-        environment:
-            - MODE=development
-            - ALLOWED_HOSTS=*
-            - STATIC_ROOT=/static
-            - LOCALE_PATH=/locales
-            - DB_ROOT=/db/db.sqlite3
-            - CONTACT_DB_ROOT=/db/contact.sqlite3
-            - ANALYTICS_DB_ROOT=/db/analytics.sqlite3
-            - ANALYTICS_TEMP_DB_ROOT=/db/analytics_temp.sqlite3
-        volumes:
-            - ../../:/lgweb/
-            - virtualenv:/venv/
-            - compiled:/compiled/
-            - db:/db/
-            - nodemodules:/lgweb/node_modules/
-        entrypoint: npm ci --omit=dev
     server:
         ports:
             - '8000:8000'
@@ -44,8 +22,25 @@ services:
             - ../../public:/public
             - compiled:/compiled/
             - caddy_data:/data/
-    main:
-        <<: *base
+    main: &main
+        build:
+            dockerfile: ./infrastructure/development/Dockerfile
+            context: ../..
+        env_file:
+            - .env
+        environment:
+            - MODE=development
+            - ALLOWED_HOSTS=*
+            - STATIC_ROOT=/static
+            - LOCALE_PATH=/locales
+            - DB_ROOT=/db/db.sqlite3
+            - CONTACT_DB_ROOT=/db/contact.sqlite3
+            - ANALYTICS_DB_ROOT=/db/analytics.sqlite3
+            - ANALYTICS_TEMP_DB_ROOT=/db/analytics_temp.sqlite3
+        volumes:
+            - ../../:/lgweb/
+            - virtualenv:/venv/
+            - db:/db/
         entrypoint:
             - /bin/sh
             - -c
@@ -63,12 +58,14 @@ services:
                 python manage.py compilemessages &&
                 python manage.py runserver 0.0.0.0:8000
     compiler:
-        <<: *base
-        depends_on:
-            builder:
-                condition: service_completed_successfully
+        <<: *main
+        volumes:
+            - ../../:/lgweb/
+            - compiled:/compiled/
+            - nodemodules:/lgweb/node_modules/
         entrypoint:
             - /bin/sh
             - -c
             - >-
+                npm i --omit=dev &&
                 npx rspack --mode=development --watch --env output=/compiled
