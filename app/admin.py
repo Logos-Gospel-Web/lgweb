@@ -140,6 +140,8 @@ class TopicAdmin(admin.ModelAdmin):
         'banner', 'title', 'author', 'end_msg', 'description',
         collapsed=True,
     )
+    class Media:
+        js = ('admin/buttons.js',)
 
 @admin.register(Message)
 class MessageAdmin(admin.ModelAdmin):
@@ -152,6 +154,8 @@ class MessageAdmin(admin.ModelAdmin):
         'title', 'author', 'banner', 'prefix',
         'document', 'audio', 'content', 'preview',
     )
+    class Media:
+        js = ('admin/buttons.js',)
 
 class ChildMenuItemForm(forms.ModelForm):
     class Meta:

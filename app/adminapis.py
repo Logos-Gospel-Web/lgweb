@@ -7,7 +7,7 @@ from base64 import b64encode
 from hashlib import sha256
 
 from .models import Topic, to_locale
-from .services.links import message_link
+from .services.links import message_link, topic_link
 from .services.import_doc import import_doc, process_doc
 
 def adminapi(fn):
@@ -81,9 +81,26 @@ def copy_doc_api(request):
     html = doc.to_doc(url, year)
     return HttpResponse(status=200, content=html)
 
+@adminapi
+def get_preview_link(request):
+    data = request.POST
+    language = 'sc'
+    position = int(data['position']) if 'position' in data else None
+    if 'slug' in data:
+        slug = data['slug']
+    else:
+        topic_id = data['topic_id']
+        topic = Topic.objects.get(pk=topic_id)
+        slug = topic.slug
+
+    link = topic_link(slug, language) if position is None else message_link(slug, position, language)
+    url = f'{request.scheme}://{request.get_host()}{link}'
+
+    return HttpResponse(status=200, content=url)
 
 urlpatterns = [
     path('document/image', upload_doc_image_api),
     path('document/import', import_doc_api),
     path('document/copy', copy_doc_api),
+    path('preview', get_preview_link),
 ]
