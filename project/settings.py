@@ -32,7 +32,7 @@ SECRET_KEY = environ.get('SECRET_KEY') or 'django-insecure-@e-x0)96^9l^&_)0j!cc0
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = environ.get('MODE') != 'production'
 
-ALLOWED_HOSTS = list(filter(None, (environ.get('ALLOWED_HOSTS') or '').split(',')))
+ALLOWED_HOSTS = list(set(filter(None, environ.get('ALLOWED_HOSTS', '').split(',') + environ.get('INTERNAL_HOSTS', '').split(','))))
 
 CSRF_TRUSTED_ORIGINS = [s + x for x in ALLOWED_HOSTS for s in ('http://', 'https://')]
 
