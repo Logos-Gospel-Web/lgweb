@@ -58,8 +58,8 @@ def view_func(skip_analytics = False):
 
             try:
                 resp = fn(request, *args, **kwargs)
-                if not skip_analytics and resp.status_code < 300 and 'test' not in request.path:
-                    _save_analytics(request, lang)
+                if not skip_analytics and resp.status_code < 300:
+                    _save_analytics(request)
                 return resp
             except (ObjectDoesNotExist, NotFound):
                 return render(request, 'site/pages/error404.html', request.context, status=404)
@@ -68,14 +68,14 @@ def view_func(skip_analytics = False):
 
     return wrapper
 
-def _save_analytics(request, lang):
+def _save_analytics(request):
     if request.method != 'GET':
         return
     headers = request.headers
     AnalyticsTemp(
         ip=request.context['ip'],
         fingerprint=request.context['fingerprint'],
-        language=lang,
+        language=request.context['language'],
         url=request.path,
         user_agent=headers.get('user-agent', ''),
         referrer=headers.get('referer', ''),
