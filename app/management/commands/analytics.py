@@ -1,6 +1,4 @@
-
 import subprocess
-import urllib
 import urllib.parse
 import urllib.request
 import json
@@ -21,9 +19,8 @@ def _get_country(ips):
     try:
         prefix = 'https://get.geojs.io/v1/ip/country.json?ip='
         query_str = ','.join((urllib.parse.quote(ip) for ip in ips))
-        sock = urllib.request.urlopen(prefix + query_str)
-        result: bytes = sock.read()
-        sock.close()
+        with urllib.request.urlopen(prefix + query_str) as sock:
+            result: bytes = sock.read()
         data = json.loads(result)
         for item in data:
             output[item['ip']] = item.get('country', 'XX')

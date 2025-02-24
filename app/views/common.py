@@ -1,10 +1,11 @@
 from django.shortcuts import redirect
 from django.core.exceptions import ObjectDoesNotExist
-from datetime import datetime
+from datetime import date, datetime
 from django.conf import settings
 from django.core.cache import caches
 from django.urls import reverse
 from django.utils import translation
+from django.utils.timezone import get_current_timezone
 from django.utils.translation import gettext as _
 from django.utils.translation.trans_real import parse_accept_lang_header
 from django.shortcuts import render
@@ -109,13 +110,16 @@ def get_build_version():
     return _BUILD_VERSION
 
 def _get_base_context(request, lang):
-    now = datetime.now()
+    tz = get_current_timezone()
+    now = datetime.now(tz=tz)
     if _PREVIEW_KEY in request.GET:
         preview = request.GET[_PREVIEW_KEY]
         try:
-            now = datetime.fromisoformat(preview)
+            d = date.fromisoformat(preview)
+            now = datetime(d.year, d.month, d.day, tzinfo=tz)
         except ValueError:
             pass
+    # print(now)
     base_url = get_base_url(request)
     search_form_url = reverse('search_form', args=(lang,))
     return {

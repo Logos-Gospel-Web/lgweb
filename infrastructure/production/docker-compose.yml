@@ -34,6 +34,7 @@ services:
             - .env
         environment:
             - FORCE_HTTPS=1
+            - MAIN_URL=main:8000
         build:
             <<: *build
             target: main

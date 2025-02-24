@@ -2,6 +2,7 @@ from datetime import datetime
 from django.urls import path, reverse
 from django.shortcuts import redirect
 from django.http import HttpRequest, HttpResponse
+from django.utils.timezone import get_current_timezone
 from .common import is_valid_language, get_base_url
 from ..models import LANGUAGES, Message
 from ..services.links import topic_link, message_link
@@ -10,7 +11,7 @@ def get_static_pages(base_url):
     return [[(lang, base_url + reverse(page, args=(lang,))) for lang, _ in LANGUAGES] for page in ('home', 'contact')]
 
 def get_all_messages(base_url):
-    now = datetime.now()
+    now = datetime.now(tz=get_current_timezone())
     msgs = Message.objects\
         .select_related('parent')\
         .filter(enabled=True, publish__lte=now, parent__enabled=True, parent__publish__lte=now)

@@ -3,6 +3,7 @@
     header -Server
     header ?Cache-Control {$CACHE_CONTROL}
     route {
+        error /private/* "Unauthorized" 403
         file_server {
             root /public
             pass_thru

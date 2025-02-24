@@ -20,14 +20,14 @@ def statistics(request: HttpRequest) -> HttpResponse:
         return HttpResponseForbidden()
 
     year = request.GET.get('year', '')
+    tz = get_current_timezone()
 
     if not re.match(r'^\d{4}$', year):
-        now = datetime.now()
+        now = datetime.now(tz=tz)
         year = str(now.year)
         return redirect(reverse('statistics') + '?year=' + year)
 
     year = int(year)
-    tz = get_current_timezone()
     this_year = datetime(year, 1, 1, tzinfo=tz)
     next_year = datetime(year + 1, 1, 1, tzinfo=tz)
     qs = Analytics.objects.filter(isbot=Value(0), created_at__gte=this_year, created_at__lt=next_year).exclude(country=Value(''))

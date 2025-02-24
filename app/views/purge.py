@@ -1,12 +1,12 @@
 from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
 from django.utils.translation import gettext as _
-from django.core.cache import caches
+
+from ..services.purge import purge_cache
 
 def purge(request: HttpRequest) -> HttpResponse:
     if not request.user.is_authenticated:
         return HttpResponseForbidden()
 
-    caches['default'].clear()
-    caches['etag'].clear()
+    purge_cache()
 
     return HttpResponse('Purged')

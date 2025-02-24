@@ -10,7 +10,7 @@ from .models import Topic, to_locale
 from .services.links import message_link, topic_link
 from .services.import_doc import import_doc, process_doc
 
-def adminapi(fn):
+def admin_api(fn):
     def wrap(request, *args, **kwargs):
         if not request.user.is_active or not request.user.is_staff:
             return HttpResponse(status=401)
@@ -22,7 +22,7 @@ def adminapi(fn):
 
     return wrap
 
-@adminapi
+@admin_api
 def upload_doc_image_api(request):
     file = request.FILES['file']
     ext = Path(file.name).suffix
@@ -36,7 +36,7 @@ def upload_doc_image_api(request):
 
     return HttpResponse(status=200, content=default_storage.url(stored_name))
 
-@adminapi
+@admin_api
 def import_doc_api(request):
     file = request.FILES['file']
     html = import_doc(file)
@@ -53,7 +53,7 @@ def import_doc_api(request):
     resp['x-data-author'] = b64encode(doc.author.encode('utf-8'))
     return resp
 
-@adminapi
+@admin_api
 def copy_doc_api(request):
     data = request.POST
     language = data['language']
@@ -81,7 +81,7 @@ def copy_doc_api(request):
     html = doc.to_doc(url, year)
     return HttpResponse(status=200, content=html)
 
-@adminapi
+@admin_api
 def get_preview_link(request):
     data = request.POST
     language = 'sc'
