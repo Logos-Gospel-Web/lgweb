@@ -2,12 +2,9 @@
 
 {% load i18n %}
 
-{% block title %}
-{% translate '頁面不存在' %}
-{% endblock title %}
+{% block title %}{% translate '頁面不存在' %}{% endblock title %}
 
 {% block content %}
 <div class="error__code">404</div>
 <div class="error__text">{% translate '頁面不存在' %}</div>
-<a class="error__back" href="{% url 'home' language %}">← {% translate '返回主頁' %}</a>
 {% endblock content %}
