@@ -2,6 +2,10 @@ name: Deploy
 
 on:
   workflow_dispatch:
+    inputs:
+      migrate:
+        type: boolean
+        description: Should Migrate
 
 jobs:
   deploy:
@@ -66,4 +70,6 @@ jobs:
 
       - name: Deploy
         shell: sh
-        run: docker compose -p lgweb -f ./infrastructure/production/docker-compose.yml up -d --build
+        run: docker compose -p lgweb -f ./infrastructure/production/$DOCKER_COMPOSE_FILE up -d --build --remove-orphans
+        env:
+          DOCKER_COMPOSE_FILE: ${{ inputs.migrate && 'docker-compose-migrate.yml' || 'docker-compose.yml' }}

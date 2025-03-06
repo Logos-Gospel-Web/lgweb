@@ -1,16 +1,23 @@
 volumes:
     caddy_data: {}
 services:
+    migrations:
+        build: &build
+            dockerfile: ./infrastructure/production/Dockerfile
+            target: migrations
+            context: ../..
+        volumes: &volumes
+            - /opt/lgweb/db/:/db/
+            - /opt/lgweb/reports/:/reports/
     server:
         restart: unless-stopped
         ports:
             - '80:80'
             - '443:443'
             - '443:443/udp'
-        build: &build
-            dockerfile: ./infrastructure/production/Dockerfile
+        build:
+            <<: *build
             target: server
-            context: ../..
         env_file:
             - .env.server
         environment:
@@ -20,6 +27,9 @@ services:
             - caddy_data:/data/
     main: &main
         restart: unless-stopped
+        depends_on:
+            migrations:
+                condition: service_completed_successfully
         env_file:
             - .env
         environment:
@@ -28,9 +38,7 @@ services:
         build:
             <<: *build
             target: main
-        volumes:
-            - /opt/lgweb/db/:/db/
-            - /opt/lgweb/reports/:/reports/
+        volumes: *volumes
     admin:
         <<: *main
         deploy:
