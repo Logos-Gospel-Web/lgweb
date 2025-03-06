@@ -3,9 +3,9 @@
 <div class="banner">
     <picture class="banner__picture">
         {% for item in srcset %}
-            <source media="{{ item.media }}" srcset="{{ item.srcset }}" />
+            <source media="{{ item.media }}" srcset="{{ item.srcset }}">
         {% endfor %}
-        <img class="banner__image" src="{{ banner.image.url }}" />
+        <img class="banner__image" src="{{ banner.image.url }}" alt="{{ banner.title }}">
     </picture>
     {% if link %}
         <a href="{{ link }}" draggable="false" title="{{ banner.title }}" class="banner__inner link--hidden">
