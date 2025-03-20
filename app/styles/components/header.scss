@@ -261,6 +261,7 @@ header,
         .header--expanded & {
             transition-duration: .3s;
             max-height: 100%;
+            padding-bottom: 48px;
         }
     }
 
