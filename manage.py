@@ -18,7 +18,7 @@ def main():
 
     # shortcuts
     if len(sys.argv) > 1:
-        messages_argv = ['-l', 'zh_CN', '-l', 'zh_TW', '-i', 'venv', '-i', 'infrastructure', '-i', 'static', '-i', '.vscode']
+        messages_argv = ['-l', 'zh_CN', '-l', 'zh_TW', '-i', 'venv', '-i', '.git', '-i', '.github', '-i', '.vscode', '-i', 'configs', '-i', 'infrastructure', '-i', 'lib', '-i', 'public']
         if sys.argv[1] == 'makemessages':
             sys.argv = sys.argv[:2] + messages_argv + ['--no-location']
         if sys.argv[1] == 'compilemessages':
