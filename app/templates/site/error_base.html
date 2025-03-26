@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock %} | {% translate '聖道福音網' %} Logos Gospel Web</title>
     <link href="/error.css" rel="stylesheet">
+    {% if head_inject %}{{ head_inject|safe }}{% endif %}
 </head>
 <body>
     <div class="error">

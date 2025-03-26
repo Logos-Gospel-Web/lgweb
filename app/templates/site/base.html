@@ -15,6 +15,7 @@
         <link href="/noscript.css?{{ build_version }}" rel="stylesheet">
     </noscript>
     {% include './components/banner_style.html' %}
+    {% if head_inject %}{{ head_inject|safe }}{% endif %}
 </head>
 <body>
     <div id="app">

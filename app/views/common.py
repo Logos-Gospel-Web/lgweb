@@ -22,6 +22,7 @@ from ..models import LANGUAGES, to_locale, to_lang_tag, AnalyticsTemp
 
 contact_email = environ.get('CONTACT_EMAIL')
 force_https = environ.get('FORCE_HTTPS')
+_head_inject = environ.get('HEAD_INJECT', '')
 
 _PREVIEW_KEY = 'preview'
 _DEFAULT_LANG = 'sc'
@@ -137,6 +138,7 @@ def _get_base_context(request, lang):
         'build_version': _BUILD_VERSION,
         'search_form_url': search_form_url,
         'search_max_length': 20,
+        'head_inject': _head_inject,
     }
 
 def make_title(title: str) -> str:

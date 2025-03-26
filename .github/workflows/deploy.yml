@@ -49,6 +49,7 @@ jobs:
           echo S3_SECRET_ACCESS_KEY=$S3_SECRET_ACCESS_KEY >> .env
           echo S3_BUCKET_NAME=$S3_BUCKET_NAME >> .env
           echo S3_CUSTOM_DOMAIN=$S3_CUSTOM_DOMAIN >> .env
+          echo HEAD_INJECT=$HEAD_INJECT >> .env
           echo WEB_DOMAIN=$WEB_DOMAIN >> .env.server
           echo WEB_HOST=$WEB_HOST >> .env.server
           echo WEB_URL=$WEB_URL >> .env.server
@@ -64,6 +65,7 @@ jobs:
           S3_SECRET_ACCESS_KEY: "${{ secrets.S3_SECRET_ACCESS_KEY }}"
           S3_BUCKET_NAME: "${{ vars.S3_BUCKET_NAME }}"
           S3_CUSTOM_DOMAIN: "${{ vars.S3_CUSTOM_DOMAIN }}"
+          HEAD_INJECT: "${{ vars.HEAD_INJECT }}"
           WEB_DOMAIN: "${{ vars.WEB_DOMAIN }}"
           WEB_HOST: "${{ vars.WEB_HOST }}"
           WEB_URL: "${{ vars.WEB_URL }}"
