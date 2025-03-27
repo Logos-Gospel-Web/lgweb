@@ -66,8 +66,8 @@ jobs:
           S3_BUCKET_NAME: "${{ vars.S3_BUCKET_NAME }}"
           S3_CUSTOM_DOMAIN: "${{ vars.S3_CUSTOM_DOMAIN }}"
           HEAD_INJECT: "${{ vars.HEAD_INJECT }}"
-          WEB_DOMAIN: "http://${{ vars.WEB_DOMAIN }}, https://${{ vars.WEB_DOMAIN }}"
-          WEB_HOST: "www.${{ vars.WEB_DOMAIN }}"
+          WEB_DOMAIN: "http://${{ vars.WEB_DOMAIN }}, https://${{ vars.WEB_DOMAIN }}, http://www.${{ vars.WEB_DOMAIN }}"
+          WEB_HOST: "https://www.${{ vars.WEB_DOMAIN }}"
           WEB_URL: "https://www.${{ vars.WEB_DOMAIN }}"
 
       - name: Deploy
