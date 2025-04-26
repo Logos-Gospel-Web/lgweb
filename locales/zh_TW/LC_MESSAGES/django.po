@@ -65,8 +65,8 @@ msgstr "，或者填寫以下表格表達您的意見。"
 msgid "您的姓名"
 msgstr "您的姓名"
 
-msgid "您的電子郵箱地址"
-msgstr "您的電子郵箱地址"
+msgid "您的電郵地址"
+msgstr "您的電郵地址"
 
 msgid "內容"
 msgstr "內容"

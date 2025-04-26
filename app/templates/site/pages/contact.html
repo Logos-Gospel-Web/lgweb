@@ -30,7 +30,7 @@
             {% include '../components/contact_label.html' with label=label error=errors.name %}
             <input class="contact__input--first" type="text" name="{{ keys.fake }}" size="50" maxlength="50" tabindex="-1">
             <input class="contact__input" type="text" name="{{ keys.name }}" size="50" maxlength="50" value="{{ values.name }}">
-            {% translate '您的電子郵箱地址' as label %}
+            {% translate '您的電郵地址' as label %}
             {% include '../components/contact_label.html' with label=label error=errors.email %}
             <input class="contact__input" type="email" name="{{ keys.email }}" size="50" maxlength="100" value="{{ values.email }}">
             {% translate '內容' as label %}
