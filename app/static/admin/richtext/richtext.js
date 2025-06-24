@@ -47,7 +47,7 @@ async function initializeTinymce(textarea) {
             export: 'http://example.com/export',
         },
         toolbar: [
-            'import export | undo redo | cut copy paste | styles | forecolor | bold italic underline removeformat | alignleft aligncenter alignright alignjustify | link | bullist numlist | table | image | block | visualblocks code help',
+            'import export | undo redo | cut copy paste | styles | forecolor | bold italic underline superscript subscript removeformat | alignleft aligncenter alignright alignjustify | link | bullist numlist | table | image | block | visualblocks code help',
         ],
         theme: 'silver',
         skin: false,
