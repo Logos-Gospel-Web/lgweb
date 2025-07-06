@@ -37,9 +37,7 @@
             </tbody>
         </table>
         {% if topic.end_msg|localize %}
-            <div class="topic__ended">
-                <span>{% localize topic.end_msg %}</span>
-            </div>
+            <section class="richtext">{{ topic.end_msg|localize|safe }}</section>
         {% endif %}
     </div>
 </main>

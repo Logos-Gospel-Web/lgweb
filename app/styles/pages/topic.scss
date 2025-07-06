@@ -60,24 +60,6 @@
     }
 }
 
-.topic__ended {
-    margin-top: 1em;
-    text-align: center;
-    letter-spacing: .2em;
-    margin-left: .2em;
-    color: #339966;
-    font-weight: 700;
-
-    & > span {
-        padding: 0 0.6em;
-    }
-
-    &::after, &::before {
-        content: "**";
-        vertical-align: middle;
-    }
-}
-
 .title--blog {
     margin-bottom: 20px;
 }

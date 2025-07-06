@@ -84,6 +84,7 @@ async function initializeTinymce(textarea) {
             { title: 'Paragraph', format: 'paragraph' },
             { title: 'Subtitle', format: 'subtitle' },
             { title: 'Remarks', format: 'remark' },
+            { title: 'Message End', format: 'msgend' },
         ],
         formats: {
             paragraph: {
@@ -99,6 +100,11 @@ async function initializeTinymce(textarea) {
             remark: {
                 block: 'p',
                 attributes: { class: 'remark' },
+                wrapper: false,
+            },
+            msgend: {
+                block: 'p',
+                attributes: { class: 'msgend' },
                 wrapper: false,
             },
             box: {

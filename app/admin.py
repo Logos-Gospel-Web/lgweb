@@ -122,8 +122,8 @@ class TopicForm(forms.ModelForm):
             'title_sc': TextInput(),
             'author_tc': TextInput(),
             'author_sc': TextInput(),
-            'end_msg_tc': TextInput(),
-            'end_msg_sc': TextInput(),
+            'end_msg_tc': RichTextInput(),
+            'end_msg_sc': RichTextInput(),
             'description_tc': RichTextInput(),
             'description_sc': RichTextInput(),
         }
@@ -137,7 +137,7 @@ class TopicAdmin(admin.ModelAdmin):
             'fields': ('type', 'enabled', 'publish', 'is_blog', 'slug'),
         }),
     ) + make_multilingual_fields(
-        'banner', 'title', 'author', 'end_msg', 'description',
+        'banner', 'title', 'author', 'description', 'end_msg',
         collapsed=True,
     )
     class Media:
