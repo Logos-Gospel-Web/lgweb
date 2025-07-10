@@ -1,0 +1,121 @@
+@use "../link";
+
+.richtext {
+    &::after {
+        content: "";
+        clear: both;
+        display: table;
+    }
+
+    .remark {
+        font-size: 0.9em;
+    }
+
+    .msgend {
+        text-align: center;
+        letter-spacing: .2em;
+        margin-left: .2em;
+        color: #339966;
+        font-weight: 700;
+
+        &::after, &::before {
+            padding: 0 0.6em;
+            content: "**";
+            vertical-align: middle;
+        }
+    }
+
+    .more {
+        display: none;
+    }
+
+    h2, p, ol, ul, table, img, .box {
+        margin: 1em 0 0 0;
+        &:first-child {
+            margin-top: 0;
+        }
+    }
+
+    h2 {
+        font-weight: 400;
+        text-decoration: underline;
+        margin-top: 2.5em;
+        font-size: 1em;
+    }
+
+    img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        margin: 0 auto;
+        clear: both;
+    }
+
+    a {
+        @extend .link;
+    }
+
+    .box {
+        text-align: center
+    }
+
+    .box__inner {
+        display: inline-block;
+        text-align: left;
+        border: 1px solid #000000;
+        padding: .5em;
+        min-width: 60px;
+        min-height: 40px;
+        margin: 0 auto;
+    }
+
+    @for $i from 6 through 24 {
+        @media screen and (min-width: ($i * 40px)) {
+            .box--left--#{$i * 40} {
+                float: left;
+                margin-right: .5em;
+            }
+
+            .box--right--#{$i * 40} {
+                float: right;
+                margin-left: .5em;
+            }
+        }
+    }
+
+    ol,
+    ul {
+        padding: 0;
+    }
+
+    li {
+        margin-left: 2em;
+        padding-left: .6em;
+    }
+
+    li+li {
+        margin-top: 0.5em;
+    }
+
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        p {
+            margin-top: 0;
+        }
+    }
+
+    thead {
+        background-color: #4F81BD;
+        color: white;
+    }
+
+    th {
+        font-weight: inherit;
+    }
+
+    th:empty,
+    td:empty {
+        padding: 0;
+    }
+}
