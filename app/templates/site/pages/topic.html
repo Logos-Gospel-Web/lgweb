@@ -6,6 +6,7 @@
 {% load page_link %}
 
 {% block content %}
+{% with description=topic.description|localize end_msg=topic.end_msg|localize %}
 {% if topic.banner|localize != None %}
     <div class="page-banner">
         {% include '../components/banner.html' with banner=topic.banner|localize %}
@@ -17,7 +18,9 @@
             <h1 class="title">{% localize topic.title %}</h1>
         {% endif %}
         <div class="author">{% localize topic.author %}</div>
-        <article class="richtext">{{ topic.description|localize|safe }}</article>
+        {% if description %}
+            <article class="richtext">{{ description|safe }}</article>
+        {% endif %}
         <table class="topic">
             <thead>
                 <tr>
@@ -36,9 +39,10 @@
                 {% endfor %}
             </tbody>
         </table>
-        {% if topic.end_msg|localize %}
-            <section class="richtext">{{ topic.end_msg|localize|safe }}</section>
+        {% if end_msg %}
+            <section class="richtext">{{ end_msg|safe }}</section>
         {% endif %}
     </div>
 </main>
+{% endwith %}
 {% endblock content %}
