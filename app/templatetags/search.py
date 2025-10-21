@@ -79,6 +79,8 @@ def search_result(page, keywords: list[str]):
     selected_priority = 0
     for child in root.children:
         text = child.text.lower()
+        if not text:
+            continue
         if child.name == 'p':
             if child.find('img'):
                 priority = 1
