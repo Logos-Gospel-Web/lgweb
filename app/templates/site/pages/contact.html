@@ -25,7 +25,6 @@
             <span>{% blocktranslate %}，或者填寫以下表格表達您的意見。{% endblocktranslate %}</span>
         </div>
         <form class="contact__form" method="POST" novalidate>
-            {% csrf_token %}
             {% translate '您的姓名' as label %}
             {% include '../components/contact_label.html' with label=label error=errors.name %}
             <input class="contact__input--first" type="text" name="{{ keys.fake }}" size="50" maxlength="50" tabindex="-1">

@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.utils.translation import gettext as _
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.views.decorators.cache import cache_page
+from django.views.decorators.csrf import csrf_exempt
 from django_ratelimit.core import is_ratelimited
 import re
 
@@ -72,6 +73,7 @@ def submit_form(values, **kwargs):
 
 _CONTACT_KEY = 'contact_success'
 
+@csrf_exempt
 @view_func()
 def contact(request: HttpRequest, lang) -> HttpResponse:
     context = request.context
