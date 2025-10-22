@@ -3,7 +3,6 @@ from bs4 import BeautifulSoup, PageElement, NavigableString
 from django import template
 from django.utils import translation
 from ..models import to_lang
-from django.urls import reverse
 
 register = template.Library()
 
@@ -79,7 +78,8 @@ def search_result(page, keywords: list[str]):
     selected_priority = 0
     for child in root.children:
         text = child.text.lower()
-        if not text:
+        text_len = len(text)
+        if text_len < 2:
             continue
         if child.name == 'p':
             if child.find('img'):
@@ -90,7 +90,7 @@ def search_result(page, keywords: list[str]):
                 priority = 4
         else:
             priority = 3
-        count = sum((text.count(k) for k in keywords)) / math.log10(len(text))
+        count = sum((text.count(k) for k in keywords)) / math.log10(text_len)
         if count > 0 and (priority > selected_priority or count > selected_count):
             selected = child
             selected_count = count
