@@ -32,6 +32,9 @@ def sanitize_email(email: str) -> str:
         return ''
     return f'{local}@{domain}'
 
+# consider bot if comment consist of only one word
+bot_value_re = re.compile(r'^[a-zA-Z0-9]+$')
+
 def validate_contact_form(values):
     fake = values.get(_keys['fake'], '')
 
@@ -41,6 +44,9 @@ def validate_contact_form(values):
     name = values.get(_keys['name'], '')
     email = values.get(_keys['email'], '')
     comment = values.get(_keys['comment'], '')
+
+    if bot_value_re.match(comment) and bot_value_re.match(name):
+        return dict(), dict(), True
 
     errors = dict()
 
