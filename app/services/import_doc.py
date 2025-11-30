@@ -173,6 +173,11 @@ def process_doc(html: str) -> Document:
             return False
         if index >= 3:
             return False
+        if el.has_attr('style'):
+            style = parseStyle(el['style'])
+            text_align = style.getProperty('text-align')
+            if text_align and text_align.value == 'right':
+                return True
         text = el.get_text()
         return '主講' in text or '主讲' in text or '筆者' in text or '笔者' in text
 
