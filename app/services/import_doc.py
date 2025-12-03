@@ -184,8 +184,13 @@ def process_doc(html: str) -> Document:
     def is_title(el, index):
         if el.name != 'p':
             return False
-        if index >= 4:
+        if index >= 3:
             return False
+        if el.has_attr('style'):
+            style = parseStyle(el['style'])
+            text_align = style.getProperty('text-align')
+            if text_align and text_align.value == 'center':
+                return True
         bold, total = 0, 0
         for child in el.contents:
             text_len = len(child.get_text().strip())
@@ -195,7 +200,6 @@ def process_doc(html: str) -> Document:
                 font_weight = style.getProperty('font-weight')
                 if font_weight and font_weight.value == 'bold':
                     bold += text_len
-
         return bold / text_len > 0.8
 
     def is_subtitle(el, index):
@@ -305,9 +309,9 @@ def process_doc(html: str) -> Document:
     for index, child in enumerate(body.contents):
         if isinstance(child, NavigableString):
             continue
-        if is_author(child, index):
+        if not author and is_author(child, index):
             author = child.get_text().strip()
-        elif is_title(child, index):
+        elif not title and is_title(child, index):
             title = child.get_text().strip()
         elif is_subtitle(child, index):
             contents.append(Subtitle(_apply_regex_filters(_content_regexp_filters, child.get_text().strip())))
