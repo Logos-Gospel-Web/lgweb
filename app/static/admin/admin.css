@@ -1,0 +1,8 @@
+.grp-collapse::selection, .grp-collapse .grp-row::selection, .grp-collapse-handler::selection {
+    background: revert;
+}
+
+.ui-datepicker .ui-datepicker-prev span, .ui-datepicker .ui-datepicker-next span {
+    display: block;
+    top: 35%;
+}

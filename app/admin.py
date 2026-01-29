@@ -77,6 +77,9 @@ class BannerForm(forms.ModelForm):
 class BannerAdmin(admin.ModelAdmin):
     form = BannerForm
 
+    class Media:
+        css = { 'all': ('admin/admin.css',) }
+
 class MessageForm(forms.ModelForm):
     class Meta:
         exclude = ['search_tc', 'search_sc']
@@ -142,6 +145,7 @@ class TopicAdmin(admin.ModelAdmin):
     )
     class Media:
         js = ('admin/buttons.js',)
+        css = { 'all': ('admin/admin.css',) }
 
 @admin.register(Message)
 class MessageAdmin(admin.ModelAdmin):
@@ -156,6 +160,7 @@ class MessageAdmin(admin.ModelAdmin):
     )
     class Media:
         js = ('admin/buttons.js',)
+        css = { 'all': ('admin/admin.css',) }
 
 class ChildMenuItemForm(forms.ModelForm):
     class Meta:
@@ -197,6 +202,9 @@ class ParentMenuItemAdmin(admin.ModelAdmin):
             'fields': ('position', 'enabled', 'page'),
         }),
     ) + make_multilingual_fields('title')
+
+    class Media:
+        css = { 'all': ('admin/admin.css',) }
 
 class HomeBannerForm(forms.ModelForm):
     class Meta:
@@ -251,6 +259,9 @@ class HomePageAdmin(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         return False
 
+    class Media:
+        css = { 'all': ('admin/admin.css',) }
+
 @admin.register(Contact)
 class ContactAdmin(admin.ModelAdmin):
     fields = ['name', 'email', 'comment', 'submitted_at', 'language', 'ip', 'fingerprint']
@@ -262,3 +273,6 @@ class ContactAdmin(admin.ModelAdmin):
 
     def has_delete_permission(self, request, obj=None):
         return False
+
+    class Media:
+        css = { 'all': ('admin/admin.css',) }
