@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1.21
 FROM alpine:3.19.1 AS base
 
 WORKDIR /lgweb
@@ -11,7 +12,8 @@ ENV TZ=Asia/Hong_Kong
 
 ADD requirements.txt /lgweb/
 
-RUN pip install -r requirements.txt --break-system-packages
+RUN pip install -r requirements.txt --break-system-packages &&\
+    rm requirements.txt
 
 RUN apk del 'build-base' 'py3-pip'
 
@@ -56,7 +58,15 @@ RUN python manage.py collectstatic --no-input &&\
 
 FROM base AS main
 
-COPY . /lgweb/
+COPY ./manage.py /lgweb/manage.py
+COPY ./project /lgweb/project
+COPY ./locales /lgweb/locales
+COPY --exclude=static/ \
+    --exclude=scripts/ \
+    --exclude=styles/ \
+    --exclude=migrations/ \
+    --exclude=management/ \
+    ./app /lgweb/app
 
 RUN python manage.py compilemessages
 
@@ -73,7 +83,17 @@ COPY lib/isbot/package-lock.json /lgweb/lib/isbot/
 
 RUN cd lib/isbot && npm ci --omit=dev
 
-COPY . /lgweb/
+COPY --exclude=app/static/ \
+    --exclude=app/scripts/ \
+    --exclude=app/styles/ \
+    --exclude=app/migrations/ \
+    --exclude=configs/ \
+    --exclude=public/ \
+    --exclude=.browserslistrc \
+    --exclude=package*.json \
+    --exclude=requirements.txt \
+    --exclude=rspack.config.mjs \
+    . /lgweb/
 
 RUN python manage.py compilemessages &&\
     cp ./infrastructure/production/crontab /etc/crontabs/root &&\

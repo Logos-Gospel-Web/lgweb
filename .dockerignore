@@ -14,6 +14,9 @@ infrastructure/*/Dockerfile*
 infrastructure/*/*.ps1
 infrastructure/*/*.sh
 configs/icomoon.json
+tsconfig*.json
+eslint.config.mjs
+LICENSE.md
 
 **/*.test.js
 **/*.test.ts

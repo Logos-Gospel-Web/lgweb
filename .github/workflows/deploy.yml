@@ -23,9 +23,6 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -p 22 "$SSH_HOST" > ~/.ssh/known_hosts
           docker context create remote --docker "host=ssh://$SSH_USERNAME@$SSH_HOST"
-          ssh-agent -a 22
-          echo "SSH_AUTH_SOCK=22" >> $GITHUB_ENV
-          echo "SSH_AGENT_PID=$SSH_AGENT_PID" >> $GITHUB_ENV
           docker context use remote
         env:
           SSH_HOST: ${{ vars.WEB_DOMAIN }}
@@ -72,6 +69,8 @@ jobs:
 
       - name: Deploy
         shell: sh
-        run: docker compose -p lgweb -f ./infrastructure/production/$DOCKER_COMPOSE_FILE up -d --build --remove-orphans
+        run: |
+          docker compose -p lgweb -f ./infrastructure/production/$DOCKER_COMPOSE_FILE build
+          docker compose -p lgweb -f ./infrastructure/production/$DOCKER_COMPOSE_FILE up -d --remove-orphans
         env:
           DOCKER_COMPOSE_FILE: ${{ inputs.migrate && 'docker-compose-migrate.yml' || 'docker-compose.yml' }}
