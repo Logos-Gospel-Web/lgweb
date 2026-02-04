@@ -9,6 +9,7 @@ from hashlib import sha256
 from .models import Topic, to_locale
 from .services.links import message_link, topic_link
 from .services.import_doc import import_doc, process_doc
+from .services.author import format_author
 
 def admin_api(fn):
     def wrap(request, *args, **kwargs):
@@ -68,6 +69,7 @@ def copy_doc_api(request):
         topic_id = data['topic_id']
         topic = Topic.objects.get(pk=topic_id)
         slug = topic.slug
+        author = format_author(author, topic.message_author_format[language])
 
     translation.activate(to_locale(language))
 

@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load localize %}
 <tr>
     <td>
         <a href="{{ url }}">{{ title }}</a>
@@ -6,6 +7,9 @@
             <span class="topic__new">NEW</span>
         {% endif %}
     </td>
+    {% if author_label %}
+        <td>{% localize page.author %}</td>
+    {% endif %}
     {% if has_audio %}
         {% if audio %}
             <td>

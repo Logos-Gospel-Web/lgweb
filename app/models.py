@@ -230,12 +230,14 @@ class Message:
         self.search_sc = convert_search_text(self.title_sc, self.content_sc)
         super(Message, self).save(*args, **kwargs)
 
-@model(multilingual=['end_msg', 'description'], base=Page)
+@model(multilingual=['message_author_label', 'message_author_format', 'end_msg', 'description'], base=Page)
 class Topic:
     class Meta:
         db_table = 'topic'
     is_blog = models.BooleanField('Blog layout')
     slug = models.SlugField('Slug')
+    message_author_label = lambda _: models.TextField('Message author label', blank=True)
+    message_author_format = lambda _: models.TextField('Message author format', blank=True)
     end_msg = lambda _: models.TextField('"End" message', blank=True)
     description = lambda _: models.TextField('Description', blank=True)
 

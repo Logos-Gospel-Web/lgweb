@@ -18,7 +18,7 @@
         {% if message.banner|localize == None %}
             <h1 class="title">{% localize message.title %}</h1>
         {% endif %}
-        <div class="author">{% localize message.author %}</div>
+        <div class="author">{{ author }}</div>
         {% if audio_player %}
             <audio class="audio__player" controls>
                 <source src="{{ audio_player }}" type="audio/mpeg">

@@ -38,6 +38,7 @@ def topic(request, lang, slug):
         'title': make_title(page.title[lang]),
         'fonts': [banner.subfont] if banner and banner.subfont and not banner.hide_title else None,
         'topic': page,
+        'author_label': page.message_author_label[lang],
         'has_audio': has_audio,
         'sidebar': sidebar,
         'topic_children': children,

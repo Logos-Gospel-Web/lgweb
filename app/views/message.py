@@ -7,6 +7,7 @@ from django.views.decorators.cache import cache_page
 
 from .common import use_etag, view_func, make_title, NotFound
 from ..services.queries import get_messages
+from ..services.author import format_author
 
 def get_message(slug, position, lang, now):
     return get_messages(lang, now)\
@@ -59,11 +60,15 @@ def message(request: HttpRequest, lang, slug, pos) -> HttpResponse:
     breadcrumb = get_breadcrumb(page.parent, context['menu'], lang)
     sidebar = get_sidebar(page.parent)
     banner = page.banner[lang]
+    raw_author: str = page.author[lang]
+    author_format: str = page.parent.message_author_format[lang]
+    author = format_author(raw_author, author_format)
     return render(request, 'site/pages/message.html', {
         **context,
         'title': make_title(page.title[lang]),
         'fonts': [banner.subfont] if banner and banner.subfont and not banner.hide_title else None,
         'message': page,
+        'author': author,
         'breadcrumb': breadcrumb,
         'sidebar': sidebar,
     })

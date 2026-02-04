@@ -26,9 +26,14 @@
                 <tr>
                     {% if has_audio %}
                         <td>{% translate '網上閱讀/收聽' %}</td>
-                        <td>{% translate '錄音下載' %}</td>
                     {% else %}
                         <td>{% translate '網上閱讀' %}</td>
+                    {% endif %}
+                    {% if author_label %}
+                        <td>{{ author_label }}</td>
+                    {% endif %}
+                    {% if has_audio %}
+                        <td>{% translate '錄音下載' %}</td>
                     {% endif %}
                     <td>{% translate '文字檔下載' %}</td>
                 </tr>

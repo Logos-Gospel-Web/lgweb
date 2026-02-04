@@ -129,6 +129,10 @@ class TopicForm(forms.ModelForm):
             'end_msg_sc': RichTextInput(),
             'description_tc': RichTextInput(),
             'description_sc': RichTextInput(),
+            'message_author_label_tc': TextInput(),
+            'message_author_label_sc': TextInput(),
+            'message_author_format_tc': TextInput(),
+            'message_author_format_sc': TextInput(),
         }
 
 @admin.register(Topic)
@@ -140,7 +144,7 @@ class TopicAdmin(admin.ModelAdmin):
             'fields': ('type', 'enabled', 'publish', 'is_blog', 'slug'),
         }),
     ) + make_multilingual_fields(
-        'banner', 'title', 'author', 'description', 'end_msg',
+        'banner', 'title', 'author', 'message_author_label', 'message_author_format', 'description', 'end_msg',
         collapsed=True,
     )
     class Media:
