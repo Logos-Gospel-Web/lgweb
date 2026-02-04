@@ -235,6 +235,7 @@ class Topic:
     class Meta:
         db_table = 'topic'
     is_blog = models.BooleanField('Blog layout')
+    show_author = models.BooleanField('Show Author', default=False)
     slug = models.SlugField('Slug')
     end_msg = lambda _: models.TextField('"End" message', blank=True)
     description = lambda _: models.TextField('Description', blank=True)

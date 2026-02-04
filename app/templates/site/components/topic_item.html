@@ -6,6 +6,9 @@
             <span class="topic__new">NEW</span>
         {% endif %}
     </td>
+    {% if show_author %}
+        <td>{{ page.author }}</td>
+    {% endif %}
     {% if has_audio %}
         {% if audio %}
             <td>
