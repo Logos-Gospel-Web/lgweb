@@ -2,7 +2,7 @@ import math
 from bs4 import BeautifulSoup, PageElement, NavigableString
 from django import template
 from django.utils import translation
-from ..models import to_lang
+from ..models import to_lang, with_lang
 
 register = template.Library()
 
@@ -59,7 +59,7 @@ def wrap_input(soup: BeautifulSoup, keywords: list[str], el: PageElement):
 @register.filter
 def search_title(page, keywords: list[str]):
     lang = to_lang(translation.get_language())
-    title = getattr(page, f'title_{lang}')
+    title = getattr(page, with_lang('title', lang))
     soup = BeautifulSoup(f'<h2 class="search__title">{title}</h2>', 'lxml')
     el = soup.h2
     wrap_input(soup, keywords, el)
@@ -68,7 +68,7 @@ def search_title(page, keywords: list[str]):
 @register.filter
 def search_result(page, keywords: list[str]):
     lang = to_lang(translation.get_language())
-    content = getattr(page, f'content_{lang}')
+    content = getattr(page, with_lang('content', lang))
     soup = BeautifulSoup(content, 'lxml')
     for div in soup.find_all('div', class_='box'):
         div.decompose()

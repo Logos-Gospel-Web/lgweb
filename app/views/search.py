@@ -7,6 +7,7 @@ from django.utils.translation import gettext as _
 from django.urls import reverse
 
 from .common import make_title, view_func
+from ..models import with_lang
 from ..services.queries import get_messages
 
 _PAGE_SIZE = 10
@@ -54,7 +55,7 @@ def search(request: HttpRequest, lang: str, input: str, page=1) -> HttpResponse:
     context = request.context
     if len(input) > context['search_max_length']:
         return redirect('search', lang=lang, input=input[:context['search_max_length']], page=1)
-    field_name = f'search_{lang}'
+    field_name = with_lang('search', lang)
     keywords = set((x.lower() for x in input.split() if x))
     # Remove keywords that contains in other keywords
     keywords = [k for k in keywords if next((False for k2 in keywords if k != k2 and k in k2), True)]
@@ -85,7 +86,7 @@ def search(request: HttpRequest, lang: str, input: str, page=1) -> HttpResponse:
     if end_index <= 0 or start_index >= message_count:
         return redirect('search', lang=lang, input=input, page=1)
 
-    title_field_name = f'title_{lang}'
+    title_field_name = with_lang('title', lang)
 
     def get_count(text):
         return sum((text.count(k) for k in keywords)) / len(text)
