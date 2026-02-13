@@ -2,7 +2,8 @@
 @use '../link';
 @use "../mixins";
 
-$nav-threshold: 840px;
+$subtitle-threshold: 1160px !default;
+$nav-threshold: 960px !default;
 
 header,
 .header,
@@ -162,7 +163,7 @@ header,
     }
 }
 
-@media not screen and (min-width: 1080px) {
+@media not screen and (min-width: $subtitle-threshold) {
     .header__title__subtitle {
         display: none;
     }

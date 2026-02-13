@@ -118,6 +118,23 @@ export default defineConfig((env, argv) => {
                     loader: 'sass-loader',
                     options: {
                         api: 'modern-compiler',
+                        additionalData: (content, loaderContext) => {
+                            const { resourcePath, rootContext } = loaderContext
+                            const relativePath = path.relative(
+                                rootContext,
+                                resourcePath,
+                            )
+
+                            if (relativePath === 'app/styles/index.scss') {
+                                // TODO: replace header variable
+                                // return content.replace(
+                                //     '@use "./components/header";',
+                                //     '@use "./components/header";',
+                                // )
+                            }
+
+                            return content
+                        },
                     },
                     type: 'css',
                 },
