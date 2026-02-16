@@ -1,9 +1,9 @@
 # syntax=docker/dockerfile:1.21
-FROM alpine:3.19.1 AS base
+FROM alpine:3.23.3 AS base
 
 WORKDIR /lgweb
 
-RUN apk add --no-cache 'abiword=~3' 'build-base' 'nginx' 'supervisor=~4' 'gettext' 'python3=~3.11' 'py3-pip=~23' 'tzdata' &&\
+RUN apk add --no-cache 'abiword=~3' 'build-base' 'gettext' 'python3=~3.12' 'py3-pip=~25' 'tzdata' &&\
     ln -sf /usr/bin/python3 /usr/bin/python &&\
     ln -sf /usr/bin/pip3 /usr/bin/pip &&\
     pip install gunicorn --break-system-packages
@@ -28,7 +28,7 @@ ENV ANALYTICS_TEMP_DB_ROOT=/db/analytics_temp.sqlite3
 
 FROM base AS node
 
-RUN apk add --no-cache 'nodejs=~20' 'npm=~10'
+RUN apk add --no-cache 'nodejs=~24' 'npm=~11'
 
 # ========================================
 
@@ -106,7 +106,7 @@ CMD [ "crond", "-f", "-d", "6" ]
 
 # ========================================
 
-FROM caddy:2.7-alpine AS server
+FROM caddy:2.11-alpine AS server
 
 ENV CACHE_CONTROL='max-age=3600'
 
