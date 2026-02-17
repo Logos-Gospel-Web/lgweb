@@ -70,7 +70,8 @@ jobs:
       - name: Deploy
         shell: sh
         run: |
-          docker compose -p lgweb -f ./infrastructure/production/$DOCKER_COMPOSE_FILE build
-          docker compose -p lgweb -f ./infrastructure/production/$DOCKER_COMPOSE_FILE up -d --remove-orphans
+          docker compose build
+          docker compose up -d --remove-orphans
         env:
-          DOCKER_COMPOSE_FILE: ${{ inputs.migrate && 'docker-compose-migrate.yml' || 'docker-compose.yml' }}
+          COMPOSE_PROJECT_NAME: lgweb
+          COMPOSE_FILE: ${{ inputs.migrate && './infrastructure/production/docker-compose.yml:./infrastructure/production/docker-compose-migrate.yml' || './infrastructure/production/docker-compose.yml' }}

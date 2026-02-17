@@ -1,56 +1,15 @@
-volumes:
-    caddy_data: {}
 services:
     migrations:
-        build: &build
+        build:
             dockerfile: ./infrastructure/production/Dockerfile
             target: migrations
             context: ../..
-        volumes: &volumes
+        volumes:
             - /opt/lgweb/db/:/db/
             - /opt/lgweb/reports/:/reports/
-    server:
-        restart: unless-stopped
-        ports:
-            - '80:80'
-            - '443:443'
-            - '443:443/udp'
-        build:
-            <<: *build
-            target: server
-        env_file:
-            - .env.server
-        environment:
-            - MAIN_URL=main:8000
-            - ADMIN_URL=admin:8000
-        volumes:
-            - caddy_data:/data/
-    main: &main
-        restart: unless-stopped
+    main: &depends_on
         depends_on:
             migrations:
                 condition: service_completed_successfully
-        env_file:
-            - .env
-        environment:
-            - FORCE_HTTPS=1
-            - INTERNAL_HOSTS=main
-        build:
-            <<: *build
-            target: main
-        volumes: *volumes
-    admin:
-        <<: *main
-        deploy:
-            resources:
-                limits:
-                    cpus: '0.5'
-    cron:
-        <<: *main
-        build:
-            <<: *build
-            target: cron
-        deploy:
-            resources:
-                limits:
-                    cpus: '0.5'
+    admin: *depends_on
+    cron: *depends_on
