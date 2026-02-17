@@ -104,6 +104,7 @@ class MessageInline(admin.StackedInline):
     fk_name = 'parent'
     extra = 0
     form = MessageForm
+    show_change_link = True
     fieldsets = (
         (None, {
             'fields': ('type', 'position', 'enabled', 'publish'),
