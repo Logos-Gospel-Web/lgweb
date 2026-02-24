@@ -5,24 +5,19 @@
     </filter>
     <g id="li">
       <circle cx="2.5" cy="2.5" r="2" fill="#909090" />
-      <rect width="20" height="4" x="8" y="0.5" fill="#909090" />
+      <rect width="20" height="3.5" x="6" y="0.75" fill="#909090" />
     </g>
   </defs>
   <path d="M10 5v90h70v-60q0-5-5-10l-15-15q-5-5-10-5h-40Z" fill="#fff" stroke="#666" stroke-width="0.5" />
   <path d="M73 22.5h-7.5v-7.5" stroke="#666" stroke-width="3" fill="none" filter="url(#blur)" />
   <path d="M80 35q0-5-5-10l-15-15q-5-5-10-5q12.5 1 12.5 17.5q17.5 1 17.5 12.5Z" stroke="#666" stroke-width="0.5" fill="#fff"/>
-  <use xlink:href="#li" x="17" y="31"/>
-  <use xlink:href="#li" x="17" y="39"/>
+  <use xlink:href="#li" x="17" y="33"/>
+  <use xlink:href="#li" x="17" y="40"/>
   <use xlink:href="#li" x="17" y="47"/>
   <rect width="22" height="16" x="48" y="34.5" stroke="#909090" fill="#fff" stroke-width="2" />
   <circle cx="53" cy="40" r="1.75" fill="#909090" />
   <path d="M51 48l3.5-3.5l2 1l5-6.5l1.5 3l1.5-.5l2 6.5Z" fill="#909090" />
   <rect x="5" y="55" width="80" height="25" rx="5" ry="5" fill="#0F568F" />
-  <path d="M23 60v15h5c10 0 10-15 0-15h-5Z" fill="#fff" />
-  <path d="M25.5 62.5v10h2c7 0 7-10 0-10h-2Z" fill="#0F568F" />     
-  <ellipse cx="45" cy="67.5" rx="6" ry="6.5" stroke="#fff" stroke-width="2.5" fill="none" />
-  <ellipse cx="61.5" cy="67.5" rx="6" ry="6.5" stroke="#fff" stroke-width="2.5" fill="none" />
-  <path d="M70 62.5v10l-10-5l10-5" fill="#0F568F" />
+  <text x="21" y="75.5" fill="#fff" style="font: bold 22px Arial">DOC</text>
   <path d="M72 54v30l-5-5c-4-4-10 2-6 6l11 11q4 4 8 0l11-11c4-4-2-10-6-6l-5 5v-30c0-6-8-6-8 0" fill="#06dd85" stroke="#037a49" stroke-width="2" />
-
 </svg>
