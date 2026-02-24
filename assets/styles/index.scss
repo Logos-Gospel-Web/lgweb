@@ -6,7 +6,7 @@
 @use "./components/banner";
 @use "./components/breadcrumb";
 @use "./components/footer";
-@use "./components/header";
+@use "./components/header" with ( $nav-threshold: $nav-threshold );
 @use "./components/rangeslider";
 @use "./components/search_form";
 @use "./components/sidebar";

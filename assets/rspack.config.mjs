@@ -46,6 +46,7 @@ const jsAssumptions = {
 export default defineConfig((env, argv) => {
     const isProduction = argv.mode === 'production'
     const outputPath = path.resolve(env.output || 'dist')
+    const navThreshold = env.navThreshold || '960px'
     return {
         cache: false,
         mode: argv.mode,
@@ -54,7 +55,7 @@ export default defineConfig((env, argv) => {
             script: './scripts/index.ts',
             sw: './scripts/service.worker.ts',
             style: './styles/index.scss',
-            richtext: './styles/richtext.scss',
+            richtext_editor: './styles/richtext_editor.scss',
             noscript: './styles/noscript.scss',
             error: './styles/error.scss',
             statistics: './styles/statistics.scss',
@@ -72,7 +73,7 @@ export default defineConfig((env, argv) => {
         module: {
             rules: [
                 {
-                    test: /\.js$/,
+                    test: /\.[jt]sx?$/,
                     exclude: /node_modules/,
                     loader: 'builtin:swc-loader',
                     /** @type {import('@rspack/core').SwcLoaderOptions} */
@@ -80,25 +81,6 @@ export default defineConfig((env, argv) => {
                         jsc: {
                             loose: true,
                             assumptions: jsAssumptions,
-                            parser: {
-                                syntax: 'ecmascript',
-                            },
-                        },
-                    },
-                    type: 'javascript/auto',
-                },
-                {
-                    test: /\.ts$/,
-                    exclude: /node_modules/,
-                    loader: 'builtin:swc-loader',
-                    /** @type {import('@rspack/core').SwcLoaderOptions} */
-                    options: {
-                        jsc: {
-                            loose: true,
-                            assumptions: jsAssumptions,
-                            parser: {
-                                syntax: 'typescript',
-                            },
                         },
                     },
                     type: 'javascript/auto',
@@ -110,17 +92,12 @@ export default defineConfig((env, argv) => {
                         api: 'modern-compiler',
                         additionalData: (content, loaderContext) => {
                             const { resourcePath, rootContext } = loaderContext
-                            const relativePath = path.relative(
-                                rootContext,
-                                resourcePath,
-                            )
+                            const relativePath = path
+                                .relative(rootContext, resourcePath)
+                                .replaceAll('\\', '/')
 
                             if (relativePath === 'styles/index.scss') {
-                                // TODO: replace header variable
-                                // return content.replace(
-                                //     '@use "./components/header";',
-                                //     '@use "./components/header";',
-                                // )
+                                return `$nav-threshold: ${navThreshold}; ${content}`
                             }
 
                             return content

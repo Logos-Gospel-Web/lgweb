@@ -2,8 +2,8 @@
 @use '../link';
 @use "../mixins";
 
-$subtitle-threshold: 1160px !default;
-$nav-threshold: 960px !default;
+$nav-threshold: 1200px !default;
+$subtitle-threshold: $nav-threshold + 166px;
 
 header,
 .header,

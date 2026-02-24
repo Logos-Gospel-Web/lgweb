@@ -1,6 +1,8 @@
-@use "./components/richtext";
+$name: 'lgweb-richtext-editor';
 
-.richtext {
+@use "./components/richtext" with ( $name: $name );
+
+.#{$name} {
     font-family: Verdana, Arial, Helvetica, Microsoft JhengHei, Segoe UI Semibold, Segoe UI, Lucida Grande, sans-serif;
     line-height: 1.5;
 }

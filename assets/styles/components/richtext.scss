@@ -1,6 +1,8 @@
 @use "../link";
 
-.richtext {
+$name: 'richtext' !default;
+
+.#{$name} {
     &::after {
         content: "";
         clear: both;

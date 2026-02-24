@@ -2,7 +2,7 @@
 
 function initializeExistingTextarea() {
     const textareas = document.querySelectorAll(
-        '.lgweb-richtext:not([aria-hidden])',
+        '.lgweb-richtext-field:not([aria-hidden])',
     )
     for (const textarea of Array.from(textareas)) {
         const isInEmpty = textarea.closest('.grp-empty-form')
@@ -76,8 +76,8 @@ async function initializeTinymce(textarea) {
             }
             throw new Error('Cannot upload image')
         },
-        body_class: 'richtext',
-        content_css: '/richtext.css',
+        body_class: 'lgweb-richtext-editor',
+        content_css: '/richtext_editor.css',
         fontsize_formats:
             '0.6em 0.65em 0.7em 0.75em 0.8em 0.9em 1em 1.25em 1.5em 1.75em 2em 2.25em 2.5em 3em 4em 5em 6em 8em',
         style_formats: [
