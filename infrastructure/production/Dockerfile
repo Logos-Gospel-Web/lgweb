@@ -72,14 +72,8 @@ CMD [ "gunicorn", "--bind", "0.0.0.0:8000", "project.wsgi:application" ]
 
 FROM base AS cron
 
-RUN apk add --no-cache 'nodejs=~24' 'npm=~11'
-
-COPY --parents lib/isbot/package*.json /lgweb/
-
-RUN cd lib/isbot && npm ci --omit=dev
-
 COPY --from=preprocessor /lgweb /lgweb
-COPY --parents ./app/management ./lib/isbot /lgweb/
+COPY --parents ./app/management /lgweb/
 COPY --chmod=600 ./server/crontab /etc/crontabs/root
 COPY --chmod=700 ./server/cron/* /cron/
 

@@ -8,7 +8,7 @@ import re
 
 from ..services.send_email import send_contact_email
 from ..models import Contact
-from .common import use_etag, view_func, make_title
+from .common import use_etag, view_func, make_title, get_ip, get_fingerprint
 
 _keys = {
     'name': '3nj99LU9Ko',
@@ -80,7 +80,7 @@ def submit_form(values, **kwargs):
 _CONTACT_KEY = 'contact_success'
 
 @csrf_exempt
-@view_func()
+@view_func(allow_post=True)
 def contact(request: HttpRequest, lang) -> HttpResponse:
     context = request.context
     status = ''
@@ -96,7 +96,7 @@ def contact(request: HttpRequest, lang) -> HttpResponse:
                 status = _('發送次數超出頻次限制，請稍後再嘗試。')
                 failed = True
             else:
-                id = submit_form(values, ip=context['ip'], language=lang, fingerprint=context['fingerprint'])
+                id = submit_form(values, ip=get_ip(request), language=lang, fingerprint=get_fingerprint(request))
                 send_contact_email(id, context['base_url'])
 
         if not failed:

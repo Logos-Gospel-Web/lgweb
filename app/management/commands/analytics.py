@@ -1,7 +1,7 @@
-import subprocess
 import urllib.parse
 import urllib.request
 import json
+import re
 
 from django.core.management.base import BaseCommand
 from django.db import transaction
@@ -27,28 +27,13 @@ def _get_country(ips):
     finally:
         return output
 
+bot_patterns = r'bot|crawler|spider|scoop|facebookexternalhit|adsbot|googlebot|bingbot|yandex|duckduckgo|slurp'
+
 def _generate_isbot():
     qs = Analytics.objects.filter(isbot__isnull=True).all()
-    agents = dict()
     for item in qs:
-        if item.user_agent not in agents:
-            agents[item.user_agent] = []
-        agents[item.user_agent].append(item)
-
-    if len(agents) > 0:
-        p = subprocess.Popen(['node', 'index.mjs'], cwd='lib/isbot', stdin=subprocess.PIPE, stdout=subprocess.PIPE)
-        for chunk in _chunks(list(agents.keys()), 100):
-            for agent in chunk:
-                p.stdin.write(agent.encode() + b'\n')
-            p.stdin.flush()
-            for agent in chunk:
-                output = p.stdout.read(1)
-                isbot = output == b'1'
-                items = agents[agent]
-                for item in items:
-                    item.isbot = isbot
-                Analytics.objects.bulk_update(items, ['isbot'])
-        p.terminate()
+        item.isbot = re.search(bot_patterns, item.user_agent, re.IGNORECASE) is not None
+    Analytics.objects.bulk_update(qs, ['isbot'])
 
 def _generate_country():
     qs = Analytics.objects.filter(isbot=Value(0), country=Value('')).all()
@@ -64,7 +49,7 @@ def _generate_country():
             for ip in chunk:
                 items = ips[ip]
                 for item in items:
-                    item.country = result[item.ip]
+                    item.country = result.get(item.ip, 'XX')
                 Analytics.objects.bulk_update(items, ['country'])
 
 _analytics_fields = ['id', 'created_at', 'ip', 'fingerprint', 'language', 'url', 'user_agent', 'referrer']

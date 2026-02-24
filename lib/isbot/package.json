@@ -1,7 +1,0 @@
-{
-    "name": "lgweb-isbot",
-    "type": "module",
-    "dependencies": {
-        "isbot": "^5.1.23"
-    }
-}

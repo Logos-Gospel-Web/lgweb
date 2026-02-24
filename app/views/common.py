@@ -3,6 +3,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from datetime import date, datetime
 from django.conf import settings
 from django.core.cache import caches
+from django.http import HttpResponse, HttpResponseForbidden
 from django.urls import reverse
 from django.utils import translation
 from django.utils.timezone import get_current_timezone
@@ -10,6 +11,7 @@ from django.utils.translation import gettext as _
 from django.utils.translation.trans_real import parse_accept_lang_header
 from django.shortcuts import render
 from django.views.decorators.cache import cache_control
+from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import etag
 from ipware import get_client_ip
 from hashlib import sha256
@@ -34,7 +36,7 @@ class NotFound(Exception):
 def is_valid_language(language: str) -> bool:
     return next((True for (lang, _) in LANGUAGES if lang == language), False)
 
-def parse_preferred_language(accept: str) -> str:
+def _parse_preferred_language(accept: str) -> str:
     for lang, _ in parse_accept_lang_header(accept):
         if lang in ('zh-hk', 'zh-mo', 'zh-tw', 'zh-hant'):
             return 'tc'
@@ -42,27 +44,40 @@ def parse_preferred_language(accept: str) -> str:
             return 'sc'
     return _DEFAULT_LANG
 
-def view_func(skip_analytics = False):
+def view_func(allow_post = False, skip_analytics = False):
     def wrapper(fn):
+        @csrf_exempt
         @cache_control(max_age=60)
         def wrap(request, *args, **kwargs):
+            if request.method == 'OPTIONS':
+                return HttpResponse(status=204)
+
             if 'lang' in kwargs:
                 lang = kwargs['lang']
             else:
                 lang = next((v for v in args if is_valid_language(v)), None)
 
-            if not is_valid_language(lang):
-                lang = parse_preferred_language(request.META.get('HTTP_ACCEPT_LANGUAGE', ''))
+            is_lang_valid = is_valid_language(lang)
+
+            if request.method == 'PUT':
+                if not skip_analytics and 'lgweb' in request.headers:
+                    if is_lang_valid:
+                        _save_analytics(request, lang)
+                    return HttpResponse(status=204)
+                return HttpResponseForbidden()
+
+            if not is_lang_valid:
+                lang = _parse_preferred_language(request.META.get('HTTP_ACCEPT_LANGUAGE', ''))
                 return redirect('home', lang)
 
-            translation.activate(to_locale(lang))
             request.context = _get_base_context(request, lang)
+            translation.activate(to_locale(lang))
+
+            if request.method != 'GET' and (not allow_post or request.method != 'POST'):
+                return HttpResponseForbidden()
 
             try:
-                resp = fn(request, *args, **kwargs)
-                if not skip_analytics and resp.status_code < 300:
-                    _save_analytics(request)
-                return resp
+                return fn(request, *args, **kwargs)
             except (ObjectDoesNotExist, NotFound):
                 return render(request, 'site/pages/error404.html', request.context, status=404)
 
@@ -70,20 +85,22 @@ def view_func(skip_analytics = False):
 
     return wrapper
 
-def _save_analytics(request):
-    if request.method != 'GET':
-        return
+def _save_analytics(request, lang):
     headers = request.headers
+    referrer = request.body.decode('utf-8')[:2048] if request.body else ''
     AnalyticsTemp(
-        ip=request.context['ip'],
-        fingerprint=request.context['fingerprint'],
-        language=request.context['language'],
+        ip=get_ip(request),
+        fingerprint=get_fingerprint(request),
+        language=lang,
         url=request.path,
         user_agent=headers.get('user-agent', ''),
-        referrer=headers.get('referer', ''),
+        referrer=referrer,
     ).save()
 
-def _get_fingerprint(request):
+def get_ip(request):
+    return get_client_ip(request)[0] or ''
+
+def get_fingerprint(request):
     headers = request.headers
     raw = ':'.join((
         headers.get('user-agent', ''),
@@ -125,8 +142,6 @@ def _get_base_context(request, lang):
     search_form_url = reverse('search_form', args=(lang,))
     return {
         'now': now,
-        'ip': get_client_ip(request)[0] or '',
-        'fingerprint': _get_fingerprint(request),
         'base_url': base_url,
         'path': request.path,
         'full_url': base_url + request.path,
