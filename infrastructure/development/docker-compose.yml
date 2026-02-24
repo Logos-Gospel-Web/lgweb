@@ -18,7 +18,7 @@ services:
             - WEB_URL=http://localhost:8000
             - CACHE_CONTROL=max-age=60
         volumes:
-            - ../../configs/Caddyfile:/etc/caddy/Caddyfile
+            - ../../server/Caddyfile:/etc/caddy/Caddyfile
             - ../../public:/public
             - compiled:/compiled/
             - caddy_data:/data/
@@ -62,10 +62,11 @@ services:
         volumes:
             - ../../:/lgweb/
             - compiled:/compiled/
-            - nodemodules:/lgweb/node_modules/
+            - nodemodules:/lgweb/assets/node_modules/
         entrypoint:
             - /bin/sh
             - -c
             - >-
+                cd /lgweb/assets &&
                 npm i --omit=dev &&
                 npx rspack --mode=development --watch --env output=/compiled

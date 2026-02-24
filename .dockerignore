@@ -1,6 +1,7 @@
 .git/
 .github/
 .vscode/
+**/dist/
 .dockerignore
 .editorconfig
 .gitignore
@@ -9,12 +10,9 @@
 *.log
 **/.env
 **/.env.*
-infrastructure/*/docker-compose.yml
-infrastructure/*/Dockerfile*
-infrastructure/*/*.ps1
-infrastructure/*/*.sh
-configs/icomoon.json
-tsconfig*.json
+infrastructure/
+misc/
+package*.json
 eslint.config.mjs
 LICENSE.md
 
@@ -24,7 +22,7 @@ LICENSE.md
 venv/
 *.mo
 *.sqlite3
-node_modules/
+**/node_modules/
 .DS_Store
 .Trash-*
 Thumbs.db

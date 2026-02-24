@@ -1,30 +1,20 @@
 import { defineConfig } from '@rspack/cli'
-import { Compilation } from '@rspack/core'
 import path from 'node:path'
 
-const CSS_EXT = ['.css', '.scss', '.sass']
-
 /** @type {import('@rspack/core').RspackPluginFunction} */
-const NoEmitCssPlugin = (compiler) => {
-    const name = 'NoEmitCssPlugin'
+const NoEmitJsPlugin = (compiler) => {
+    const name = 'NoEmitJsPlugin'
     compiler.hooks.thisCompilation.tap(name, (compilation) => {
-        compilation.hooks.processAssets.tap(
-            {
-                name,
-                stage: Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL,
-            },
-            () => {
-                for (const [key, entry] of compilation.entries.entries()) {
-                    for (const dep of entry.dependencies) {
-                        const ext = path.extname(dep.request)
-                        if (CSS_EXT.includes(ext)) {
-                            compilation.deleteAsset(key + '.js')
-                            break
-                        }
-                    }
+        compilation.hooks.chunkAsset.tap(name, (chunk, assetName) => {
+            if (assetName.endsWith('.js')) {
+                const modules = compilation.chunkGraph.getChunkModules(chunk)
+                if (
+                    modules.every((mod) => !mod.type.startsWith('javascript/'))
+                ) {
+                    compilation.deleteAsset(assetName)
                 }
-            },
-        )
+            }
+        })
     })
 }
 
@@ -61,13 +51,13 @@ export default defineConfig((env, argv) => {
         mode: argv.mode,
         devtool: isProduction ? false : false,
         entry: {
-            script: './app/scripts/index.ts',
-            sw: './app/scripts/service.worker.ts',
-            style: './app/styles/index.scss',
-            richtext: './app/styles/richtext.scss',
-            noscript: './app/styles/noscript.scss',
-            error: './app/styles/error.scss',
-            statistics: './app/styles/statistics.scss',
+            script: './scripts/index.ts',
+            sw: './scripts/service.worker.ts',
+            style: './styles/index.scss',
+            richtext: './styles/richtext.scss',
+            noscript: './styles/noscript.scss',
+            error: './styles/error.scss',
+            statistics: './styles/statistics.scss',
         },
         output: {
             path: outputPath,
@@ -77,7 +67,7 @@ export default defineConfig((env, argv) => {
             poll: 500,
         },
         resolve: {
-            extensions: ['.js', '.ts', '.json', ...CSS_EXT],
+            extensions: ['.js', '.ts', '.json', '.css', '.scss', '.sass'],
         },
         module: {
             rules: [
@@ -125,7 +115,7 @@ export default defineConfig((env, argv) => {
                                 resourcePath,
                             )
 
-                            if (relativePath === 'app/styles/index.scss') {
+                            if (relativePath === 'styles/index.scss') {
                                 // TODO: replace header variable
                                 // return content.replace(
                                 //     '@use "./components/header";',
@@ -140,7 +130,7 @@ export default defineConfig((env, argv) => {
                 },
             ],
         },
-        plugins: [{ apply: NoEmitCssPlugin }],
+        plugins: [{ apply: NoEmitJsPlugin }],
         optimization: {
             splitChunks: false,
         },

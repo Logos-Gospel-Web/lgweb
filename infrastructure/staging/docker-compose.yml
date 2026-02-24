@@ -39,3 +39,8 @@ services:
             target: main
         volumes: *volumes
     admin: *main
+    cron:
+        <<: *main
+        build:
+            <<: *build
+            target: cron

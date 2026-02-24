@@ -1,10 +1,13 @@
 import eslint from '@eslint/js'
 import globals from 'globals'
 import tseslint from 'typescript-eslint'
+import { defineConfig } from 'eslint/config'
 import eslintPluginPrettier from 'eslint-plugin-prettier/recommended'
 
+const browserFiles = ['app/**', 'assets/scripts/**']
+
 /** @type {import('eslint').Linter.Config} */
-export default tseslint.config(
+export default defineConfig(
     {
         ignores: ['dist', 'app/static/admin/richtext/tinymce/**'],
     },
@@ -40,7 +43,7 @@ export default tseslint.config(
         },
     },
     {
-        files: ['app/**'],
+        files: browserFiles,
         languageOptions: {
             globals: {
                 ...globals.browser,
@@ -48,7 +51,7 @@ export default tseslint.config(
         },
     },
     {
-        ignores: ['app/**'],
+        ignores: browserFiles,
         languageOptions: {
             globals: {
                 ...globals.node,
