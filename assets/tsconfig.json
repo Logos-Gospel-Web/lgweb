@@ -3,6 +3,7 @@
         "target": "esnext",
         "module": "esnext",
         "lib": ["ESNext", "DOM"],
+        "jsx": "react-jsx",
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "moduleResolution": "Bundler",

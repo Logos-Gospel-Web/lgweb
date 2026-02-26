@@ -20,13 +20,11 @@ class RichTextInput(Input):
     class Media:
         css = {
             'all': (
-                'admin/richtext/tinymce/skins/ui/oxide/skin.min.css',
+                '/richtext_editor_style.css',
             )
         }
         js = (
-            'https://cdn.jsdelivr.net/npm/js-base64@3.7.5/base64.min.js',
-            'admin/richtext/tinymce/tinymce.min.js',
-            'admin/richtext/richtext.js',
+            '/richtext_editor_script.js',
         )
 
 class JS:
