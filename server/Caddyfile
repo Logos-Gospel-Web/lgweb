@@ -1,6 +1,7 @@
 {$WEB_HOST} {
     root * /
     header -Server
+    header -Via
     header ?Cache-Control {$CACHE_CONTROL}
     route {
         error /private/* "Unauthorized" 403
@@ -23,5 +24,6 @@
 
 {$WEB_DOMAIN} {
     header -Server
+    header -Via
     redir {$WEB_URL}{uri}
 }
