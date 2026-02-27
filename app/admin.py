@@ -90,8 +90,6 @@ class MessageForm(forms.ModelForm):
             'author_sc': TextInput(),
             'prefix_tc': TextInput(),
             'prefix_sc': TextInput(),
-            'preview_tc': RichTextInput(),
-            'preview_sc': RichTextInput(),
             'content_tc': RichTextInput(),
             'content_sc': RichTextInput(),
         }
@@ -159,7 +157,7 @@ class MessageAdmin(admin.ModelAdmin):
         }),
     ) + make_multilingual_fields(
         'title', 'author', 'banner', 'prefix',
-        'document', 'audio', 'content', 'preview',
+        'document', 'audio', 'content',
     )
     class Media:
         js = ('admin/buttons.js',)

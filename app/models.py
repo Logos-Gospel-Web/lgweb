@@ -197,7 +197,7 @@ class Page:
     def __str__(self):
         return f'({self.type.title()}) {print_multilingual(self, "title")}'
 
-@model(multilingual=['prefix', 'document', 'audio', 'preview', 'content', 'search'], base=Page)
+@model(multilingual=['prefix', 'document', 'audio', 'content', 'search'], base=Page)
 class Message:
     class Meta:
         db_table = 'message'
@@ -207,7 +207,6 @@ class Message:
     prefix = lambda _: models.TextField('Prefix', blank=True)
     document = lambda _: models.FileField('Document', upload_to='message/document/', blank=True)
     audio = lambda _: models.FileField('Audio', upload_to='message/audio/', blank=True)
-    preview = lambda _: models.TextField('Preview', blank=True)
     content = lambda _: models.TextField('Content', blank=True)
     search = lambda _: models.TextField(blank=True)
 
