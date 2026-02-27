@@ -1,13 +1,14 @@
 {% load i18n %}
 {% load localize %}
 {% load page_link %}
+{% load message %}
 <div class="blog">
     <h2 class="blog__title">
         <a class="link--hover" href="{{ page|page_link:slug }}">{% localize page.title %}</a>
     </h2>
     <div>{% blocktranslate with year=page.publish|date:'Y' month=page.publish|date:'n' %}{{ year }}年{{ month }}月{% endblocktranslate %}</div>
     <div class="blog__author">{% localize page.author %}</div>
-    <article class="richtext">{{ page.preview|localize|safe }}</article>
+    <article class="richtext">{{ page.content|localize|preview|safe }}</article>
     <div class="blog__further">
         <a class="link" href="{{ page|page_link:slug }}">{% translate "(深入瞭解...)" %}</a>
     </div>

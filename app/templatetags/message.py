@@ -25,3 +25,10 @@ def file_dl(var):
     if x and x.name:
         return x.url + '&dl=1' if '?' in x.url else x.url + '?dl=1'
     return None
+
+@register.filter
+def preview(content: str):
+    index = content.find('<hr')
+    if index == -1:
+        return content
+    return content[:index]
