@@ -2,7 +2,7 @@
 {% load localize %}
 <tr>
     <td>
-        <a href="{{ url }}">{{ title }}</a>
+        <a href="{{ url }}{{ url_suffix }}">{{ title }}</a>
         {% if is_new %}
             <span class="topic__new">NEW</span>
         {% endif %}

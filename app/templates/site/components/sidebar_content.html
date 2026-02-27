@@ -4,7 +4,7 @@
 <nav>
     {% for item in sidebar.children %}
         <div class="sidebar__item">
-            <a class="link--hover" href="{{ item|page_link:sidebar.topic.slug }}">{{ item|full_title:language }}</a>
+            <a class="link--hover" href="{{ item|page_link:sidebar.topic.slug }}{{ url_suffix }}">{{ item|full_title:language }}</a>
         </div>
     {% endfor %}
 </nav>

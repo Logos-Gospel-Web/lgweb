@@ -4,7 +4,7 @@
         <div class="footer__copyright">{% blocktranslate with year=now|date:'Y' %}© {{ year }} LOGOS福音網。版權所有。{% endblocktranslate %}</div>
         <div class="footer__contact">
             <span>Email: <a class="link--hover" href="mailto:{{ contact_email }}">{{ contact_email }}</a></span>
-            <span> (<a class="link--hover" href="{% url 'contact' language %}">{% translate '聯絡我們' %}</a>)</span>
+            <span> (<a class="link--hover" href="{% url 'contact' language %}{{ url_suffix }}">{% translate '聯絡我們' %}</a>)</span>
         </div>
     </div>
     {% include './toolbar.html' %}

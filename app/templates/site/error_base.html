@@ -14,7 +14,7 @@
     <div class="error">
         <div class="error__block">
             {% block content %}{% endblock %}
-            <a class="error__back" href="{% url 'home' language %}">← {% translate '返回主頁' %}</a>
+            <a class="error__back" href="{% url 'home' language %}{{ url_suffix }}">← {% translate '返回主頁' %}</a>
         </div>
     </div>
 </body>

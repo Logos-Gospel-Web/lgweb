@@ -8,10 +8,10 @@
     <td class="latest__page">
         <div class="latest__page__inner">
             <div class="latest__title latest__item">
-                <a class="link--hover" href="{{ msg|page_link }}">{% localize msg.title %}</a>
+                <a class="link--hover" href="{{ msg|page_link }}{{ url_suffix }}">{% localize msg.title %}</a>
             </div>
             <div class="latest__parent latest__item">
-                <a class="link--hover" href="{{ msg.parent|page_link }}">{% localize msg.parent.title %}</a>
+                <a class="link--hover" href="{{ msg.parent|page_link }}{{ url_suffix }}">{% localize msg.parent.title %}</a>
             </div>
         </div>
     </td>

@@ -5,7 +5,7 @@
 <div class="promotions">
     {% for promotion in promotions %}
         <div class="promo">
-            <a class="promo__inner" href="{{ promotion.page|page_link }}">
+            <a class="promo__inner" href="{{ promotion.page|page_link }}{{ url_suffix }}">
                 <div class="promo__left">
                     <div class="promo__left__inner">
                         <div class="promo__image" style="background-image:url('{{ promotion.image.url }}')"></div>

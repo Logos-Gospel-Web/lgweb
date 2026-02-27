@@ -1,7 +1,7 @@
 {% load localize %}
 <li class="nav__item">
     {% if link %}
-        <a href="{{ link }}" class="nav__item__inner">
+        <a href="{{ link }}{{ url_suffix }}" class="nav__item__inner">
             <span class="nav__item__text">{% localize title %}</span>
             {% if children %}
                 <span class="icon nav__arrow nav__expand"></span>

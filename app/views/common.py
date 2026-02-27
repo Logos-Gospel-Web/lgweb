@@ -140,11 +140,13 @@ def _get_base_context(request, lang):
     tz = get_current_timezone()
     now = datetime.now(tz=tz)
     has_preview = _PREVIEW_KEY in request.GET
+    url_suffix = ''
     if has_preview:
         preview = request.GET[_PREVIEW_KEY]
         try:
             d = date.fromisoformat(preview)
             now = datetime(d.year, d.month, d.day, tzinfo=tz)
+            url_suffix = '?preview=' + preview
         except ValueError:
             pass
     # print(now)
@@ -164,6 +166,7 @@ def _get_base_context(request, lang):
         'search_form_url': search_form_url,
         'search_max_length': 20,
         'head_inject': _head_inject,
+        'url_suffix': url_suffix,
     }
 
 def make_title(title: str) -> str:

@@ -1,6 +1,6 @@
 {% load i18n %}
 {% load page_link %}
-<a class="toolbar toolbar--language" href="{{ request.path|switch_language }}">{% translate 'Language' %}</a>
+<a class="toolbar toolbar--language" href="{{ request.path|switch_language }}{{ url_suffix }}">{% translate 'Language' %}</a>
 <div class="icon toolbar toolbar--fontsize"></div>
 <div class="icon toolbar toolbar--search"></div>
 <div class="icon toolbar toolbar--qrcode"></div>
