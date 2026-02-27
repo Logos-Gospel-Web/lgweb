@@ -22,12 +22,12 @@ FROM alpine:3.23.3 AS base
 
 WORKDIR /lgweb
 
-RUN apk add --no-cache 'abiword=~3' 'build-base' 'gettext' 'python3=~3.12' 'py3-pip=~25' 'tzdata' &&\
+ENV TZ=Asia/Hong_Kong
+
+RUN apk add --no-cache 'abiword=~3' 'abiword-plugin-openxml=~3' 'build-base' 'gettext' 'python3=~3.12' 'py3-pip=~25' 'tzdata' &&\
     ln -sf /usr/bin/python3 /usr/bin/python &&\
     ln -sf /usr/bin/pip3 /usr/bin/pip &&\
     pip install gunicorn --break-system-packages
-
-ENV TZ=Asia/Hong_Kong
 
 ADD requirements.txt /lgweb/
 
