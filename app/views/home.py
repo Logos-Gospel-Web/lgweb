@@ -9,6 +9,7 @@ from ..services.queries import get_messages
 
 def get_home_banners(lang):
     return HomeBanner.objects\
+        .with_topic()\
         .select_related('banner')\
         .select_related('target_page')\
         .filter(language=lang)
@@ -18,7 +19,7 @@ def get_latest_messages(lang, now):
 
 def get_promotions(lang):
     return Promotion.objects\
-        .with_page_url()\
+        .with_topic()\
         .filter(language=lang)
 
 @view_func()

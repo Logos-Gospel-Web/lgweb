@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Q
 from django.utils import timezone
 import ulid
 from app.services.convert_search_text import convert_search_text
@@ -71,14 +72,25 @@ def model(*, multilingual: list[str] = [], base: type[models.Model] = models.Mod
 
     return decorator
 
-def WithPageManager(page_field):
+def WithTopicManager(page_field):
     class Manager(models.Manager):
-        def with_page_url(self):
+        def with_topic(self):
             return self\
                 .select_related(f'{page_field}__message__parent')\
-                .select_related(f'{page_field}__topic')\
+                .select_related(f'{page_field}__topic')
 
-    return Manager()
+    return Manager
+
+def MenuManager(page_field):
+    class Manager(WithTopicManager(page_field)):
+        def filter_disabled_item(self, now, include_null = False):
+            query = self.with_topic().filter(enabled=True)
+            q = { f'{page_field}__enabled': True, f'{page_field}__publish__lte': now }
+            if include_null:
+                return query.filter(Q(**{ f'{page_field}__isnull': True }) | Q(**q))
+            return query.filter(**q)
+
+    return Manager
 
 @model()
 class HomePage:
@@ -119,7 +131,7 @@ class Banner:
 
 @model()
 class HomeBanner:
-    objects = WithPageManager('target_page')
+    objects = WithTopicManager('target_page')()
     class Meta:
         db_table = 'home_banner'
         ordering = ['position']
@@ -135,7 +147,7 @@ class HomeBanner:
 
 @model()
 class Promotion:
-    objects = WithPageManager('page')
+    objects = WithTopicManager('page')()
     class Meta:
         db_table = 'promotion'
         ordering = ['position']
@@ -153,7 +165,7 @@ class Promotion:
 
 @model(multilingual=['title'])
 class MenuItem:
-    objects = WithPageManager('page')
+    objects = MenuManager('page')()
     class Meta:
         db_table = 'menu_item'
         ordering = ['position']

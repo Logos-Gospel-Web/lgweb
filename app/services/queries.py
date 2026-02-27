@@ -1,17 +1,17 @@
-from django.db.models import Prefetch
+from django.db.models import Prefetch, Q
 from ..models import with_lang, ParentMenuItem, ChildMenuItem, Message
 
-def get_menu():
-    return ParentMenuItem.objects\
-        .with_page_url()\
+def get_menu(now):
+    menu = ParentMenuItem.objects\
+        .filter_disabled_item(now, True)\
         .prefetch_related(
             Prefetch(
                 'children',
                 queryset=ChildMenuItem.objects\
-                    .with_page_url()\
-                    .filter(enabled=True))
+                    .filter_disabled_item(now, False))
         )\
-        .filter(enabled=True)
+        .all()
+    return [item for item in menu if item.children.exists() or item.page is not None]
 
 def get_messages(lang, now, with_parent=True):
     res = Message.objects\

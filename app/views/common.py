@@ -2,7 +2,7 @@ from django.shortcuts import redirect
 from django.core.exceptions import ObjectDoesNotExist
 from datetime import date, datetime
 from django.conf import settings
-from django.core.cache import caches
+from django.core.cache import cache, caches
 from django.http import HttpResponse, HttpResponseForbidden
 from django.urls import reverse
 from django.utils import translation
@@ -29,9 +29,18 @@ _head_inject = environ.get('HEAD_INJECT', '')
 _PREVIEW_KEY = 'preview'
 _DEFAULT_LANG = 'sc'
 _BUILD_VERSION = 'dev' if settings.DEBUG else ulid.new().str
+_MENU_CACHE_KEY = '__MENU__'
 
 class NotFound(Exception):
     pass
+
+def _get_menu_cached(now: datetime):
+    value = cache.get(_MENU_CACHE_KEY)
+    if value:
+        return value
+    value = get_menu(now)
+    cache.set(_MENU_CACHE_KEY, value)
+    return value
 
 def is_valid_language(language: str) -> bool:
     return next((True for (lang, _) in LANGUAGES if lang == language), False)
@@ -130,7 +139,8 @@ def get_build_version():
 def _get_base_context(request, lang):
     tz = get_current_timezone()
     now = datetime.now(tz=tz)
-    if _PREVIEW_KEY in request.GET:
+    has_preview = _PREVIEW_KEY in request.GET
+    if has_preview:
         preview = request.GET[_PREVIEW_KEY]
         try:
             d = date.fromisoformat(preview)
@@ -146,7 +156,7 @@ def _get_base_context(request, lang):
         'path': request.path,
         'full_url': base_url + request.path,
         'contact_email': contact_email,
-        'menu': get_menu(),
+        'menu': get_menu(now) if has_preview else _get_menu_cached(now),
         'language': lang,
         'locale': to_locale(lang),
         'lang_tag': to_lang_tag(lang),
