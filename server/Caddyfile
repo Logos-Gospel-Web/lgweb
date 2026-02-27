@@ -2,7 +2,24 @@
     root * /
     header -Server
     header -Via
-    header ?Cache-Control {$CACHE_CONTROL}
+    @GET method GET
+    @NOT_GET not method GET
+    header @GET Cache-Control {$CACHE_CONTROL} {
+        match {
+            status 2xx
+            header !Cache-Control
+        }
+    }
+    header @NOT_GET -Cache-Control
+    header -Cache-Control {
+        match status 4xx 5xx
+    }
+    header -Content-Type {
+        match status 204
+    }
+    header -Content-Length {
+        match status 204
+    }
     route {
         error /private/* "Unauthorized" 403
         file_server {
