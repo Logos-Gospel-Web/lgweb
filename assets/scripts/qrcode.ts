@@ -244,19 +244,19 @@ function placeFinderPatterns(matrix: Matrix, row: number, column: number) {
     fillArea(matrix, row + 2, column + 2, 3, 3)
 }
 
-function placeFixedPatterns(matrix: Matrix, version: Version) {
-    const [array, offset, size] = matrix
+function placeFixedPatterns(matrix: Matrix) {
+    const [array, offset, size, version] = matrix
     // Finder patterns
     placeFinderPatterns(matrix, 0, 0)
     placeFinderPatterns(matrix, size - 7, 0)
     placeFinderPatterns(matrix, 0, size - 7)
     // Separators
-    fillArea(matrix, 7, 0, 8, 1, 0)
-    fillArea(matrix, 0, 7, 1, 7, 0)
-    fillArea(matrix, size - 8, 0, 8, 1, 0)
-    fillArea(matrix, 0, size - 8, 1, 7, 0)
-    fillArea(matrix, 7, size - 8, 8, 1, 0)
-    fillArea(matrix, size - 7, 7, 1, 7, 0)
+    // fillArea(matrix, 7, 0, 8, 1, 0)
+    // fillArea(matrix, 0, 7, 1, 7, 0)
+    // fillArea(matrix, size - 8, 0, 8, 1, 0)
+    // fillArea(matrix, 0, size - 8, 1, 7, 0)
+    // fillArea(matrix, 7, size - 8, 8, 1, 0)
+    // fillArea(matrix, size - 7, 7, 1, 7, 0)
     // Alignment patterns
     const alignmentTracks = getAlignmentTracks(version)
     const lastTrack = alignmentTracks.length - 1
@@ -276,7 +276,7 @@ function placeFixedPatterns(matrix: Matrix, version: Version) {
         })
     })
     // Timing patterns
-    for (let pos = 8; pos < size - 9; pos += 2) {
+    for (let pos = 8; pos <= size - 9; pos += 2) {
         array[offset(6, pos)] = 1
         array[offset(6, pos + 1)] = 0
         array[offset(pos, 6)] = 1
@@ -317,16 +317,21 @@ function getMaskedQRCode(
 ) {
     const matrix = getMaskedMatrix(version, codewords, maskIndex)
     placeFormatModules(matrix, errorLevel, maskIndex)
-    placeFixedPatterns(matrix, version)
+    placeFixedPatterns(matrix)
     placeVersionModules(matrix)
     return matrix
 }
 
-function getRule1Penalty(array: Uint8Array, offset: number, step: number) {
+function getRule1Penalty(
+    array: Uint8Array,
+    offset: number,
+    step: number,
+    total: number,
+) {
     let count = 0
     let counting = 0
     let penalty = 0
-    for (let i = offset, len = array.length; i < len; i += step) {
+    for (let i = offset, len = offset + step * total; i < len; i += step) {
         const cell = array[i]!
         if (cell !== counting) {
             counting = cell
@@ -348,16 +353,9 @@ const RULE_3_REVERSED_PATTERN = RULE_3_PATTERN.slice().reverse()
 const RULE_3_SIZE = RULE_3_PATTERN.length
 
 function getRule3Penalty(array: Uint8Array, offset: number, step: number) {
-    if (array.length <= offset + step * (RULE_3_SIZE - 1)) {
-        return 0
-    }
     const pattern =
         array[offset]! === 1 ? RULE_3_PATTERN : RULE_3_REVERSED_PATTERN
-    for (
-        let i = offset + step, p = 1, len = array.length;
-        i < len && p < RULE_3_SIZE;
-        i += step, ++p
-    ) {
+    for (let i = offset + step, p = 1; p < RULE_3_SIZE; i += step, ++p) {
         const cell = array[i]!
         if (cell !== pattern[p]) {
             return 0
@@ -374,19 +372,19 @@ function getPenaltyScore(matrix: Matrix) {
 
     // Rule 1
     for (let i = 0; i < size; ++i) {
-        totalPenalty += getRule1Penalty(array, i * size, 1) // row penalty
-        totalPenalty += getRule1Penalty(array, i, size) // column penalty
+        totalPenalty += getRule1Penalty(array, i * size, 1, size) // row penalty
+        totalPenalty += getRule1Penalty(array, i, size, size) // column penalty
     }
 
     // Rule 2
-    for (let row = 0; row < size - 1; ++row) {
-        for (let column = 0; column < size - 1; ++column) {
+    for (let row = 1; row < size; ++row) {
+        for (let column = 1; column < size; ++column) {
             const i = offset(row, column)
             const cell = array[i]!
             if (
-                cell === array[i + 1]! &&
-                cell === array[i + size]! &&
-                cell === array[i + size + 1]!
+                cell === array[i - 1]! &&
+                cell === array[i - size]! &&
+                cell === array[i - size - 1]!
             ) {
                 totalPenalty += 3
             }
@@ -394,9 +392,11 @@ function getPenaltyScore(matrix: Matrix) {
     }
 
     // Rule 3
-    for (let i = 0, len = totalModules - size * RULE_3_SIZE; i < len; ++i) {
-        totalPenalty += getRule3Penalty(array, i * size, 1) // row penalty
-        totalPenalty += getRule3Penalty(array, i, size) // column penalty
+    for (let i = 0, len = size - RULE_3_SIZE; i <= len; ++i) {
+        for (let j = 0; j < size; ++j) {
+            totalPenalty += getRule3Penalty(array, offset(j, i), 1) // row penalty
+            totalPenalty += getRule3Penalty(array, offset(i, j), size) // column penalty
+        }
     }
 
     // Rule 4
