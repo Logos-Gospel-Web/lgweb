@@ -14,7 +14,9 @@ RUN npm ci --omit=dev
 
 COPY ./assets /assets/
 
-RUN npx rspack --mode=production --env output=/compiled
+ARG NAV_THRESHOLD
+
+RUN npx rspack --mode=production --env output=/compiled --env navThreshold=$NAV_THRESHOLD
 
 # ========================================
 

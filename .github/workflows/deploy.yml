@@ -70,8 +70,9 @@ jobs:
       - name: Deploy
         shell: sh
         run: |
-          docker compose build
+          docker compose build --build-arg NAV_THRESHOLD=$NAV_THRESHOLD
           docker compose up -d --remove-orphans
         env:
+          NAV_THRESHOLD: "${{ vars.NAV_THRESHOLD }}"
           COMPOSE_PROJECT_NAME: lgweb
           COMPOSE_FILE: ${{ inputs.migrate && './infrastructure/production/docker-compose.yml:./infrastructure/production/docker-compose-migrate.yml' || './infrastructure/production/docker-compose.yml' }}
