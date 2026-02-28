@@ -12,7 +12,7 @@ COPY assets/package*.json /assets/
 
 RUN npm ci --omit=dev
 
-COPY ./assets /assets/
+COPY assets /assets/
 
 ARG NAV_THRESHOLD
 
@@ -31,12 +31,11 @@ RUN apk add --no-cache 'abiword=~3' 'abiword-plugin-openxml=~3' 'build-base' 'ge
     ln -sf /usr/bin/pip3 /usr/bin/pip &&\
     pip install gunicorn --break-system-packages
 
-ADD requirements.txt /lgweb/
+COPY requirements.txt /lgweb/
 
 RUN pip install -r requirements.txt --break-system-packages &&\
-    rm requirements.txt
-
-RUN apk del 'build-base' 'py3-pip'
+    rm requirements.txt &&\
+    apk del 'build-base' 'py3-pip'
 
 ENV MODE=production
 ENV STATIC_ROOT=/static
@@ -53,7 +52,7 @@ FROM base AS preprocessor
 COPY --parents \
     --exclude=app/migrations/ \
     --exclude=app/management/ \
-    ./manage.py ./project ./locales ./app /lgweb/
+    manage.py project locales app /lgweb/
 
 # Unset the variable to prevent logging
 ENV ERROR_LOG_FILE=
@@ -75,9 +74,10 @@ CMD [ "gunicorn", "--bind", "0.0.0.0:8000", "project.wsgi:application" ]
 FROM base AS cron
 
 COPY --from=preprocessor /lgweb /lgweb
-COPY --parents ./app/management /lgweb/
-COPY --chmod=600 ./server/crontab /etc/crontabs/root
-COPY --chmod=700 ./server/cron/* /cron/
+COPY --parents app/management app/migrations /lgweb/
+COPY --parents --chmod=700 server/migrations /lgweb/
+COPY --chmod=600 server/crontab /etc/crontabs/root
+COPY --chmod=700 server/cron/* /cron/
 
 CMD [ "crond", "-f", "-d", "6" ]
 
@@ -86,8 +86,8 @@ CMD [ "crond", "-f", "-d", "6" ]
 FROM base AS migrations
 
 COPY --from=preprocessor /lgweb /lgweb
-COPY --parents ./app/migrations /lgweb/
-COPY --parents --chmod=700 ./server/migrations /lgweb/
+COPY --parents app/migrations /lgweb/
+COPY --parents --chmod=700 server/migrations /lgweb/
 
 CMD [ "./server/migrations" ]
 
@@ -97,7 +97,7 @@ FROM caddy:2.11-alpine AS server
 
 ENV CACHE_CONTROL='max-age=3600'
 
-COPY ./server/Caddyfile /etc/caddy/Caddyfile
+COPY server/Caddyfile /etc/caddy/Caddyfile
 COPY public /public
 COPY --from=preprocessor /static /static
 COPY --from=compiler /compiled /compiled
