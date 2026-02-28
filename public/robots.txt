@@ -4,6 +4,9 @@ Disallow: /tc/search
 Disallow: /sc/search
 Disallow: /tc/test
 Disallow: /sc/test
+Disallow: /*?preview=
+Disallow: /*?dl=
+Disallow: /*.doc$
 
 # Baidu
 User-agent: BaiduSpider

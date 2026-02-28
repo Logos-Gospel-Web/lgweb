@@ -77,7 +77,7 @@ def view_func(allow_post = False, skip_analytics = False):
 
             if not is_lang_valid:
                 lang = _parse_preferred_language(request.META.get('HTTP_ACCEPT_LANGUAGE', ''))
-                return redirect('home', lang)
+                return redirect('home', lang, permanent=True)
 
             request.context = _get_base_context(request, lang)
             translation.activate(to_locale(lang))

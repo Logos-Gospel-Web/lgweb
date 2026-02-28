@@ -6,7 +6,7 @@
     @NOT_GET not method GET
     header @GET Cache-Control {$CACHE_CONTROL} {
         match {
-            status 2xx
+            status 2xx 3xx
             header !Cache-Control
         }
     }
@@ -42,5 +42,6 @@
 {$WEB_DOMAIN} {
     header -Server
     header -Via
-    redir {$WEB_URL}{uri}
+    header Cache-Control {$CACHE_CONTROL}
+    redir {$WEB_URL}{uri} permanent
 }
