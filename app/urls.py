@@ -10,11 +10,13 @@ from .views.error import error400, error404
 from .views.search import search, search_form
 from .views.statistics import statistics
 from .views.purge import purge
+from .views.analytics import analytics
 
 urlpatterns = [
     path('', include('app.views.sitemap'), name='sitemap'),
     path('adminapi/', include('app.admin_apis'), name='adminapi'),
     path('private/', include('app.private_apis'), name='privateapi'),
+    path('view', analytics, name='analytics'),
     path('purge', purge, name='purge'),
     path('statistics', statistics, name='statistics'),
     path('<slug:lang>/error/400', error400, name='error400'),

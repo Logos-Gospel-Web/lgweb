@@ -1,8 +1,8 @@
 function sendAnalytics() {
     const xhr = new XMLHttpRequest()
-    xhr.open('PUT', location.href)
+    xhr.open('POST', '/view')
     xhr.setRequestHeader('lgweb', '1')
-    xhr.send(document.referrer)
+    xhr.send(location.pathname + ',' + document.referrer)
 }
 
 sendAnalytics()

@@ -53,7 +53,7 @@ def _parse_preferred_language(accept: str) -> str:
             return 'sc'
     return _DEFAULT_LANG
 
-def view_func(allow_post = False, skip_analytics = False):
+def view_func(allow_post = False):
     def wrapper(fn):
         @csrf_exempt
         @cache_control(max_age=60)
@@ -67,13 +67,6 @@ def view_func(allow_post = False, skip_analytics = False):
                 lang = next((v for v in args if is_valid_language(v)), None)
 
             is_lang_valid = is_valid_language(lang)
-
-            if request.method == 'PUT':
-                if not skip_analytics and 'lgweb' in request.headers:
-                    if is_lang_valid:
-                        _save_analytics(request, lang)
-                    return HttpResponse(status=204)
-                return HttpResponseForbidden()
 
             if not is_lang_valid:
                 lang = _parse_preferred_language(request.META.get('HTTP_ACCEPT_LANGUAGE', ''))
@@ -93,18 +86,6 @@ def view_func(allow_post = False, skip_analytics = False):
         return wrap
 
     return wrapper
-
-def _save_analytics(request, lang):
-    headers = request.headers
-    referrer = request.body.decode('utf-8')[:2048] if request.body else ''
-    AnalyticsTemp(
-        ip=get_ip(request),
-        fingerprint=get_fingerprint(request),
-        language=lang,
-        url=request.path,
-        user_agent=headers.get('user-agent', ''),
-        referrer=referrer,
-    ).save()
 
 def get_ip(request):
     return get_client_ip(request)[0] or ''
