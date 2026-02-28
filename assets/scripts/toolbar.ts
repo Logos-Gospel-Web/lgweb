@@ -66,13 +66,12 @@ function registerFontsizeButton() {
 function registerQrcodeButton() {
     const container = document.querySelector('.qrcode')!
     const popup = document.querySelector('.qrcode__container') as HTMLElement
-    const image = document.querySelector('.qrcode__image')!
     document
         .querySelector('.toolbar--qrcode')!
         .addEventListener('click', () => {
-            if (image.childNodes.length === 0) {
-                const svg = getQRCode(location.href)
-                image.appendChild(svg)
+            if (popup.childNodes.length === 1) {
+                const qrcode = getQRCode(location.href)
+                popup.appendChild(qrcode)
             }
             const qrcodeSize =
                 Math.min(500, window.innerWidth, window.innerHeight) -

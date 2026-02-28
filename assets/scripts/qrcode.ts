@@ -627,43 +627,26 @@ function placeVersionModules(matrix: Matrix) {
     })
 }
 
-function makeSVG(tag: string, attrs: Record<string, string>): SVGElement {
-    const el = document.createElementNS('http://www.w3.org/2000/svg', tag)
-    for (const k in attrs) {
-        el.setAttribute(k, attrs[k]!)
-    }
-    return el
-}
-
 function printMatrix(matrix: Matrix) {
     const [array, offset, size] = matrix
-    const svg = makeSVG('svg', {
-        viewBox: '0 0 ' + (size + 2) + ' ' + (size + 2),
-    })
+    const canvas = document.createElement('canvas')
+    const scale = 64
+    canvas.width = canvas.height = (size + 2) * scale
+    const ctx = canvas.getContext('2d')!
+    ctx.fillStyle = '#000'
 
-    svg.appendChild(
-        makeSVG('rect', {
-            fill: '#fff',
-            width: '100%',
-            height: '100%',
-        }),
-    )
-
-    let path = ''
     for (let row = 0; row < size; ++row) {
         for (let col = 0; col < size; ++col) {
             if (array[offset(row, col)]) {
-                path += 'M' + (col + 1) + ',' + (row + 1) + 'h1v1h-1z'
+                ctx.fillRect((col + 1) * scale, (row + 1) * scale, scale, scale)
             }
         }
     }
 
-    svg.appendChild(makeSVG('path', { d: path, fill: '#000' }))
-
-    return svg
+    return canvas
 }
 
-export function getQRCode(content: string): SVGElement {
+export function getQRCode(content: string): HTMLElement {
     const [codewords, version, errorLevel] = getCodewords(content, L)
     const matrix = getOptimalMask(version, codewords, errorLevel)
 
