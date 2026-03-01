@@ -1,12 +1,10 @@
-import { noop } from './common'
 import { createDrag } from './drag'
+import { listenMany } from './events'
 
 function registerSlideshow(slideshow: HTMLElement) {
     const slides = slideshow.getElementsByClassName('slideshow__item')
     const count = slides.length
-    if (count === 1) {
-        return noop
-    }
+    if (count === 1) return
     const interval = 5000
     const first = slides[0]!
     const last = slides[count - 1]!
@@ -115,7 +113,7 @@ function registerSlideshow(slideshow: HTMLElement) {
         }
     }
 
-    const unregister = createDrag({
+    createDrag({
         elem: slideshow,
         onStart(p) {
             if (moving || holding) return
@@ -140,19 +138,10 @@ function registerSlideshow(slideshow: HTMLElement) {
             ev.stopPropagation()
         }
     }
-    anchors.forEach((a) => {
-        a.addEventListener('click', anchorPrevent)
-    })
-
-    return () => {
-        unregister()
-        anchors.forEach((a) => {
-            a.removeEventListener('click', anchorPrevent)
-        })
-    }
+    listenMany(anchors, 'click', anchorPrevent)
 }
 
-const slideshow = document.querySelector('.slideshow')
+const slideshow = document.querySelector<HTMLElement>('.slideshow')
 if (slideshow) {
-    registerSlideshow(slideshow as HTMLElement)
+    registerSlideshow(slideshow)
 }

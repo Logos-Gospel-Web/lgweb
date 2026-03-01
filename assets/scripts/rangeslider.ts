@@ -11,7 +11,6 @@ export type RangeSliderOptions = {
 
 export type RangeSlider = {
     element: HTMLElement
-    unregister: () => void
     val: (v?: number) => number
 }
 
@@ -65,7 +64,7 @@ export function createRangeSlider(options: RangeSliderOptions): RangeSlider {
         setValue(((pos - rect.left) * len) / rect.width + min)
     }
 
-    const unregister = createDrag({
+    createDrag({
         elem: slider,
         onStart(p) {
             if (onActive) onActive(value!)
@@ -83,7 +82,6 @@ export function createRangeSlider(options: RangeSliderOptions): RangeSlider {
 
     return {
         element: slider,
-        unregister: unregister,
         val(v?: number) {
             if (v !== undefined) {
                 setValue(v)

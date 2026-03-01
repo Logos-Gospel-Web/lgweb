@@ -1,9 +1,9 @@
-import { noop } from './common'
+import { listen } from './events'
 import { createRangeSlider } from './rangeslider'
 
 function createAudioPlayer(player: HTMLAudioElement) {
     const playerParent = player.parentElement
-    if (!playerParent) return noop
+    if (!playerParent) return
 
     function timeString(t: number) {
         const m = Math.floor(t / 60)
@@ -108,7 +108,7 @@ function createAudioPlayer(player: HTMLAudioElement) {
     })
     volumeContainer.appendChild(volumeSlider.element)
 
-    volume.addEventListener('click', () => {
+    listen(volume, 'click', () => {
         const v = volumeSlider.val()
         if (v) {
             prevVolume = v
@@ -118,7 +118,7 @@ function createAudioPlayer(player: HTMLAudioElement) {
         }
     })
 
-    player.addEventListener('timeupdate', () => {
+    listen(player, 'timeupdate', () => {
         const currentTime = player.currentTime
         const duration = player.duration
         current.textContent = timeString(currentTime)
@@ -127,13 +127,13 @@ function createAudioPlayer(player: HTMLAudioElement) {
         }
     })
 
-    player.addEventListener('ended', () => {
+    listen(player, 'ended', () => {
         pause()
         controlSlider.val(1000)
         ended = true
     })
 
-    player.addEventListener('loadedmetadata', () => {
+    listen(player, 'loadedmetadata', () => {
         total.textContent = timeString(player.duration)
     })
 
@@ -148,7 +148,7 @@ function createAudioPlayer(player: HTMLAudioElement) {
         player.pause()
     }
 
-    playpause.addEventListener('click', () => {
+    listen(playpause, 'click', () => {
         if (player.readyState) {
             if (player.paused) {
                 play()
@@ -159,17 +159,10 @@ function createAudioPlayer(player: HTMLAudioElement) {
     })
 
     playerParent.insertBefore(root, player)
-
-    return () => {
-        controlSlider.unregister()
-        volumeSlider.unregister()
-    }
 }
 
-const players = document.getElementsByClassName('audio__player')
-
-const fns = new Array(players.length)
+const players = document.querySelectorAll<HTMLAudioElement>('.audio__player')
 
 for (let i = 0, n = players.length; i < n; i += 1) {
-    fns[i] = createAudioPlayer(players[i] as HTMLAudioElement)
+    createAudioPlayer(players[i])
 }

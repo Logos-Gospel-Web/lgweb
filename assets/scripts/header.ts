@@ -1,29 +1,29 @@
-import { delegate } from './events'
+import { listen, listenMany } from './events'
 
-delegate('.header__offcanvas__inner', 'click', () => {
-    const header = document.querySelector('.header')!
+const header = document.querySelector<HTMLElement>('.header')!
+const offcanvas = document.querySelector<HTMLElement>(
+    '.header__offcanvas__inner',
+)!
+
+listen(offcanvas, 'click', () => {
     header.classList.toggle('header--expanded')
 })
 
-delegate('.nav__expand', 'click', (ev) => {
+const expandElems = document.querySelectorAll<HTMLElement>('.nav__expand')
+listenMany(expandElems, 'click', (ev) => {
     ev.preventDefault()
     const target = ev.currentTarget as HTMLElement
-    const list = (
-        target.nextSibling
-            ? target.nextSibling
-            : target.parentElement!.nextSibling
-    ) as HTMLElement
+    const list = (target.nextSibling ||
+        target.parentElement!.nextSibling) as HTMLElement
     const item = list.parentElement!
 
     const expanded = item.classList.toggle('nav__item--expanded')
     list.style.maxHeight = expanded ? list.children.length * 48 + 'px' : ''
 })
 
-delegate(
+const closeElems = document.querySelectorAll<HTMLElement>(
     '.header__title__link, a.nav__item__inner > .nav__item__text, a.nav__subitem__inner',
-    'click',
-    () => {
-        const header = document.querySelector('.header')!
-        header.classList.remove('header--expanded')
-    },
 )
+listenMany(closeElems, 'click', () => {
+    header.classList.remove('header--expanded')
+})

@@ -90,28 +90,21 @@ function registerSidebar(sidebar: HTMLElement) {
         prevTop = parentRect.top
     }
 
-    const unlisten = listen(window, 'scroll', onScroll, true)
+    listen(window, 'scroll', onScroll, true)
 
-    const close = sidebar.querySelector('.sidebar__close')
+    const close = sidebar.querySelector<HTMLElement>('.sidebar__close')
     function onClose() {
         body.classList.add('sidebar-container--closed')
-        unlisten()
+        window.removeEventListener('scroll', onScroll)
     }
     if (close) {
-        close.addEventListener('click', onClose)
+        listen(close, 'click', onClose)
     }
     onScroll()
-
-    return () => {
-        if (close) {
-            close.removeEventListener('click', onClose)
-        }
-        unlisten()
-    }
 }
 
-const sidebar = document.querySelector('.sidebar__content')
+const sidebar = document.querySelector<HTMLElement>('.sidebar__content')
 
 if (sidebar) {
-    registerSidebar(sidebar as HTMLElement)
+    registerSidebar(sidebar)
 }

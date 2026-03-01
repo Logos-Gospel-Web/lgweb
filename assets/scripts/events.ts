@@ -5,19 +5,25 @@ export function listen<K extends keyof DocumentEventMap>(
     event: K,
     listener: (ev: DocumentEventMap[K]) => void,
     passive?: boolean,
-): () => void
+): void
 export function listen<K extends keyof WindowEventMap>(
     elem: Window,
     event: K,
     listener: (ev: WindowEventMap[K]) => void,
     passive?: boolean,
-): () => void
+): void
 export function listen<K extends keyof HTMLElementEventMap>(
     elem: HTMLElement,
     event: K,
     listener: (ev: HTMLElementEventMap[K]) => void,
     passive?: boolean,
-): () => void
+): void
+export function listen<K extends keyof ElementEventMap>(
+    elem: Element,
+    event: K,
+    listener: (ev: ElementEventMap[K]) => void,
+    passive?: boolean,
+): void
 export function listen(
     elem: any,
     event: string,
@@ -27,9 +33,19 @@ export function listen(
     const options =
         supportPassiveListener && passive !== undefined ? { passive } : false
     elem.addEventListener(event, listener, options)
-    return () => {
-        elem.removeEventListener(event, listener, false)
-    }
+}
+
+export function listenMany<K extends keyof HTMLElementEventMap>(
+    elems: NodeListOf<HTMLElement>,
+    event: K,
+    listener: (ev: HTMLElementEventMap[K]) => void,
+    passive?: boolean,
+) {
+    const options =
+        supportPassiveListener && passive !== undefined ? { passive } : false
+    elems.forEach((elem) => {
+        elem.addEventListener(event, listener, options)
+    })
 }
 
 // Stop propagation does not work here

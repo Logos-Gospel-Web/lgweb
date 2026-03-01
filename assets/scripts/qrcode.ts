@@ -1,4 +1,4 @@
-import { memoize } from './common'
+import { memoize, times } from './common'
 
 type Version = number
 
@@ -470,9 +470,9 @@ const getAlignmentTracks = memoize((version: Version): number[] => {
     const distance = 4 * version + 4 // between first and last pattern
     const step = Math.ceil(distance / intervals / 2) * 2
     return [6].concat(
-        Array.from(
-            { length: intervals },
-            (_, index) => distance + 6 - (intervals - 1 - index) * step,
+        times(
+            intervals,
+            (index) => distance + 6 - (intervals - 1 - index) * step,
         ),
     )
 })

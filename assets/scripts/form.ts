@@ -1,10 +1,11 @@
-const fakeInputs = document.getElementsByClassName('contact__input--first')
+const fakeInput = document.querySelector<HTMLInputElement>(
+    '.contact__input--first',
+)
 
-for (let i = 0, n = fakeInputs.length; i < n; i += 1) {
-    const fakeInput = fakeInputs[i]
+if (fakeInput) {
     setInterval(() => {
         // clear fake input in case of autocomplete
-        ;(fakeInput as HTMLInputElement).value = ''
+        fakeInput.value = ''
     }, 1000)
 }
 

@@ -58,4 +58,8 @@ if (!String.prototype.padStart) {
     }
 }
 
+if (!NodeList.prototype.forEach) {
+    ;(NodeList.prototype as any).forEach = Array.prototype.forEach
+}
+
 export {}

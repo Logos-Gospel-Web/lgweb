@@ -1,4 +1,3 @@
-import { noop } from './common'
 import { listen } from './events'
 
 type Point = {
@@ -17,34 +16,32 @@ function getPoint(ev: any): Point {
     return { x: ev.clientX, y: ev.clientY }
 }
 
-export function createDrag(options: DragOptions): () => void {
+export function createDrag(options: DragOptions) {
     const elem = options.elem
 
-    let unregisterMouse = noop
-    const mousedown = listen(elem, 'mousedown', (ev) => {
-        function onMouseMove(ev: MouseEvent) {
+    let isMouseDown = false
+    listen(elem, 'mousedown', (ev) => {
+        isMouseDown = true
+        options.onStart(getPoint(ev))
+    })
+    listen(document, 'mousemove', (ev) => {
+        if (isMouseDown) {
             options.onMove(getPoint(ev))
         }
-        function onMouseUp(ev: MouseEvent) {
+    })
+    listen(document, 'mouseup', (ev) => {
+        if (isMouseDown) {
             options.onEnd(() => {
                 ev.preventDefault()
             })
-            unregisterMouse()
-            unregisterMouse = noop
+            isMouseDown = false
         }
-        const mousemove = listen(document, 'mousemove', onMouseMove)
-        const mouseup = listen(document, 'mouseup', onMouseUp)
-        unregisterMouse = () => {
-            mousemove()
-            mouseup()
-        }
-        options.onStart(getPoint(ev))
     })
 
     let touches = 0
-    let unregisterTouch = noop
-    const touchstart = listen(elem, 'touchstart', (ev) => {
-        function onTouchChange(ev: TouchEvent) {
+    let isTouchDown = false
+    function onTouchChange(ev: TouchEvent) {
+        if (isTouchDown) {
             touches = ev.touches.length
             if (touches) {
                 options.onMove(getPoint(ev.touches[0]))
@@ -52,31 +49,20 @@ export function createDrag(options: DragOptions): () => void {
                 options.onEnd(() => {
                     ev.preventDefault()
                 })
-                unregisterTouch()
-                unregisterTouch = noop
+                isTouchDown = false
             }
         }
+    }
+    listen(elem, 'touchstart', (ev) => {
         const p = getPoint(ev.touches[0])
         if (touches) {
             options.onMove(p)
         } else {
-            const touchmove = listen(document, 'touchmove', onTouchChange)
-            const touchend = listen(document, 'touchend', onTouchChange)
-            const touchcancel = listen(document, 'touchcancel', onTouchChange)
-            unregisterTouch = () => {
-                touchmove()
-                touchend()
-                touchcancel()
-            }
             options.onStart(p)
         }
         touches = ev.touches.length
     })
-
-    return () => {
-        touchstart()
-        mousedown()
-        unregisterTouch()
-        unregisterMouse()
-    }
+    listen(document, 'touchmove', onTouchChange)
+    listen(document, 'touchend', onTouchChange)
+    listen(document, 'touchcancel', onTouchChange)
 }
