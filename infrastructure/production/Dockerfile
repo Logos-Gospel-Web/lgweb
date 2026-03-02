@@ -38,7 +38,6 @@ RUN pip install -r requirements.txt --break-system-packages &&\
     apk del 'build-base' 'py3-pip'
 
 ENV MODE=production
-ENV STATIC_ROOT=/static
 ENV DB_ROOT=/db/db.sqlite3
 ENV CONTACT_DB_ROOT=/db/contact.sqlite3
 ENV ANALYTICS_DB_ROOT=/db/analytics.sqlite3
@@ -56,6 +55,7 @@ COPY --parents \
 
 # Unset the variable to prevent logging
 ENV ERROR_LOG_FILE=
+ENV STATIC_ROOT=/static
 
 RUN python manage.py collectstatic --no-input &&\
     python manage.py compilemessages &&\
@@ -99,5 +99,5 @@ ENV CACHE_CONTROL='max-age=3600'
 
 COPY server/Caddyfile /etc/caddy/Caddyfile
 COPY public /public
-COPY --from=preprocessor /static /static
-COPY --from=compiler /compiled /compiled
+COPY --from=preprocessor /static /public/static
+COPY --from=compiler /compiled /public
