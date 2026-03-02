@@ -1,6 +1,6 @@
 from django import template
 from django.utils import translation
-from ..models import to_locale, to_lang
+from ..lang import to_locale, to_lang
 
 register = template.Library()
 

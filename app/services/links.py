@@ -1,6 +1,6 @@
 from django.urls import reverse
 from django.utils import translation
-from ..models import to_lang
+from ..lang import to_lang
 
 def topic_link(slug, language=None):
     if language is None:

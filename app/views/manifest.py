@@ -5,7 +5,7 @@ from django.utils.translation import gettext as _
 from django.views.decorators.cache import cache_page
 
 from .common import get_build_version, is_valid_language, use_etag
-from ..models import to_locale
+from ..lang import to_locale
 
 @use_etag()
 @cache_page(None)

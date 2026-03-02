@@ -6,7 +6,8 @@ from django.core.files.storage import default_storage
 from base64 import b64encode
 from hashlib import sha256
 
-from .models import Topic, to_locale
+from .lang import to_locale
+from .models import Topic
 from .services.links import message_link, topic_link
 from .services.import_doc import import_doc, process_doc
 from .services.author import format_author

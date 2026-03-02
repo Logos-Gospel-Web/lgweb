@@ -20,7 +20,7 @@ import ulid
 
 from ..services.random_string import random_string
 from ..services.queries import get_menu
-from ..models import LANGUAGES, to_locale, to_lang_tag, AnalyticsTemp
+from ..lang import LANGUAGES, to_locale, to_lang_tag
 
 contact_email = environ.get('CONTACT_EMAIL')
 force_https = environ.get('FORCE_HTTPS')
@@ -43,7 +43,7 @@ def _get_menu_cached(now: datetime):
     return value
 
 def is_valid_language(language: str) -> bool:
-    return next((True for (lang, _) in LANGUAGES if lang == language), False)
+    return language in LANGUAGES
 
 def _parse_preferred_language(accept: str) -> str:
     for lang, _ in parse_accept_lang_header(accept):

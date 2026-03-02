@@ -4,9 +4,8 @@ from django.urls.exceptions import Resolver404
 from django.views.decorators.csrf import csrf_exempt
 
 from .common import get_ip, get_fingerprint
-from ..models import LANGUAGES, AnalyticsTemp
-
-_langs = [lang for (lang, _) in LANGUAGES]
+from ..lang import LANGUAGES
+from ..models import AnalyticsTemp
 
 def _save_analytics(request):
     if request.method != 'POST' or 'lgweb' not in request.headers:
@@ -26,7 +25,7 @@ def _save_analytics(request):
         return False
 
     lang = resolved.kwargs['lang']
-    if lang not in _langs:
+    if lang not in LANGUAGES:
         return False
 
     AnalyticsTemp(

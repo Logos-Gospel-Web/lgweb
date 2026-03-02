@@ -4,11 +4,12 @@ from django.shortcuts import redirect
 from django.http import HttpRequest, HttpResponse
 from django.utils.timezone import get_current_timezone
 from .common import is_valid_language, get_base_url
-from ..models import LANGUAGES, Message
+from ..lang import LANGUAGES
+from ..models import Message
 from ..services.links import topic_link, message_link
 
 def get_static_pages(base_url):
-    return [[(lang, base_url + reverse(page, args=(lang,))) for lang, _ in LANGUAGES] for page in ('home', 'contact')]
+    return [[(lang, base_url + reverse(page, args=(lang,))) for lang in LANGUAGES] for page in ('home', 'contact')]
 
 def get_all_messages(base_url):
     now = datetime.now(tz=get_current_timezone())
@@ -19,9 +20,9 @@ def get_all_messages(base_url):
     output = []
     for msg in msgs:
         if msg.parent.id not in topics:
-            topics[msg.parent.id] = [(lang, base_url + topic_link(msg.parent.slug, lang)) for lang, _ in LANGUAGES if msg.parent.title[lang]]
+            topics[msg.parent.id] = [(lang, base_url + topic_link(msg.parent.slug, lang)) for lang in LANGUAGES if msg.parent.title[lang]]
         output.append(
-            [(lang, base_url + message_link(msg.parent.slug, msg.position, lang)) for lang, _ in LANGUAGES if msg.title[lang] and msg.parent.title[lang]]
+            [(lang, base_url + message_link(msg.parent.slug, msg.position, lang)) for lang in LANGUAGES if msg.title[lang] and msg.parent.title[lang]]
         )
     return output + list(topics.values())
 

@@ -2,7 +2,7 @@ import math
 from bs4 import BeautifulSoup, PageElement, NavigableString
 from django import template
 from django.utils import translation
-from ..models import to_lang, with_lang
+from ..lang import to_lang, with_lang
 
 register = template.Library()
 

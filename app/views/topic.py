@@ -2,7 +2,8 @@ from django.shortcuts import render
 from django.db.models import Prefetch
 from django.views.decorators.cache import cache_page
 
-from ..models import with_lang, Topic
+from ..lang import with_lang
+from ..models import Topic
 from .common import use_etag, view_func, make_title
 from ..services.queries import get_messages
 

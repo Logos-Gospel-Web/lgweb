@@ -1,5 +1,6 @@
-from django.db.models import Prefetch, Q
-from ..models import with_lang, ParentMenuItem, ChildMenuItem, Message
+from django.db.models import Prefetch
+from ..lang import with_lang
+from ..models import ParentMenuItem, ChildMenuItem, Message
 
 def get_menu(now):
     menu = ParentMenuItem.objects\

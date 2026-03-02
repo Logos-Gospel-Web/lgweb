@@ -2,40 +2,10 @@ from django.db import models
 from django.db.models import Q
 from django.utils import timezone
 import ulid
-from app.services.convert_search_text import convert_search_text
+from .services.convert_search_text import convert_search_text
+from .lang import LANGUAGES, LANGUAGE_NAMES, with_lang
 
 # Create your models here.
-
-LANGUAGES = (
-    ('tc', '繁體'),
-    ('sc', '简体'),
-)
-
-_TO_LOCALE = {
-    'tc': 'zh_TW',
-    'sc': 'zh_CN',
-}
-
-_FROM_LOCALE = {
-    'zh_TW': 'tc',
-    'zh-tw': 'tc',
-    'zh_CN': 'sc',
-    'zh-cn': 'sc',
-}
-
-_TO_LANG_TAG = {
-    'tc': 'zh-hant',
-    'sc': 'zh-hans',
-}
-
-def to_locale(lang: str) -> str:
-    return _TO_LOCALE[lang]
-
-def to_lang_tag(lang: str) -> str:
-    return _TO_LANG_TAG[lang]
-
-def to_lang(locale: str) -> str:
-    return _FROM_LOCALE[locale]
 
 def make_id():
     return ulid.new().str
@@ -43,21 +13,18 @@ def make_id():
 def make_id_field():
     return models.CharField(max_length=26, primary_key=True, default=make_id, editable=False)
 
-def with_lang(field: str, lang: str):
-    return f'{field}_{lang}'
-
 def print_multilingual(self, field: str):
-    return ' / '.join((getattr(self, with_lang(field, lang)) or f'<empty>' for (lang, _) in LANGUAGES))
+    return ' / '.join((getattr(self, with_lang(field, lang)) or f'<empty>' for lang in LANGUAGES))
 
 def model(*, multilingual: list[str] = [], base: type[models.Model] = models.Model):
     def make_multilingual(Cls, field):
         def getter(self):
-            return { lang: getattr(self, with_lang(field, lang)) for (lang, _) in LANGUAGES }
+            return { lang: getattr(self, with_lang(field, lang)) for lang in LANGUAGES }
 
         definition = getattr(Cls, field)
         if not callable(definition):
             raise Exception('multilingual field must be callable')
-        for (lang, _) in LANGUAGES:
+        for lang in LANGUAGES:
             name = with_lang(field, lang)
             setattr(Cls, name, definition(lang))
         setattr(Cls, field, property(getter))
@@ -96,10 +63,10 @@ def MenuManager(page_field):
 class HomePage:
     class Meta:
         db_table = 'home_page'
-    language = models.TextField(primary_key=True, choices=LANGUAGES)
+    language = models.TextField(primary_key=True, choices=LANGUAGE_NAMES)
 
     def __str__(self):
-        return next(name for lang, name in LANGUAGES if lang == self.language)
+        return next(LANGUAGE_NAMES[lang] for lang in LANGUAGES if lang == self.language)
 
 @model()
 class Banner:
@@ -263,7 +230,7 @@ class Contact:
     submitted_at = models.DateTimeField(auto_now_add=True)
     ip = models.CharField('IP', max_length=45)
     fingerprint = models.CharField(max_length=64)
-    language = models.TextField(choices=LANGUAGES)
+    language = models.TextField(choices=LANGUAGE_NAMES)
     name = models.TextField()
     email = models.EmailField()
     comment = models.TextField()
@@ -279,7 +246,7 @@ class AnalyticsTemp:
     created_at = models.DateTimeField(auto_now_add=True)
     ip = models.CharField('IP', max_length=45)
     fingerprint = models.CharField(max_length=64)
-    language = models.TextField(choices=LANGUAGES)
+    language = models.TextField(choices=LANGUAGE_NAMES)
     url = models.TextField()
     user_agent = models.TextField()
     referrer = models.TextField()
@@ -298,7 +265,7 @@ class Analytics:
     created_at = models.DateTimeField()
     ip = models.CharField('IP', max_length=45)
     fingerprint = models.CharField(max_length=64)
-    language = models.TextField(choices=LANGUAGES)
+    language = models.TextField(choices=LANGUAGE_NAMES)
     url = models.TextField()
     user_agent = models.TextField()
     referrer = models.TextField()

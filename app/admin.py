@@ -6,13 +6,14 @@ from django.forms.widgets import Input, TextInput, HiddenInput
 from django.templatetags.static import static
 from django.utils.html import format_html, html_safe
 from django.utils.safestring import mark_safe
-from .models import LANGUAGES, with_lang, Banner, HomePage, HomeBanner, Promotion, Message, Topic, ChildMenuItem, ParentMenuItem, Contact
+from .lang import LANGUAGE_NAMES, with_lang
+from .models import Banner, HomePage, HomeBanner, Promotion, Message, Topic, ChildMenuItem, ParentMenuItem, Contact
 
 def make_multilingual_fields(*fields: str, collapsed: bool = False):
     return tuple(((name, {
         'classes': ('grp-collapse', 'grp-closed' if collapsed else 'grp-open'),
         'fields': tuple((with_lang(field, lang) for field in fields)),
-    }) for (lang, name) in LANGUAGES))
+    }) for lang, name in LANGUAGE_NAMES))
 
 class RichTextInput(Input):
     input_type = 'text'
