@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-08 17:58+0800\n"
+"POT-Creation-Date: 2026-03-02 13:13+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -41,6 +41,12 @@ msgstr "最新信息"
 msgid "信息推介"
 msgstr "信息推介"
 
+msgid "請輸入關鍵字"
+msgstr "请输入关键字"
+
+msgid "Language"
+msgstr "繁"
+
 msgid "字體大小"
 msgstr "字体大小"
 
@@ -55,6 +61,9 @@ msgstr "下载 DOC"
 
 msgid "不設文字檔"
 msgstr "不设文字档"
+
+msgid "返回主頁"
+msgstr "返回主页"
 
 msgid "若有任何意見或問題，歡迎您反饋給我們。您可以選擇發送電郵至"
 msgstr "若有任何意见或问题，欢迎您反馈给我们。您可以选择发送电邮至"
@@ -77,9 +86,6 @@ msgstr "提交"
 msgid "網絡異常，請重新加載"
 msgstr "网络异常，请重新加载"
 
-msgid "返回主頁"
-msgstr "返回主页"
-
 msgid "頁面不存在"
 msgstr "页面不存在"
 
@@ -89,21 +95,21 @@ msgstr "下载录音"
 msgid "下載文字檔"
 msgstr "下载文字档"
 
-msgid "搜索"
-msgstr "搜索"
-
 #, python-format
 msgid "共%(total)s項結果，現正顯示第%(start_index)s至%(end_index)s項"
 msgstr "共%(total)s项结果，现正显示第%(start_index)s至%(end_index)s项"
 
+msgid "找不到相關信息"
+msgstr "找不到相关信息"
+
 msgid "網上閱讀/收聽"
 msgstr "网上阅读/收听"
 
-msgid "錄音下載"
-msgstr "录音下载"
-
 msgid "網上閱讀"
 msgstr "网上阅读"
+
+msgid "錄音下載"
+msgstr "录音下载"
 
 msgid "文字檔下載"
 msgstr "文字档下载"
@@ -138,15 +144,6 @@ msgstr "上一页"
 msgid "下一頁"
 msgstr "下一页"
 
-msgid "找不到相關信息"
-msgstr "找不到相关信息"
-
-msgid "請輸入關鍵字"
-msgstr "请输入关键字"
-
 #, python-format
 msgid "搜尋結果：「%(keyword)s」的%(count)d項結果"
 msgstr "搜寻结果：「%(keyword)s」的%(count)d项结果"
-
-msgid "Language"
-msgstr "繁"
