@@ -77,7 +77,7 @@ COPY --from=preprocessor /lgweb /lgweb
 COPY --parents app/management app/migrations /lgweb/
 COPY --parents --chmod=700 server/migrations /lgweb/
 COPY --chmod=600 server/crontab /etc/crontabs/root
-COPY --chmod=700 server/cron/* /cron/
+COPY --chmod=700 server/cron /cron
 
 CMD [ "crond", "-f", "-d", "6" ]
 
