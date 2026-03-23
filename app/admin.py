@@ -13,7 +13,7 @@ def make_multilingual_fields(*fields: str, collapsed: bool = False):
     return tuple(((name, {
         'classes': ('grp-collapse', 'grp-closed' if collapsed else 'grp-open'),
         'fields': tuple((with_lang(field, lang) for field in fields)),
-    }) for lang, name in LANGUAGE_NAMES))
+    }) for lang, name in LANGUAGE_NAMES.items()))
 
 class RichTextInput(Input):
     input_type = 'text'
