@@ -77,7 +77,8 @@ def submit_form(values, **kwargs):
     c.save()
     return c.id
 
-_CONTACT_KEY = 'contact_success'
+_CONTACT_COOKIE_KEY = 'contact_success'
+_CONTACT_COOKIE_VALUE = '1'
 
 @csrf_exempt
 @view_func(allow_post=True)
@@ -101,12 +102,12 @@ def contact(request: HttpRequest, lang) -> HttpResponse:
 
         if not failed:
             resp = HttpResponseSeeOther(request.path)
-            resp.set_cookie(key=_CONTACT_KEY, value='1', path=request.path, httponly=True, samesite='Strict')
+            resp.set_cookie(key=_CONTACT_COOKIE_KEY, value=_CONTACT_COOKIE_VALUE, path=request.path, httponly=True, samesite='Strict')
             return resp
     else:
         values, errors = dict(), dict()
-        success = request.COOKIES.get(_CONTACT_KEY)
-        if success == '1':
+        success = request.COOKIES.get(_CONTACT_COOKIE_KEY)
+        if success == _CONTACT_COOKIE_VALUE:
             sent = True
             status = _('您的訊息已經成功發出。')
 
@@ -124,7 +125,7 @@ def contact(request: HttpRequest, lang) -> HttpResponse:
         })
 
         if sent:
-            resp.delete_cookie(key=_CONTACT_KEY, path=request.path, samesite='Strict')
+            resp.delete_cookie(key=_CONTACT_COOKIE_KEY, path=request.path, samesite='Strict')
 
         if failed:
             resp.status_code = 400
