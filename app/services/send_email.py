@@ -15,7 +15,7 @@ _headers = {
     'api-key': _api_key,
 }
 
-def send_contact_email(contact_id, base_url):
+def send_contact_email(contact_id, base_url, name, email, comment):
     if not _api_key:
         return False
 
@@ -24,6 +24,9 @@ def send_contact_email(contact_id, base_url):
         'params': {
             'CONTACT_ID': contact_id,
             'BASE_URL': base_url,
+            'NAME': name,
+            'EMAIL': email,
+            'CONTENT': 'TRUNCATED' if len(comment) > 10_000 else comment,
         },
     })
 

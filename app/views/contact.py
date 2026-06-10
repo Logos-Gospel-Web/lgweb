@@ -50,12 +50,12 @@ def validate_contact_form(values):
 
     errors = dict()
 
-    if not name:
+    if not name or len(name) > 50:
         errors['name'] = _('請輸入您的姓名')
     elif not re.match(r'^[\s.,A-Za-z\u3000\u3400-\u4DBF\u4E00-\u9FFF]+$', name):
         errors['name'] = _('請使用中文或英文字母填寫姓名')
 
-    if not email:
+    if not email or len(email) > 100:
         errors['email'] = _('請輸入您的電郵')
     else:
         clean_email = sanitize_email(email)
@@ -97,7 +97,7 @@ def contact(request: HttpRequest, lang) -> HttpResponse:
                 failed = True
             else:
                 id = submit_form(values, ip=get_ip(request), language=lang, fingerprint=get_fingerprint(request))
-                send_contact_email(id, context['base_url'])
+                send_contact_email(id, context['base_url'], values['name'], values['email'], values['comment'])
 
         if not failed:
             resp = HttpResponseSeeOther(request.path)
