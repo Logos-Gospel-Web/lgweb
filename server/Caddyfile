@@ -1,4 +1,4 @@
-{$WEB_HOST} {
+{$WEB_HOSTNAME} {
     root * /
     header -Server
     header -Via
@@ -36,9 +36,9 @@
     }
 }
 
-{$WEB_DOMAIN} {
+{$WEB_REDIR_HOSTNAME} {
     header -Server
     header -Via
     header Cache-Control {$CACHE_CONTROL}
-    redir {$WEB_URL}{uri} permanent
+    redir {$WEB_REDIR_TARGET}{uri} permanent
 }

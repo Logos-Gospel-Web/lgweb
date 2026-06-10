@@ -47,9 +47,9 @@ jobs:
           echo S3_BUCKET_NAME=$S3_BUCKET_NAME >> .env
           echo S3_CUSTOM_DOMAIN=$S3_CUSTOM_DOMAIN >> .env
           echo HEAD_INJECT=$HEAD_INJECT >> .env
-          echo WEB_DOMAIN=$WEB_DOMAIN >> .env.server
-          echo WEB_HOST=$WEB_HOST >> .env.server
-          echo WEB_URL=$WEB_URL >> .env.server
+          echo WEB_HOSTNAME=$WEB_HOSTNAME >> .env.server
+          echo WEB_REDIR_HOSTNAME=$WEB_REDIR_HOSTNAME >> .env.server
+          echo WEB_REDIR_TARGET=$WEB_HOSTNAME >> .env.server
         env:
           ALLOWED_HOSTS: "${{ vars.ALLOWED_HOSTS }}"
           SECRET_KEY: "${{ secrets.SECRET_KEY }}"
@@ -63,9 +63,8 @@ jobs:
           S3_BUCKET_NAME: "${{ vars.S3_BUCKET_NAME }}"
           S3_CUSTOM_DOMAIN: "${{ vars.S3_CUSTOM_DOMAIN }}"
           HEAD_INJECT: "${{ vars.HEAD_INJECT }}"
-          WEB_DOMAIN: "http://${{ vars.WEB_DOMAIN }}, https://${{ vars.WEB_DOMAIN }}, http://www.${{ vars.WEB_DOMAIN }}"
-          WEB_HOST: "https://www.${{ vars.WEB_DOMAIN }}"
-          WEB_URL: "https://www.${{ vars.WEB_DOMAIN }}"
+          WEB_HOSTNAME: "https://www.${{ vars.WEB_DOMAIN }}"
+          WEB_REDIR_HOSTNAME: "http://${{ vars.WEB_DOMAIN }}, https://${{ vars.WEB_DOMAIN }}, http://www.${{ vars.WEB_DOMAIN }}"
 
       - name: Deploy
         shell: sh
