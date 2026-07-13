@@ -39,6 +39,9 @@ jobs:
           echo SECRET_KEY=$SECRET_KEY >> .env
           echo CONTACT_EMAIL=$CONTACT_EMAIL >> .env
           echo BREVO_API_KEY=$BREVO_API_KEY >> .env
+          echo BREVO_SMTP_LOGIN=$BREVO_SMTP_LOGIN >> .env
+          echo BREVO_SMTP_KEY=$BREVO_SMTP_KEY >> .env
+          echo BREVO_PING_TARGET=$BREVO_PING_TARGET >> .env
           echo CONTACT_FORM_TEMPLATE_ID=$CONTACT_FORM_TEMPLATE_ID >> .env
           echo CONTACT_FORM_RECIPIENTS=$CONTACT_FORM_RECIPIENTS >> .env
           echo S3_ENDPOINT_URL=$S3_ENDPOINT_URL >> .env
@@ -55,6 +58,9 @@ jobs:
           SECRET_KEY: "${{ secrets.SECRET_KEY }}"
           CONTACT_EMAIL: "${{ vars.CONTACT_EMAIL }}"
           BREVO_API_KEY: "${{ secrets.BREVO_API_KEY }}"
+          BREVO_SMTP_LOGIN: "${{ secrets.BREVO_SMTP_LOGIN }}"
+          BREVO_SMTP_KEY: "${{ secrets.BREVO_SMTP_KEY }}"
+          BREVO_PING_TARGET: "${{ secrets.BREVO_PING_TARGET }}"
           CONTACT_FORM_TEMPLATE_ID: "${{ vars.CONTACT_FORM_TEMPLATE_ID }}"
           CONTACT_FORM_RECIPIENTS: "${{ secrets.CONTACT_FORM_RECIPIENTS }}"
           S3_ENDPOINT_URL: "${{ secrets.S3_ENDPOINT_URL }}"

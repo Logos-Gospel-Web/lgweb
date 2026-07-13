@@ -2,3 +2,4 @@
 0       5       7       *       *       /cron dbbackup
 5       */4     *       *       *       /cron analytics
 1       0       *       *       *       /cron purge
+0       0       1       *       *       /cron ping_brevo
