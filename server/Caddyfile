@@ -2,6 +2,8 @@
     root * /
     header -Server
     header -Via
+    header -Age
+    header -Expires
     @GET method GET
     @NOT_GET not method GET
     header @GET Cache-Control {$CACHE_CONTROL} {
@@ -39,6 +41,8 @@
 {$WEB_REDIR_HOSTNAME} {
     header -Server
     header -Via
+    header -Age
+    header -Expires
     header Cache-Control {$CACHE_CONTROL}
     redir {$WEB_REDIR_TARGET}{uri} permanent
 }
