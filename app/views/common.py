@@ -2,17 +2,17 @@ from django.shortcuts import redirect
 from django.core.exceptions import ObjectDoesNotExist
 from datetime import date, datetime
 from django.conf import settings
-from django.core.cache import cache, caches
-from django.http import HttpResponse, HttpResponseForbidden
+from django.core.cache import cache as default_cache, caches
+from django.http import HttpResponse, HttpResponseForbidden, HttpResponseNotModified
 from django.urls import reverse
 from django.utils import translation
 from django.utils.timezone import get_current_timezone
 from django.utils.translation import gettext as _
 from django.utils.translation.trans_real import parse_accept_lang_header
 from django.shortcuts import render
-from django.views.decorators.cache import cache_control
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import etag
+from functools import wraps
 from ipware import get_client_ip
 from hashlib import sha256
 from os import environ
@@ -35,11 +35,11 @@ class NotFound(Exception):
     pass
 
 def _get_menu_cached(now: datetime):
-    value = cache.get(_MENU_CACHE_KEY)
+    value = default_cache.get(_MENU_CACHE_KEY)
     if value:
         return value
     value = get_menu(now)
-    cache.set(_MENU_CACHE_KEY, value)
+    default_cache.set(_MENU_CACHE_KEY, value)
     return value
 
 def is_valid_language(language: str) -> bool:
@@ -56,7 +56,6 @@ def _parse_preferred_language(accept: str) -> str:
 def view_func(allow_post = False):
     def wrapper(fn):
         @csrf_exempt
-        @cache_control(max_age=60)
         def wrap(request, *args, **kwargs):
             if request.method == 'OPTIONS':
                 return HttpResponse(status=204)
@@ -106,10 +105,48 @@ def get_fingerprint(request):
     ))
     return sha256(raw.encode('utf-8')).hexdigest()
 
-def use_etag(key = None):
-    def etag_func(request, *args, **kwargs):
-        return None if _PREVIEW_KEY in request.GET else caches['etag'].get_or_set(request.path if key is None else key, random_string)
-    return etag(etag_func)
+def use_cache(disabled = None):
+    def decorator(view_func):
+        @wraps(view_func)
+        def _wrapped_view(request, *args, **kwargs):
+            if disabled or request.method not in ('GET', 'HEAD') or _PREVIEW_KEY in request.GET:
+                return view_func(request, *args, **kwargs)
+
+            key = request.path
+
+            current_etag = caches['etag'].get(key)
+            client_etag = request.META.get('HTTP_IF_NONE_MATCH')
+
+            if current_etag and client_etag:
+                clean_client_etag = client_etag.replace('W/', '').strip('"')
+                if clean_client_etag == current_etag:
+                    response = HttpResponseNotModified()
+
+            else:
+                cached_content = default_cache.get(key)
+                if cached_content is not None:
+                    response = HttpResponse(cached_content)
+                else:
+                    response = view_func(request, *args, **kwargs)
+                    if hasattr(response, 'render') and callable(response.render):
+                        response.render()
+
+                    if response.status_code != 200:
+                        return response
+
+                    default_cache.set(key, response.content)
+
+                if not current_etag:
+                    current_etag = random_string()
+                    caches['etag'].set(key, current_etag)
+
+            response['ETag'] = f'"{current_etag}"'
+            response['Cache-Control'] = 'max-age=60'
+
+            return response
+
+        return _wrapped_view
+    return decorator
 
 def get_base_url(request):
     return f'{request.scheme if not force_https else "https"}://{request.get_host()}'

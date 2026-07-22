@@ -1,14 +1,13 @@
 from django.shortcuts import render
 from django.utils.translation import gettext as _
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
-from django.views.decorators.cache import cache_page
 from django.views.decorators.csrf import csrf_exempt
 from django_ratelimit.core import is_ratelimited
 import re
 
 from ..services.send_email import send_contact_email
 from ..models import Contact
-from .common import use_etag, view_func, make_title, get_ip, get_fingerprint
+from .common import use_cache, view_func, make_title, get_ip, get_fingerprint
 
 _keys = {
     'name': '3nj99LU9Ko',
@@ -111,8 +110,7 @@ def contact(request: HttpRequest, lang) -> HttpResponse:
             sent = True
             status = _('您的訊息已經成功發出。')
 
-    @use_etag(f'{request.path}:{sent}')
-    @cache_page(None, key_prefix=str(sent))
+    @use_cache(disabled = sent)
     def wrap(request, lang):
         resp = render(request, 'site/pages/contact.html', {
             **context,

@@ -1,10 +1,9 @@
 from django.shortcuts import render
 from django.db.models import Prefetch
-from django.views.decorators.cache import cache_page
 
 from ..lang import with_lang
 from ..models import Topic
-from .common import use_etag, view_func, make_title
+from .common import use_cache, view_func, make_title
 from ..services.queries import get_messages
 
 def get_topic_by_slug(slug, lang, now, with_children=True):
@@ -18,8 +17,7 @@ def get_topic_by_slug(slug, lang, now, with_children=True):
     return res.get(slug=slug, enabled=True, publish__lte=now)
 
 @view_func()
-@use_etag()
-@cache_page(None)
+@use_cache()
 def topic(request, lang, slug):
     context = request.context
     page = get_topic_by_slug(slug, lang, context['now'])

@@ -3,9 +3,8 @@ from django.shortcuts import render
 from django.utils.translation import gettext as _
 from django.urls import reverse
 from django.db.models import Prefetch
-from django.views.decorators.cache import cache_page
 
-from .common import use_etag, view_func, make_title, NotFound
+from .common import use_cache, view_func, make_title, NotFound
 from ..services.queries import get_messages
 from ..services.author import format_author
 
@@ -44,8 +43,7 @@ def get_sidebar(topic):
     }
 
 @view_func()
-@use_etag()
-@cache_page(None)
+@use_cache()
 def message(request: HttpRequest, lang, slug, pos) -> HttpResponse:
     context = request.context
     if len(pos) == 2:
