@@ -71,8 +71,3 @@ def sitemap(request: HttpRequest) -> HttpResponse:
     content = print_sitemap(pages)
     resp = HttpResponse(status=200, content=content, content_type='application/xml; charset=utf-8')
     return resp
-
-urlpatterns = [
-    path('<slug:lang>/sitemap.xml', sitemap_with_lang, name='sitemap_lang'),
-    path('sitemap.xml', sitemap, name='sitemap'),
-]
