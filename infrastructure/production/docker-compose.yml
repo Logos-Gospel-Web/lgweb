@@ -31,6 +31,10 @@ services:
             - /opt/lgweb/reports/:/reports/
     admin:
         <<: *main
+        environment:
+            - FORCE_HTTPS=1
+            - INTERNAL_HOSTS=admin
+            - MAIN_URL=main:8000
         deploy:
             resources:
                 limits:
@@ -40,6 +44,10 @@ services:
         build:
             <<: *build
             target: cron
+        environment:
+            - FORCE_HTTPS=1
+            - INTERNAL_HOSTS=cron
+            - MAIN_URL=main:8000
         deploy:
             resources:
                 limits:

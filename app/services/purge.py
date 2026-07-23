@@ -1,14 +1,10 @@
-from datetime import datetime
 from django.core.cache import caches
-from django.utils.timezone import get_current_timezone
+from os import environ
+from urllib.request import urlopen
 
-from ..models import Page
+from .has_new_page import check_has_new_page
 
-def _check_past_page_count():
-    now = datetime.now(tz=get_current_timezone())
-    return Page.objects.filter(enabled=True, publish__lte=now).count()
-
-_count = _check_past_page_count()
+_main_url = environ.get('MAIN_URL')
 
 def _purge():
     caches['default'].clear()
@@ -16,13 +12,14 @@ def _purge():
     caches['components'].clear()
 
 def purge_cache():
-    global _count
-    _count = _check_past_page_count()
-    _purge()
+    if _main_url:
+        urlopen(f'http://{_main_url}/private/purge_cache').close()
+    else:
+        check_has_new_page()
+        _purge()
 
 def purge_cache_if_needed():
-    global _count
-    current_count = _check_past_page_count()
-    if _count != current_count:
-        _count = current_count
+    if _main_url:
+        urlopen(f'http://{_main_url}/private/purge_cache_if_needed').close()
+    elif check_has_new_page():
         _purge()

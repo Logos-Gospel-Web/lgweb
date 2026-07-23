@@ -38,9 +38,17 @@ services:
             <<: *build
             target: main
         volumes: *volumes
-    admin: *main
-    # cron:
-    #     <<: *main
-    #     build:
-    #         <<: *build
-    #         target: cron
+    admin:
+        <<: *main
+        environment:
+            - ALLOWED_HOSTS=*
+            - MAIN_URL=main:8000
+    cron:
+        <<: *main
+        environment:
+            - ALLOWED_HOSTS=*
+            - MAIN_URL=main:8000
+            - DRY_RUN=1
+        build:
+            <<: *build
+            target: cron

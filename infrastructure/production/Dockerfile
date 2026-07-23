@@ -86,11 +86,11 @@ CMD [ "gunicorn", "--bind", "0.0.0.0:8000", "project.wsgi:application" ]
 
 FROM base AS cron
 
-COPY --from=preprocessor /lgweb /lgweb
-COPY --parents app/management app/migrations /lgweb/
-COPY --parents --chmod=700 server/migrations /lgweb/
 COPY --chmod=600 server/crontab /etc/crontabs/root
 COPY --chmod=700 server/cron /cron
+COPY --from=prerendered /lgweb /lgweb
+COPY --parents app/management app/migrations /lgweb/
+COPY --parents --chmod=700 server/migrations /lgweb/
 
 CMD [ "crond", "-f", "-d", "6" ]
 
