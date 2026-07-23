@@ -17,7 +17,6 @@ from hashlib import sha256
 from os import environ
 import ulid
 
-from ..services.random_string import random_string
 from ..services.queries import get_menu
 from ..lang import LANGUAGES, to_locale, to_lang_tag
 
@@ -88,6 +87,9 @@ def view_func(allow_post = False):
 def get_ip(request):
     return get_client_ip(request)[0] or ''
 
+def _generate_hash(content: bytes):
+    return sha256(content).hexdigest()
+
 def get_fingerprint(request):
     headers = request.headers
     raw = ':'.join((
@@ -102,7 +104,7 @@ def get_fingerprint(request):
         headers.get('sec-ch-ua-mobile', ''),
         headers.get('sec-ch-ua-platform', ''),
     ))
-    return sha256(raw.encode('utf-8')).hexdigest()
+    return _generate_hash(raw.encode('utf-8'))
 
 def use_cache(disabled = None):
     def decorator(view_func):
@@ -116,32 +118,36 @@ def use_cache(disabled = None):
             current_etag = caches['etag'].get(key)
             client_etag = request.META.get('HTTP_IF_NONE_MATCH')
 
+            if client_etag:
+                client_etag = client_etag.replace('W/', '').strip('"')
+
             response = None
 
-            if current_etag and client_etag:
-                clean_client_etag = client_etag.replace('W/', '').strip('"')
-                if clean_client_etag == current_etag:
+            if current_etag:
+                if client_etag == current_etag:
                     response = HttpResponseNotModified()
+                else:
+                    cached_data = default_cache.get(key)
+                    if cached_data is not None:
+                        cached_content, content_type = cached_data
+                        response = HttpResponse(cached_content, content_type=content_type)
 
             if not response:
-                cached_data = default_cache.get(key)
-                if cached_data is not None:
-                    cached_content, content_type = cached_data
-                    response = HttpResponse(cached_content, content_type=content_type)
-                else:
-                    response = view_func(request, *args, **kwargs)
-                    if hasattr(response, 'render') and callable(response.render):
-                        response.render()
+                response = view_func(request, *args, **kwargs)
+                if hasattr(response, 'render') and callable(response.render):
+                    response.render()
 
-                    if response.status_code != 200:
-                        return response
+                if response.status_code != 200:
+                    return response
 
-                    content_type = response.get('Content-Type', 'text/html; charset=utf-8')
-                    default_cache.set(key, (response.content, content_type))
+                content_type = response.get('Content-Type', 'text/html; charset=utf-8')
+                default_cache.set(key, (response.content, content_type))
 
-                if not current_etag:
-                    current_etag = random_string()
-                    caches['etag'].set(key, current_etag)
+                current_etag = _generate_hash(response.content)[:16]
+                caches['etag'].set(key, current_etag)
+
+                if client_etag == current_etag:
+                    response = HttpResponseNotModified()
 
             response['ETag'] = f'"{current_etag}"'
             response['Cache-Control'] = 'max-age=60'
