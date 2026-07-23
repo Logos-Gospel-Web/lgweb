@@ -113,7 +113,7 @@ def contact(request: HttpRequest, lang) -> HttpResponse:
             status = _('您的訊息已經成功發出。')
 
     @use_cache(disabled = sent)
-    def wrap(request, lang):
+    def wrap(request: HttpRequest, lang):
         resp = render(request, 'site/pages/contact.html', {
             **context,
             'title': make_title(_('聯絡我們')),

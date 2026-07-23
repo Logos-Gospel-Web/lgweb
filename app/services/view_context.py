@@ -3,7 +3,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from datetime import date, datetime
 from django.conf import settings
 from django.core.cache import cache as default_cache
-from django.http import HttpResponse, HttpResponseForbidden
+from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
 from django.urls import reverse
 from django.utils import translation
 from django.utils.timezone import get_current_timezone
@@ -46,7 +46,7 @@ def _parse_preferred_language(accept: str) -> str:
 def inject_context(allow_post = False):
     def decorator(view_func):
         @csrf_exempt
-        def _wrapped_view(request, *args, **kwargs):
+        def _wrapped_view(request: HttpRequest, *args, **kwargs):
             if request.method == 'OPTIONS':
                 return HttpResponse(status=204)
 
@@ -76,10 +76,10 @@ def inject_context(allow_post = False):
 
     return decorator
 
-def get_base_url(request):
+def get_base_url(request: HttpRequest):
     return f'{request.scheme if not _force_https else "https"}://{request.get_host()}'
 
-def _get_base_context(request, lang):
+def _get_base_context(request: HttpRequest, lang):
     tz = get_current_timezone()
     now = datetime.now(tz=tz)
     has_preview = _PREVIEW_KEY in request.GET

@@ -7,7 +7,7 @@ from ..lang import LANGUAGES
 from ..models import AnalyticsTemp
 from ..services.client_info import get_ip, get_fingerprint
 
-def _save_analytics(request):
+def _save_analytics(request: HttpRequest):
     if request.method != 'POST' or 'lgweb' not in request.headers:
         return False
 

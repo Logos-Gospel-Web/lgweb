@@ -1,10 +1,11 @@
+from django.http import HttpRequest
 from ipware import get_client_ip
 from hashlib import sha256
 
-def get_ip(request):
+def get_ip(request: HttpRequest):
     return get_client_ip(request)[0] or ''
 
-def get_fingerprint(request):
+def get_fingerprint(request: HttpRequest):
     headers = request.headers
     raw = ':'.join((
         headers.get('user-agent', ''),

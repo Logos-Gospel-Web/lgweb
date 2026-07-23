@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.db.models import Prefetch
+from django.http import HttpRequest
 
 from ..lang import with_lang
 from ..models import Topic
@@ -19,7 +20,7 @@ def get_topic_by_slug(slug, lang, now, with_children=True):
 
 @inject_context()
 @use_cache()
-def topic(request, lang, slug):
+def topic(request: HttpRequest, lang, slug):
     context = request.context
     page = get_topic_by_slug(slug, lang, context['now'])
     template = 'blog.html' if page.is_blog else 'topic.html'

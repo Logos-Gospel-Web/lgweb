@@ -1,7 +1,7 @@
 from pathlib import Path
 from django.urls import path
 from django.utils import translation
-from django.http import HttpResponse
+from django.http import HttpRequest, HttpResponse
 from django.core.files.storage import default_storage
 from base64 import b64encode
 from hashlib import sha256
@@ -13,7 +13,7 @@ from .services.import_doc import import_doc, process_doc
 from .services.author import format_author
 
 def admin_api(fn):
-    def wrap(request, *args, **kwargs):
+    def wrap(request: HttpRequest, *args, **kwargs):
         if not request.user.is_active or not request.user.is_staff:
             return HttpResponse(status=401)
         if request.method == 'OPTIONS':
@@ -25,7 +25,7 @@ def admin_api(fn):
     return wrap
 
 @admin_api
-def upload_doc_image_api(request):
+def upload_doc_image_api(request: HttpRequest):
     file = request.FILES['file']
     ext = Path(file.name).suffix
 
@@ -39,7 +39,7 @@ def upload_doc_image_api(request):
     return HttpResponse(status=200, content=default_storage.url(stored_name))
 
 @admin_api
-def import_doc_api(request):
+def import_doc_api(request: HttpRequest):
     file = request.FILES['file']
     html = import_doc(file)
 
@@ -56,7 +56,7 @@ def import_doc_api(request):
     return resp
 
 @admin_api
-def copy_doc_api(request):
+def copy_doc_api(request: HttpRequest):
     data = request.POST
     language = data['language']
     content = data['content']
@@ -85,7 +85,7 @@ def copy_doc_api(request):
     return HttpResponse(status=200, content=html)
 
 @admin_api
-def get_preview_link(request):
+def get_preview_link(request: HttpRequest):
     data = request.POST
     language = 'sc'
     position = int(data['position']) if 'position' in data else None
