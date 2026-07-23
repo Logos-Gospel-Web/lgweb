@@ -7,7 +7,7 @@ from django.utils.translation import gettext as _
 from django.urls import reverse
 
 from ..lang import with_lang
-from ..services.queries import get_messages
+from ..services.messages import get_messages
 from ..services.view_context import make_title, inject_context
 
 _PAGE_SIZE = 10

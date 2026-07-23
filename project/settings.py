@@ -51,6 +51,11 @@ CACHES = {
         'LOCATION': 'lgweb-etag-cache',
         'TIMEOUT': None,
     },
+    'components': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'lgweb-components-cache',
+        'TIMEOUT': None,
+    },
 }
 
 # Application definition

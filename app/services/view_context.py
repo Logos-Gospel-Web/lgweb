@@ -2,7 +2,6 @@ from django.shortcuts import redirect
 from django.core.exceptions import ObjectDoesNotExist
 from datetime import date, datetime
 from django.conf import settings
-from django.core.cache import cache as default_cache
 from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
 from django.urls import reverse
 from django.utils import translation
@@ -13,7 +12,7 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from os import environ
 
-from ..services.queries import get_menu
+from .menu import get_menu
 from ..lang import is_valid_language, to_locale, to_lang_tag
 
 _contact_email = environ.get('CONTACT_EMAIL')
@@ -22,18 +21,9 @@ _head_inject = environ.get('HEAD_INJECT', '')
 
 _PREVIEW_KEY = 'preview'
 _DEFAULT_LANG = 'sc'
-_MENU_CACHE_KEY = '__MENU__'
 
 class NotFound(Exception):
     pass
-
-def _get_menu_cached(now: datetime):
-    value = default_cache.get(_MENU_CACHE_KEY)
-    if value:
-        return value
-    value = get_menu(now)
-    default_cache.set(_MENU_CACHE_KEY, value)
-    return value
 
 def _parse_preferred_language(accept: str) -> str:
     for lang, _ in parse_accept_lang_header(accept):
@@ -102,7 +92,7 @@ def _get_base_context(request: HttpRequest, lang):
         'path': request.path,
         'full_url': base_url + request.path,
         'contact_email': _contact_email,
-        'menu': get_menu(now) if has_preview else _get_menu_cached(now),
+        'menu': get_menu(now, cache=not has_preview),
         'language': lang,
         'locale': to_locale(lang),
         'lang_tag': to_lang_tag(lang),

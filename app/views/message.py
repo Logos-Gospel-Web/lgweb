@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.db.models import Prefetch
 
 from ..services.author import format_author
-from ..services.queries import get_messages
+from ..services.messages import get_messages
 from ..services.view_cache import use_cache
 from ..services.view_context import inject_context, make_title, NotFound
 

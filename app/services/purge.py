@@ -13,6 +13,7 @@ _count = _check_past_page_count()
 def _purge():
     caches['default'].clear()
     caches['etag'].clear()
+    caches['components'].clear()
 
 def purge_cache():
     global _count

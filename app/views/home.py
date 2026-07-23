@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.utils.translation import gettext as _
 
 from ..models import HomeBanner, Promotion
-from ..services.queries import get_messages
+from ..services.messages import get_messages
 from ..services.view_cache import use_cache
 from ..services.view_context import inject_context, make_title
 

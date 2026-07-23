@@ -4,7 +4,7 @@ from django.http import HttpRequest
 
 from ..lang import with_lang
 from ..models import Topic
-from ..services.queries import get_messages
+from ..services.messages import get_messages
 from ..services.view_cache import use_cache
 from ..services.view_context import inject_context, make_title
 
