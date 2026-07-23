@@ -116,12 +116,14 @@ def use_cache(disabled = None):
             current_etag = caches['etag'].get(key)
             client_etag = request.META.get('HTTP_IF_NONE_MATCH')
 
+            response = None
+
             if current_etag and client_etag:
                 clean_client_etag = client_etag.replace('W/', '').strip('"')
                 if clean_client_etag == current_etag:
                     response = HttpResponseNotModified()
 
-            else:
+            if not response:
                 cached_data = default_cache.get(key)
                 if cached_data is not None:
                     cached_content, content_type = cached_data
