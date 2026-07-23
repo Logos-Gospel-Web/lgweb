@@ -1,6 +1,7 @@
 from django.core.cache import cache as default_cache, caches
 from django.http import HttpResponse, HttpResponseNotModified
-from hashlib import sha256
+from hashlib import md5
+from base64 import urlsafe_b64encode
 
 def use_cache(disabled = None):
     def decorator(view_func):
@@ -11,10 +12,12 @@ def use_cache(disabled = None):
             key = request.path
 
             current_etag = caches['etag'].get(key)
-            client_etag = request.META.get('HTTP_IF_NONE_MATCH')
+            client_etag: str | None = request.META.get('HTTP_IF_NONE_MATCH')
 
             if client_etag:
-                client_etag = client_etag.replace('W/', '').strip('"')
+                if client_etag.startswith('W/'):
+                    client_etag = client_etag[2:]
+                client_etag = client_etag.strip('"')
 
             response = None
 
@@ -38,7 +41,7 @@ def use_cache(disabled = None):
                 content_type = response.get('Content-Type', 'text/html; charset=utf-8')
                 default_cache.set(key, (response.content, content_type))
 
-                current_etag = sha256(response.content).hexdigest()[:16]
+                current_etag = urlsafe_b64encode(md5(response.content).digest()).decode('utf-8').strip('=')
                 caches['etag'].set(key, current_etag)
 
                 if client_etag == current_etag:
