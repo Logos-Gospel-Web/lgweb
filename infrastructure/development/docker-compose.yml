@@ -36,6 +36,7 @@ services:
             - CONTACT_DB_ROOT=/db/contact.sqlite3
             - ANALYTICS_DB_ROOT=/db/analytics.sqlite3
             - ANALYTICS_TEMP_DB_ROOT=/db/analytics_temp.sqlite3
+            - PYTHONUNBUFFERED=1
         volumes:
             - ../../:/lgweb/
             - virtualenv:/venv/
