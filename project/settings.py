@@ -103,32 +103,21 @@ WSGI_APPLICATION = 'project.wsgi.application'
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,
-    'filters': {
-        'require_debug_true': {
-            '()': 'django.utils.log.RequireDebugTrue',
-        },
-    },
     'formatters': {
-        'default': {
-            '()': 'django.utils.log.ServerFormatter',
-            'format': '[{server_time}] [{levelname}] {message}',
+        'verbose': {
+            'format': '[{asctime}] {levelname} {name} {message}',
             'style': '{',
-        }
+        },
     },
     'handlers': {
         'console': {
-            'level': 'INFO',
-            'filters': ['require_debug_true'],
             'class': 'logging.StreamHandler',
-            'formatter': 'default',
+            'formatter': 'verbose',
         },
     },
-    'loggers': {
-        'django': {
-            'level': 'INFO',
-            'handlers': ['console'],
-            'propagate': False,
-        },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
     },
 }
 
@@ -138,9 +127,9 @@ if environ.get('ERROR_LOG_FILE'):
         'class': 'logging.handlers.RotatingFileHandler',
         'filename': environ.get('ERROR_LOG_FILE'),
         'maxBytes': 1024 * 1024 * 100,
-        'formatter': 'default',
+        'formatter': 'verbose',
     }
-    LOGGING['loggers']['django']['handlers'].append('file')
+    LOGGING['root']['handlers'].append('file')
 
 
 # Database

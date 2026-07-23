@@ -80,7 +80,7 @@ FROM base AS main
 
 COPY --from=prerendered /lgweb /lgweb
 
-CMD [ "gunicorn", "--bind", "0.0.0.0:8000", "project.wsgi:application" ]
+CMD [ "gunicorn", "--bind", "0.0.0.0:8000", "project.wsgi:application",  "--capture-output", "--log-level", "info", "--access-logfile", "-", "--error-logfile", "-" ]
 
 # ========================================
 
