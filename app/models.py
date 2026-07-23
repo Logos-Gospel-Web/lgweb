@@ -2,10 +2,45 @@ from django.db import models
 from django.db.models import Q
 from django.utils import timezone
 import ulid
+
 from .services.convert_search_text import convert_search_text
+from .services.purge import purge_cache
 from .lang import LANGUAGES, LANGUAGE_NAMES, with_lang
 
-# Create your models here.
+class CacheInvalidationQuerySet(models.QuerySet):
+    def update(self, *args, **kwargs):
+        result = super().update(*args, **kwargs)
+        purge_cache()
+        return result
+
+    def delete(self, *args, **kwargs):
+        result = super().delete(*args, **kwargs)
+        purge_cache()
+        return result
+
+    def bulk_create(self, *args, **kwargs):
+        result = super().bulk_create(*args, **kwargs)
+        purge_cache()
+        return result
+
+    def bulk_update(self, *args, **kwargs):
+        result = super().bulk_update(*args, **kwargs)
+        purge_cache()
+        return result
+
+class CacheInvalidationModel(models.Model):
+    objects = CacheInvalidationQuerySet.as_manager()
+
+    class Meta:
+        abstract = True
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        purge_cache()
+
+    def delete(self, *args, **kwargs):
+        super().delete(*args, **kwargs)
+        purge_cache()
 
 def make_id():
     return ulid.new().str
@@ -16,7 +51,7 @@ def make_id_field():
 def print_multilingual(self, field: str):
     return ' / '.join((getattr(self, with_lang(field, lang)) or f'<empty>' for lang in LANGUAGES))
 
-def model(*, multilingual: list[str] = [], base: type[models.Model] = models.Model):
+def model(*, multilingual: list[str] = [], base: type[models.Model] = CacheInvalidationModel):
     def make_multilingual(Cls, field):
         def getter(self):
             return { lang: getattr(self, with_lang(field, lang)) for lang in LANGUAGES }
@@ -39,25 +74,14 @@ def model(*, multilingual: list[str] = [], base: type[models.Model] = models.Mod
 
     return decorator
 
-def WithTopicManager(page_field):
-    class Manager(models.Manager):
-        def with_topic(self):
-            return self\
-                .select_related(f'{page_field}__message__parent')\
-                .select_related(f'{page_field}__topic')
 
-    return Manager
+class WithTopicQuerySet(CacheInvalidationQuerySet):
+    page_field: str | None = None
 
-def MenuManager(page_field):
-    class Manager(WithTopicManager(page_field)):
-        def filter_disabled_item(self, now, include_null = False):
-            query = self.with_topic().filter(enabled=True)
-            q = { f'{page_field}__enabled': True, f'{page_field}__publish__lte': now }
-            if include_null:
-                return query.filter(Q(**{ f'{page_field}__isnull': True }) | Q(**q))
-            return query.filter(**q)
-
-    return Manager
+    def with_topic(self):
+        return self\
+            .select_related(f'{self.page_field}__message__parent')\
+            .select_related(f'{self.page_field}__topic')
 
 @model()
 class HomePage:
@@ -96,9 +120,12 @@ class Banner:
     def __str__(self):
         return self.title
 
+class HomeBannerQuerySet(WithTopicQuerySet):
+    page_field = 'target_page'
+
 @model()
 class HomeBanner:
-    objects = WithTopicManager('target_page')()
+    objects = HomeBannerQuerySet.as_manager()
     class Meta:
         db_table = 'home_banner'
         ordering = ['position']
@@ -112,9 +139,12 @@ class HomeBanner:
     def __str__(self):
         return f'Home Banner {self.position + 1}'
 
+class PromotionQuerySet(WithTopicQuerySet):
+    page_field = 'page'
+
 @model()
 class Promotion:
-    objects = WithTopicManager('page')()
+    objects = PromotionQuerySet.as_manager()
     class Meta:
         db_table = 'promotion'
         ordering = ['position']
@@ -130,9 +160,19 @@ class Promotion:
     def __str__(self):
         return self.title
 
+class MenuQuerySet(WithTopicQuerySet):
+    page_field = 'page'
+
+    def filter_disabled_item(self, now, include_null = False):
+        query = self.with_topic().filter(enabled=True)
+        q = { f'{self.page_field}__enabled': True, f'{self.page_field}__publish__lte': now }
+        if include_null:
+            return query.filter(Q(**{ f'{self.page_field}__isnull': True }) | Q(**q))
+        return query.filter(**q)
+
 @model(multilingual=['title'])
 class MenuItem:
-    objects = MenuManager('page')()
+    objects = MenuQuerySet.as_manager()
     class Meta:
         db_table = 'menu_item'
         ordering = ['position']
@@ -222,7 +262,7 @@ class Topic:
     def __str__(self):
         return print_multilingual(self, 'title')
 
-@model()
+@model(base=models.Model)
 class Contact:
     class Meta:
         db_table = 'contact'
@@ -238,7 +278,7 @@ class Contact:
     def __str__(self):
         return f'{self.name} ({timezone.localtime(self.submitted_at).strftime(r"%Y-%m-%d %H:%M:%S")})'
 
-@model()
+@model(base=models.Model)
 class AnalyticsTemp:
     class Meta:
         db_table = 'analytics_temp'
@@ -254,7 +294,7 @@ class AnalyticsTemp:
     def __str__(self):
         return f'{self.ip} ({self.created_at.strftime(r"%Y-%m-%d %H:%M:%S")})'
 
-@model()
+@model(base=models.Model)
 class Analytics:
     class Meta:
         db_table = 'analytics'
