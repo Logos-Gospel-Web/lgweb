@@ -10,7 +10,6 @@ from django.utils.translation import gettext as _
 import re
 
 from app.models import Analytics
-from .common import get_build_version
 
 def _count_dict(dict: defaultdict[Any, set], counter: Counter):
     return [(len(v), counter[k], k) for k, v in dict.items()]
@@ -47,7 +46,6 @@ def statistics(request: HttpRequest) -> HttpResponse:
         by_country_visitors[country].add(item.ip)
 
     return render(request, 'site/pages/statistics.html', {
-        'build_version': get_build_version(),
         'year': year,
         'prev_year': year - 1,
         'next_year': year + 1,

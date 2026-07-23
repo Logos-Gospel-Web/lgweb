@@ -5,9 +5,11 @@ from django.views.decorators.csrf import csrf_exempt
 from django_ratelimit.core import is_ratelimited
 import re
 
-from ..services.send_email import send_contact_email
 from ..models import Contact
-from .common import use_cache, view_func, make_title, get_ip, get_fingerprint
+from ..services.client_info import get_ip, get_fingerprint
+from ..services.send_email import send_contact_email
+from ..services.view_cache import use_cache
+from ..services.view_context import inject_context, make_title
 
 _keys = {
     'name': '3nj99LU9Ko',
@@ -80,7 +82,7 @@ _CONTACT_COOKIE_KEY = 'contact_success'
 _CONTACT_COOKIE_VALUE = '1'
 
 @csrf_exempt
-@view_func(allow_post=True)
+@inject_context(allow_post=True)
 def contact(request: HttpRequest, lang) -> HttpResponse:
     context = request.context
     status = ''

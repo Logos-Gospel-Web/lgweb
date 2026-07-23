@@ -3,8 +3,9 @@ from django.db.models import Prefetch
 
 from ..lang import with_lang
 from ..models import Topic
-from .common import use_cache, view_func, make_title
 from ..services.queries import get_messages
+from ..services.view_cache import use_cache
+from ..services.view_context import inject_context, make_title
 
 def get_topic_by_slug(slug, lang, now, with_children=True):
     res = Topic.objects\
@@ -16,7 +17,7 @@ def get_topic_by_slug(slug, lang, now, with_children=True):
 
     return res.get(slug=slug, enabled=True, publish__lte=now)
 
-@view_func()
+@inject_context()
 @use_cache()
 def topic(request, lang, slug):
     context = request.context

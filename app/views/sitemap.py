@@ -3,10 +3,12 @@ from django.urls import path, reverse
 from django.shortcuts import redirect
 from django.http import HttpRequest, HttpResponse
 from django.utils.timezone import get_current_timezone
-from .common import is_valid_language, get_base_url
-from ..lang import LANGUAGES
+
+from ..lang import LANGUAGES, is_valid_language
 from ..models import Message
 from ..services.links import topic_link, message_link
+from ..services.view_cache import use_cache
+from ..services.view_context import get_base_url
 
 def get_static_pages(base_url):
     return [[(lang, base_url + reverse(page, args=(lang,))) for lang in LANGUAGES] for page in ('home', 'contact')]
@@ -51,6 +53,7 @@ def print_sitemap(pages):
         ''.join([print_page(page) for page in pages]) +\
         '</urlset>'
 
+@use_cache()
 def sitemap_with_lang(request: HttpRequest, lang) -> HttpResponse:
     if not is_valid_language(lang):
         return redirect('sitemap')
@@ -61,6 +64,7 @@ def sitemap_with_lang(request: HttpRequest, lang) -> HttpResponse:
     resp = HttpResponse(status=200, content=content, content_type='application/xml; charset=utf-8')
     return resp
 
+@use_cache()
 def sitemap(request: HttpRequest) -> HttpResponse:
     base_url = get_base_url(request)
     pages = get_all_pages(base_url)

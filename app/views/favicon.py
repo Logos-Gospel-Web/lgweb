@@ -1,7 +1,8 @@
 from django.http import HttpRequest, HttpResponse, HttpResponseNotFound
 from django.shortcuts import render
 
-from .common import is_valid_language, use_cache
+from ..lang import is_valid_language
+from ..services.view_cache import use_cache
 
 @use_cache()
 def favicon(request: HttpRequest, lang, hash = None) -> HttpResponse:

@@ -4,9 +4,10 @@ from django.utils.translation import gettext as _
 from django.urls import reverse
 from django.db.models import Prefetch
 
-from .common import use_cache, view_func, make_title, NotFound
-from ..services.queries import get_messages
 from ..services.author import format_author
+from ..services.queries import get_messages
+from ..services.view_cache import use_cache
+from ..services.view_context import inject_context, make_title, NotFound
 
 def get_message(slug, position, lang, now):
     return get_messages(lang, now)\
@@ -42,7 +43,7 @@ def get_sidebar(topic):
         'children': children,
     }
 
-@view_func()
+@inject_context()
 @use_cache()
 def message(request: HttpRequest, lang, slug, pos) -> HttpResponse:
     context = request.context

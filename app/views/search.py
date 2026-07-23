@@ -6,9 +6,9 @@ from django.shortcuts import render, redirect
 from django.utils.translation import gettext as _
 from django.urls import reverse
 
-from .common import make_title, view_func
 from ..lang import with_lang
 from ..services.queries import get_messages
+from ..services.view_context import make_title, inject_context
 
 _PAGE_SIZE = 10
 
@@ -50,7 +50,7 @@ def get_pagination(current: int, count: int):
 class HttpResponseSeeOther(HttpResponseRedirect):
     status_code = 303
 
-@view_func()
+@inject_context()
 def search(request: HttpRequest, lang: str, input: str, page=1) -> HttpResponse:
     context = request.context
     if len(input) > context['search_max_length']:

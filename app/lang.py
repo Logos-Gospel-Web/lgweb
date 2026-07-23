@@ -33,3 +33,6 @@ def to_lang(locale: str) -> str:
 
 def with_lang(field: str, lang: str):
     return f'{field}_{lang}'
+
+def is_valid_language(language: str) -> bool:
+    return language in LANGUAGES

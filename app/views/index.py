@@ -1,5 +1,5 @@
-from .common import view_func
+from ..services.view_context import inject_context
 
-@view_func()
+@inject_context()
 def index():
     pass

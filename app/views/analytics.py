@@ -3,9 +3,9 @@ from django.urls import resolve
 from django.urls.exceptions import Resolver404
 from django.views.decorators.csrf import csrf_exempt
 
-from .common import get_ip, get_fingerprint
 from ..lang import LANGUAGES
 from ..models import AnalyticsTemp
+from ..services.client_info import get_ip, get_fingerprint
 
 def _save_analytics(request):
     if request.method != 'POST' or 'lgweb' not in request.headers:

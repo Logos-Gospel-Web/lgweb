@@ -3,8 +3,9 @@ from django.shortcuts import render
 from django.utils.translation import gettext as _
 
 from ..models import HomeBanner, Promotion
-from .common import use_cache, view_func, make_title
 from ..services.queries import get_messages
+from ..services.view_cache import use_cache
+from ..services.view_context import inject_context, make_title
 
 def get_home_banners(lang):
     return HomeBanner.objects\
@@ -21,7 +22,7 @@ def get_promotions(lang):
         .with_topic()\
         .filter(language=lang)
 
-@view_func()
+@inject_context()
 @use_cache()
 def home(request: HttpRequest, lang) -> HttpResponse:
     context = request.context
