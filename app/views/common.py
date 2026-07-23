@@ -123,9 +123,10 @@ def use_cache(disabled = None):
                     response = HttpResponseNotModified()
 
             else:
-                cached_content = default_cache.get(key)
-                if cached_content is not None:
-                    response = HttpResponse(cached_content)
+                cached_data = default_cache.get(key)
+                if cached_data is not None:
+                    cached_content, content_type = cached_data
+                    response = HttpResponse(cached_content, content_type=content_type)
                 else:
                     response = view_func(request, *args, **kwargs)
                     if hasattr(response, 'render') and callable(response.render):
@@ -134,7 +135,8 @@ def use_cache(disabled = None):
                     if response.status_code != 200:
                         return response
 
-                    default_cache.set(key, response.content)
+                    content_type = response.get('Content-Type', 'text/html; charset=utf-8')
+                    default_cache.set(key, (response.content, content_type))
 
                 if not current_etag:
                     current_etag = random_string()
