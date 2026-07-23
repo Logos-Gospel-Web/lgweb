@@ -11,7 +11,6 @@ from django.utils.translation import gettext as _
 from django.utils.translation.trans_real import parse_accept_lang_header
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import etag
 from functools import wraps
 from ipware import get_client_ip
 from hashlib import sha256
@@ -173,6 +172,7 @@ def _get_base_context(request, lang):
     base_url = get_base_url(request)
     search_form_url = reverse('search_form', args=(lang,))
     return {
+        'debug': settings.DEBUG,
         'now': now,
         'base_url': base_url,
         'path': request.path,

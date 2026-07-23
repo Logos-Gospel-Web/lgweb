@@ -63,9 +63,22 @@ RUN python manage.py collectstatic --no-input &&\
 
 # ========================================
 
+FROM base AS prerendered
+
+RUN apk add --no-cache 'cairo'
+
+COPY --parents prerender.py /lgweb/
+COPY --from=preprocessor /lgweb /lgweb
+COPY --from=compiler /compiled/manifest.json /manifest.json
+
+RUN python prerender.py --base=/lgweb/app/templates --output=/prerendered --manifest=/manifest.json &&\
+    rm -f /lgweb/prerender.py
+
+# ========================================
+
 FROM base AS main
 
-COPY --from=preprocessor /lgweb /lgweb
+COPY --from=prerendered /lgweb /lgweb
 
 CMD [ "gunicorn", "--bind", "0.0.0.0:8000", "project.wsgi:application" ]
 
@@ -100,4 +113,5 @@ ENV CACHE_CONTROL='max-age=3600'
 COPY server/Caddyfile /etc/caddy/Caddyfile
 COPY public /public
 COPY --from=preprocessor /static /public/static
-COPY --from=compiler /compiled /public
+COPY --from=prerendered /prerendered /public
+COPY --from=compiler --exclude=manifest.json /compiled /public

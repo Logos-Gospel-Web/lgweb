@@ -1,0 +1,9 @@
+<link rel="icon" href="/{{ language }}/{{ favicon_hash|default:'0' }}/favicon.svg" type="image/svg+xml">
+{% if not debug %}
+    <link rel="manifest" href="/{{ language }}/{{ favicon_hash }}/app.webmanifest">
+    <link rel="apple-touch-icon" href="/{{ language }}/{{ favicon_hash }}/apple-touch-icon.png">
+{% endif %}
+<link href="/{{ css_style|default:"style.css" }}" rel="stylesheet">
+<noscript>
+    <link href="/{{ css_noscript|default:"noscript.css" }}" rel="stylesheet">
+</noscript>

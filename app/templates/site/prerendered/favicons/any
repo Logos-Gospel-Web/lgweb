@@ -1,0 +1,8 @@
+{% spaceless %}
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 360">
+  <rect x="0" y="0" width="100%" height="100%" fill="#AA78B9" />
+  <g transform="translate(30, 40)">
+    {% include text_template %}
+  </g>
+</svg>
+{% endspaceless %}

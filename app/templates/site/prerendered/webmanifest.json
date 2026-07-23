@@ -1,0 +1,26 @@
+{
+    "id": "lgweb",
+    "name": "{{ base_title }}",
+    "start_url": "/{{ language }}",
+    "icons": [
+        {
+            "src": "/{{ language }}/{{ favicon_hash }}/favicon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/{{ language }}/{{ favicon_hash }}/favicon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "src": "/{{ language }}/{{ favicon_hash }}/favicon-maskable.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ],
+    "theme_color": "#AA78B9",
+    "background_color": "#FFFFFF",
+    "display": "standalone"
+}

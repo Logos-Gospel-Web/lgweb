@@ -25,11 +25,9 @@
         "react": "^19.2.4",
         "react-dom": "^19.2.4",
         "react-icons": "^5.5.0",
+        "rspack-manifest-plugin": "^5.2.2",
+        "sass-embedded": "^1.97.3",
         "sass-loader": "^16.0.7",
         "typescript": "^5.9.3"
-    },
-    "devDependencies": {
-        "sass": "^1.97.3",
-        "sass-embedded": "^1.97.3"
     }
 }

@@ -19,8 +19,7 @@ services:
             - CACHE_CONTROL=max-age=60
         volumes:
             - ../../server/Caddyfile:/etc/caddy/Caddyfile
-            - ../../public:/public
-            - compiled:/compiled/
+            - compiled:/public/
             - caddy_data:/data/
     main: &main
         build:

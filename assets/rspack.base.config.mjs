@@ -1,23 +1,6 @@
 import { defineConfig } from '@rspack/cli'
 import path from 'node:path'
 
-/** @type {import('@rspack/core').RspackPluginFunction} */
-const NoEmitJsPlugin = (compiler) => {
-    const name = 'NoEmitJsPlugin'
-    compiler.hooks.thisCompilation.tap(name, (compilation) => {
-        compilation.hooks.chunkAsset.tap(name, (chunk, assetName) => {
-            if (assetName.endsWith('.js')) {
-                const modules = compilation.chunkGraph.getChunkModules(chunk)
-                if (
-                    modules.every((mod) => !mod.type.startsWith('javascript/'))
-                ) {
-                    compilation.deleteAsset(assetName)
-                }
-            }
-        })
-    })
-}
-
 /** @type {import('@rspack/core').SwcLoaderJscConfig['assumptions']} */
 const jsAssumptions = {
     constantReexports: true,
@@ -113,7 +96,6 @@ export default defineConfig((env, argv) => {
                 },
             ],
         },
-        plugins: [{ apply: NoEmitJsPlugin }],
         optimization: {
             splitChunks: false,
         },
