@@ -48,37 +48,32 @@ ENV ERROR_LOG_FILE=/reports/error.log
 
 FROM base AS preprocessor
 
-COPY --parents \
-    --exclude=app/migrations/ \
-    --exclude=app/management/ \
-    manage.py project locales app /lgweb/
-
 # Unset the variable to prevent logging
 ENV ERROR_LOG_FILE=
 ENV STATIC_ROOT=/static
+
+RUN apk add --no-cache 'cairo'
+
+COPY --parents \
+    --exclude=app/migrations/ \
+    --exclude=app/management/ \
+    manage.py prerender.py project locales app /lgweb/
 
 RUN python manage.py collectstatic --no-input &&\
     python manage.py compilemessages &&\
     rm -rf /lgweb/app/static
 
-# ========================================
-
-FROM base AS prerendered
-
-RUN apk add --no-cache 'cairo'
-
-COPY --parents prerender.py /lgweb/
-COPY --from=preprocessor /lgweb /lgweb
 COPY --from=compiler /compiled/manifest.json /manifest.json
 
 RUN python prerender.py --base=/lgweb/app/templates --output=/prerendered --manifest=/manifest.json &&\
-    rm -f /lgweb/prerender.py
+    rm -f /lgweb/prerender.py &&\
+    rm -rf /lgweb/app/templates/site/favicons
 
 # ========================================
 
 FROM base AS main
 
-COPY --from=prerendered /lgweb /lgweb
+COPY --from=preprocessor /lgweb /lgweb
 
 CMD [ "gunicorn", "--bind", "0.0.0.0:8000", "project.wsgi:application",  "--capture-output", "--log-level", "info", "--access-logfile", "-", "--error-logfile", "-" ]
 
@@ -88,7 +83,7 @@ FROM base AS cron
 
 COPY --chmod=600 server/crontab /etc/crontabs/root
 COPY --chmod=700 server/cron /cron
-COPY --from=prerendered /lgweb /lgweb
+COPY --from=preprocessor /lgweb /lgweb
 COPY --parents app/management app/migrations /lgweb/
 COPY --parents --chmod=700 server/migrations /lgweb/
 
@@ -113,5 +108,5 @@ ENV CACHE_CONTROL='max-age=3600'
 COPY server/Caddyfile /etc/caddy/Caddyfile
 COPY public /public
 COPY --from=preprocessor /static /public/static
-COPY --from=prerendered /prerendered /public
+COPY --from=preprocessor /prerendered /public
 COPY --from=compiler --exclude=manifest.json /compiled /public

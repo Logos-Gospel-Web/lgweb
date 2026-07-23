@@ -26,9 +26,9 @@ def _generate_png(input: str, size: int, output: Path):
     )
 
 def _generate_favicons(output_dir: Path):
-    icon_template = get_template(f'site/prerendered/favicons/any')
-    maskable_template = get_template(f'site/prerendered/favicons/maskable')
-    rounded_template = get_template(f'site/prerendered/favicons/rounded')
+    icon_template = get_template(f'site/favicons/any')
+    maskable_template = get_template(f'site/favicons/maskable')
+    rounded_template = get_template(f'site/favicons/rounded')
     contexts = { lang: { 'text_template': f'./{lang}' } for lang in LANGUAGES }
     icons = { lang: icon_template.render(context) for lang, context in contexts.items() }
     maskables = { lang: maskable_template.render(context) for lang, context in contexts.items() }
