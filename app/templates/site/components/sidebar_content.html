@@ -3,7 +3,7 @@
 {% load message %}
 <nav>
     {% for item in sidebar.children %}
-        <div class="sidebar__item">
+        <div class="sidebar__item{% if message.id == item.id %} sidebar__item--active{% endif %}">
             <a class="link--hover" href="{{ item|page_link:sidebar.topic.slug }}{{ url_suffix }}">{{ item|full_title:language }}</a>
         </div>
     {% endfor %}
