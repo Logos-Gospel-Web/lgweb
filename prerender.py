@@ -1,6 +1,7 @@
 import argparse
 import cairosvg
 import django
+from collections import defaultdict
 from django.conf import settings
 from django.template.loader import get_template
 from pathlib import Path
@@ -26,9 +27,9 @@ def _generate_png(input: str, size: int, output: Path):
     )
 
 def _generate_favicons(output_dir: Path):
-    icon_template = get_template(f'site/favicons/any')
-    maskable_template = get_template(f'site/favicons/maskable')
-    rounded_template = get_template(f'site/favicons/rounded')
+    icon_template = get_template(f'favicons/any')
+    maskable_template = get_template(f'favicons/maskable')
+    rounded_template = get_template(f'favicons/rounded')
     contexts = { lang: { 'text_template': f'./{lang}' } for lang in LANGUAGES }
     icons = { lang: icon_template.render(context) for lang, context in contexts.items() }
     maskables = { lang: maskable_template.render(context) for lang, context in contexts.items() }
@@ -71,7 +72,10 @@ def _read_manifest(manifest_file: Path):
 
 def _generate_single_template(template_path: str, context: dict[str, str]):
     template = get_template(template_path)
-    return (template.origin.name, template.render(context))
+    content = template.render(context)
+    if template_path.endswith('.json'):
+        content = json.dumps(json.loads(content), separators=(',', ':'))
+    return (template.origin.name, content)
 
 def _generate_templates(context: dict[str, str]):
     return [_generate_single_template(t, context) for t in _templates]
@@ -87,6 +91,13 @@ def _setup(template_dir: str):
         ]
     )
     django.setup()
+
+class Context(dict[str, str]):
+    def __missing__(self, key):
+        return '{{ ' + key + ' }}'
+
+    def __contains__(self, _):
+        return True
 
 def _parse_args():
     parser = argparse.ArgumentParser()
@@ -127,10 +138,7 @@ def main():
     output_dir: str | None  = args.output
     dry_run: bool = args.dry_run
 
-    context: dict[str, str] = {
-        'language': '{{ language }}',
-        'base_title': '{{ base_title }}',
-    }
+    context = Context()
 
     if manifest_file:
         manifest = _read_manifest(Path(manifest_file))
@@ -140,19 +148,10 @@ def main():
         context['css_noscript'] = manifest['noscript.css'].strip('/')
         context['css_error'] = manifest['error.css'].strip('/')
         context['css_statistics'] = manifest['statistics.css'].strip('/')
-    else:
-        context['js_script'] = '{{ js_script }}'
-        context['js_sw'] = '{{ js_sw }}'
-        context['css_style'] = '{{ css_style }}'
-        context['css_noscript'] = '{{ css_noscript }}'
-        context['css_error'] = '{{ css_error }}'
-        context['css_statistics'] = '{{ css_statistics }}'
 
     if output_dir:
         favicon_hash = _generate_favicons(Path(output_dir))
         context['favicon_hash'] = favicon_hash
-    else:
-        context['favicon_hash'] = '{{ favicon_hash }}'
 
     templates = _generate_templates(context)
 

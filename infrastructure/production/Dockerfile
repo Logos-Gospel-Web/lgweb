@@ -67,7 +67,7 @@ COPY --from=compiler /compiled/manifest.json /manifest.json
 
 RUN python prerender.py --base=/lgweb/app/templates --output=/prerendered --manifest=/manifest.json &&\
     rm -f /lgweb/prerender.py &&\
-    rm -rf /lgweb/app/templates/site/favicons
+    rm -rf /lgweb/app/templates/favicons
 
 # ========================================
 
