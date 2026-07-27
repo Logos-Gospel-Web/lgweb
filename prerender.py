@@ -92,6 +92,9 @@ def _setup(template_dir: str):
     django.setup()
 
 class Context(dict[str, str]):
+    def __init__(self):
+        super().__init__({ 'debug': False })
+
     def __missing__(self, key):
         return '{{ ' + key + ' }}'
 
