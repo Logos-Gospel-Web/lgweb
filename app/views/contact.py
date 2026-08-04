@@ -5,11 +5,12 @@ from django.views.decorators.csrf import csrf_exempt
 from django_ratelimit.core import is_ratelimited
 import re
 
+from ..lang import Language
 from ..models import Contact
 from ..services.client_info import get_ip, get_fingerprint
 from ..services.send_email import send_contact_email
 from ..services.view_cache import use_cache
-from ..services.view_context import inject_context, make_title
+from ..services.view_context import RequestContext, with_context, make_title
 
 _keys = {
     'name': '3nj99LU9Ko',
@@ -85,10 +86,9 @@ def is_contact_success(request: HttpRequest) -> bool:
     return request.COOKIES.get(_CONTACT_COOKIE_KEY) == _CONTACT_COOKIE_VALUE
 
 @csrf_exempt
-@inject_context(allow_post=True)
+@with_context(allow_post=True)
 @use_cache(disabled = is_contact_success)
-def contact(request: HttpRequest, lang) -> HttpResponse:
-    context = request.context
+def contact(request: HttpRequest, context: RequestContext, lang: Language) -> HttpResponse:
     status = ''
     sent = False
     failed = False
@@ -103,7 +103,7 @@ def contact(request: HttpRequest, lang) -> HttpResponse:
                 failed = True
             else:
                 id = submit_form(values, ip=get_ip(request), language=lang, fingerprint=get_fingerprint(request))
-                send_contact_email(id, context['base_url'], values['name'], values['email'], values['comment'])
+                send_contact_email(id, context.base_url, values['name'], values['email'], values['comment'])
 
         if not failed:
             resp = HttpResponseSeeOther(request.path)
@@ -116,7 +116,7 @@ def contact(request: HttpRequest, lang) -> HttpResponse:
             status = _('您的訊息已經成功發出。')
 
     resp = render(request, 'site/pages/contact.html', {
-        **context,
+        **context.asdict(),
         'title': make_title(_('聯絡我們')),
         'keys': _keys,
         'values': values,

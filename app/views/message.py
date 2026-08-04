@@ -4,10 +4,11 @@ from django.utils.translation import gettext as _
 from django.urls import reverse
 from django.db.models import Prefetch
 
+from ..lang import Language
 from ..services.author import format_author
 from ..services.messages import get_messages
 from ..services.view_cache import use_cache
-from ..services.view_context import inject_context, make_title, NotFound
+from ..services.view_context import RequestContext, with_context, make_title, NotFound
 
 def get_message(slug, position, lang, now):
     return get_messages(lang, now)\
@@ -43,10 +44,9 @@ def get_sidebar(topic):
         'children': children,
     }
 
-@inject_context()
+@with_context()
 @use_cache()
-def message(request: HttpRequest, lang, slug, pos) -> HttpResponse:
-    context = request.context
+def message(request: HttpRequest, context: RequestContext, lang: Language, slug, pos) -> HttpResponse:
     if len(pos) == 2:
         try:
             position = int(pos) - 1
@@ -54,16 +54,16 @@ def message(request: HttpRequest, lang, slug, pos) -> HttpResponse:
             raise NotFound()
     else:
         raise NotFound()
-    now = context['now']
+    now = context.now
     page = get_message(slug, position, lang, now)
-    breadcrumb = get_breadcrumb(page.parent, context['menu'], lang)
+    breadcrumb = get_breadcrumb(page.parent, context.menu, lang)
     sidebar = get_sidebar(page.parent)
     banner = page.banner[lang]
     raw_author: str = page.author[lang]
     author_format: str = page.parent.message_author_format[lang]
     author = format_author(raw_author, author_format)
     return render(request, 'site/pages/message.html', {
-        **context,
+        **context.asdict(),
         'title': make_title(page.title[lang]),
         'fonts': [banner.subfont] if banner and banner.subfont and not banner.hide_title else None,
         'message': page,

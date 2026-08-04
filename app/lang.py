@@ -1,3 +1,7 @@
+from typing import Literal
+
+type Language = Literal['tc', 'sc']
+
 LANGUAGES = ('tc', 'sc')
 
 LANGUAGE_NAMES = {
@@ -22,16 +26,16 @@ _TO_LANG_TAG = {
     'sc': 'zh-hans',
 }
 
-def to_locale(lang: str) -> str:
+def to_locale(lang: Language) -> str:
     return _TO_LOCALE[lang]
 
-def to_lang_tag(lang: str) -> str:
+def to_lang_tag(lang: Language) -> str:
     return _TO_LANG_TAG[lang]
 
-def to_lang(locale: str) -> str:
+def to_lang(locale: str) -> Language:
     return _FROM_LOCALE[locale]
 
-def with_lang(field: str, lang: str):
+def with_lang(field: str, lang: Language):
     return f'{field}_{lang}'
 
 def is_valid_language(language: str) -> bool:

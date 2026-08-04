@@ -6,9 +6,9 @@ from django.shortcuts import render, redirect
 from django.utils.translation import gettext as _
 from django.urls import reverse
 
-from ..lang import with_lang
+from ..lang import Language, with_lang
 from ..services.messages import get_messages
-from ..services.view_context import make_title, inject_context
+from ..services.view_context import RequestContext, make_title, with_context
 
 _PAGE_SIZE = 10
 
@@ -50,11 +50,10 @@ def get_pagination(current: int, count: int):
 class HttpResponseSeeOther(HttpResponseRedirect):
     status_code = 303
 
-@inject_context()
-def search(request: HttpRequest, lang: str, input: str, page=1) -> HttpResponse:
-    context = request.context
-    if len(input) > context['search_max_length']:
-        return redirect('search', lang=lang, input=input[:context['search_max_length']], page=1)
+@with_context()
+def search(request: HttpRequest, context: RequestContext, lang: Language, input: str, page=1) -> HttpResponse:
+    if len(input) > context.search_max_length:
+        return redirect('search', lang=lang, input=input[:context.search_max_length], page=page)
     field_name = with_lang('search', lang)
     keywords = set((x.lower() for x in input.split() if x))
     # Remove keywords that contains in other keywords
@@ -64,13 +63,13 @@ def search(request: HttpRequest, lang: str, input: str, page=1) -> HttpResponse:
     if not keywords:
         page_title = make_title(title_trans % { 'keyword': input, 'count': 0 })
         return render(request, 'site/pages/search_empty.html', {
-            **context,
+            **context.asdict(),
             'title': page_title,
             'keyword': input,
         })
 
     message_query = reduce(lambda a, b: a & b, [Q(**{ f'{field_name}__contains': k }) for k in keywords])
-    matched_messages = get_messages(lang, context['now'])\
+    matched_messages = get_messages(lang, context.now)\
         .filter(message_query)\
         .order_by('-publish')
     message_count = matched_messages.count()
@@ -79,7 +78,7 @@ def search(request: HttpRequest, lang: str, input: str, page=1) -> HttpResponse:
     page_title = make_title(title_trans % { 'keyword': input, 'count': message_count })
     if message_count == 0:
         return render(request, 'site/pages/search_empty.html', {
-            **context,
+            **context.asdict(),
             'title': page_title,
             'keyword': input,
         })
@@ -100,7 +99,7 @@ def search(request: HttpRequest, lang: str, input: str, page=1) -> HttpResponse:
     messages = sorted(matched_messages, key=get_score, reverse=True)[start_index:end_index]
     page_count = math.ceil(message_count / _PAGE_SIZE)
     return render(request, 'site/pages/search.html', {
-        **context,
+        **context.asdict(),
         'title': page_title,
         'keyword': input,
         'keywords': keywords,

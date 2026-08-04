@@ -1,5 +1,5 @@
-from ..services.view_context import inject_context
+from ..services.view_context import with_context
 
-@inject_context()
+@with_context()
 def index():
     pass

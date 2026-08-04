@@ -1,18 +1,17 @@
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 
-from ..services.view_context import inject_context
+from ..lang import Language
+from ..services.view_context import RequestContext, with_context
 
-@inject_context()
-def error400(request: HttpRequest, lang) -> HttpResponse:
-    context = request.context
+@with_context()
+def error400(request: HttpRequest, context: RequestContext, lang: Language) -> HttpResponse:
     return render(request, 'site/pages/error400.html', {
-        **context,
+        **context.asdict(),
     }, status=400)
 
-@inject_context()
-def error404(request: HttpRequest, lang) -> HttpResponse:
-    context = request.context
+@with_context()
+def error404(request: HttpRequest, context: RequestContext, lang: Language) -> HttpResponse:
     return render(request, 'site/pages/error404.html', {
-        **context,
+        **context.asdict(),
     }, status=404)

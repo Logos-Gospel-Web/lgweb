@@ -17,7 +17,7 @@ def _get_menu(now: datetime):
         .all()
     return [item for item in menu if item.children.exists() or item.page is not None]
 
-def get_menu(now: datetime, cache = True):
+def get_menu(now: datetime, cache = True) -> list:
     if cache:
         return caches['components'].get_or_set(_MENU_CACHE_KEY, lambda: _get_menu(now))
     else:

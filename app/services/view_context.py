@@ -13,7 +13,7 @@ from django.views.decorators.csrf import csrf_exempt
 from os import environ
 
 from .menu import get_menu
-from ..lang import is_valid_language, to_locale, to_lang_tag
+from ..lang import Language, is_valid_language, to_locale, to_lang_tag
 
 _contact_email = environ.get('CONTACT_EMAIL')
 _force_https = environ.get('FORCE_HTTPS')
@@ -25,6 +25,46 @@ _DEFAULT_LANG = 'sc'
 class NotFound(Exception):
     pass
 
+class RequestContext:
+    def __init__(self, request: HttpRequest, lang: Language):
+        self.debug = settings.DEBUG
+
+        tz = get_current_timezone()
+        now = datetime.now(tz=tz)
+        self.now = now
+        # print(now)
+
+        has_preview = _PREVIEW_KEY in request.GET
+        url_suffix = ''
+        if has_preview:
+            preview = request.GET[_PREVIEW_KEY]
+            try:
+                d = date.fromisoformat(preview)
+                now = datetime(d.year, d.month, d.day, tzinfo=tz)
+                url_suffix = f'?{_PREVIEW_KEY}={preview}'
+            except ValueError:
+                pass
+
+        base_url = get_base_url(request)
+        self.base_url = base_url
+        self.path = request.path
+        self.full_url = base_url + request.path
+        self.url_suffix = url_suffix
+
+        self.language = lang
+        self.locale = to_locale(lang)
+        self.lang_tag = to_lang_tag(lang)
+
+        self.search_form_url = reverse('search_form', args=(lang,))
+        self.search_max_length = 20
+
+        self.menu = get_menu(now, cache=not has_preview)
+        self.contact_email = _contact_email
+        self.head_inject = _head_inject
+
+    def asdict(self):
+        return vars(self)
+
 def _parse_preferred_language(accept: str) -> str:
     for lang, _ in parse_accept_lang_header(accept):
         if lang in ('zh-hk', 'zh-mo', 'zh-tw', 'zh-hant'):
@@ -33,7 +73,7 @@ def _parse_preferred_language(accept: str) -> str:
             return 'sc'
     return _DEFAULT_LANG
 
-def inject_context(allow_post = False):
+def with_context(allow_post = False):
     def decorator(view_func):
         @csrf_exempt
         def _wrapped_view(request: HttpRequest, *args, **kwargs):
@@ -54,13 +94,13 @@ def inject_context(allow_post = False):
                 lang = _parse_preferred_language(request.META.get('HTTP_ACCEPT_LANGUAGE', ''))
                 return redirect('home', lang, permanent=True)
 
-            request.context = _get_base_context(request, lang)
+            context = RequestContext(request, lang)
             translation.activate(to_locale(lang))
 
             try:
-                return view_func(request, *args, **kwargs)
+                return view_func(request, context, *args, **kwargs)
             except (ObjectDoesNotExist, NotFound):
-                return render(request, 'site/pages/error404.html', request.context, status=404)
+                return render(request, 'site/pages/error404.html', context.asdict(), status=404)
 
         return _wrapped_view
 
@@ -68,39 +108,6 @@ def inject_context(allow_post = False):
 
 def get_base_url(request: HttpRequest):
     return f'{request.scheme if not _force_https else "https"}://{request.get_host()}'
-
-def _get_base_context(request: HttpRequest, lang):
-    tz = get_current_timezone()
-    now = datetime.now(tz=tz)
-    has_preview = _PREVIEW_KEY in request.GET
-    url_suffix = ''
-    if has_preview:
-        preview = request.GET[_PREVIEW_KEY]
-        try:
-            d = date.fromisoformat(preview)
-            now = datetime(d.year, d.month, d.day, tzinfo=tz)
-            url_suffix = '?preview=' + preview
-        except ValueError:
-            pass
-    # print(now)
-    base_url = get_base_url(request)
-    search_form_url = reverse('search_form', args=(lang,))
-    return {
-        'debug': settings.DEBUG,
-        'now': now,
-        'base_url': base_url,
-        'path': request.path,
-        'full_url': base_url + request.path,
-        'contact_email': _contact_email,
-        'menu': get_menu(now, cache=not has_preview),
-        'language': lang,
-        'locale': to_locale(lang),
-        'lang_tag': to_lang_tag(lang),
-        'search_form_url': search_form_url,
-        'search_max_length': 20,
-        'head_inject': _head_inject,
-        'url_suffix': url_suffix,
-    }
 
 def make_title(title: str) -> str:
     return f'{title} | {_("聖道福音網")} Logos Gospel Web'
