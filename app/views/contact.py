@@ -81,8 +81,12 @@ def submit_form(values, **kwargs):
 _CONTACT_COOKIE_KEY = 'contact_success'
 _CONTACT_COOKIE_VALUE = '1'
 
+def is_contact_success(request: HttpRequest) -> bool:
+    return request.COOKIES.get(_CONTACT_COOKIE_KEY) == _CONTACT_COOKIE_VALUE
+
 @csrf_exempt
 @inject_context(allow_post=True)
+@use_cache(disabled = is_contact_success)
 def contact(request: HttpRequest, lang) -> HttpResponse:
     context = request.context
     status = ''
@@ -107,29 +111,24 @@ def contact(request: HttpRequest, lang) -> HttpResponse:
             return resp
     else:
         values, errors = dict(), dict()
-        success = request.COOKIES.get(_CONTACT_COOKIE_KEY)
-        if success == _CONTACT_COOKIE_VALUE:
+        if is_contact_success(request):
             sent = True
             status = _('您的訊息已經成功發出。')
 
-    @use_cache(disabled = sent)
-    def wrap(request: HttpRequest, lang):
-        resp = render(request, 'site/pages/contact.html', {
-            **context,
-            'title': make_title(_('聯絡我們')),
-            'keys': _keys,
-            'values': values,
-            'errors': errors,
-            'status': status,
-            'sent': sent,
-        })
+    resp = render(request, 'site/pages/contact.html', {
+        **context,
+        'title': make_title(_('聯絡我們')),
+        'keys': _keys,
+        'values': values,
+        'errors': errors,
+        'status': status,
+        'sent': sent,
+    })
 
-        if sent:
-            resp.delete_cookie(key=_CONTACT_COOKIE_KEY, path=request.path, samesite='Strict')
+    if sent:
+        resp.delete_cookie(key=_CONTACT_COOKIE_KEY, path=request.path, samesite='Strict')
 
-        if failed:
-            resp.status_code = 400
+    if failed:
+        resp.status_code = 400
 
-        return resp
-
-    return wrap(request, lang)
+    return resp

@@ -1,13 +1,20 @@
+from collections.abc import Callable
+
 from django.core.cache import cache as default_cache, caches
 from django.http import HttpRequest, HttpResponse, HttpResponseNotModified
 from hashlib import md5
 from base64 import urlsafe_b64encode
 
-def use_cache(disabled: bool | None = None):
+def use_cache(disabled: Callable[[HttpRequest], bool] | None = None):
     def decorator(view_func):
         def _wrapped_view(request: HttpRequest, *args, **kwargs):
-            if disabled or request.method not in ('GET', 'HEAD') or request.GET:
+            if request.method not in ('GET', 'HEAD'):
                 return view_func(request, *args, **kwargs)
+
+            if (disabled and disabled(request)) or request.GET:
+                response = view_func(request, *args, **kwargs)
+                response['Cache-Control'] = 'no-store'
+                return response
 
             key = request.path
 
