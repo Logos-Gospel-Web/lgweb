@@ -10,7 +10,7 @@ const browserFiles = ['app/**', 'assets/scripts/**']
 /** @type {import('eslint').Linter.Config} */
 export default defineConfig(
     {
-        ignores: ['**/dist', 'app/static/admin/richtext/tinymce/**'],
+        ignores: ['**/dist'],
     },
     eslint.configs.recommended,
     prettier,
