@@ -12,7 +12,7 @@ def banner_text_style(banner):
     style += f'padding:0.2em {max(50 - banner.letter_spacing, 0) / 100}em 0.2em {max(banner.letter_spacing, 50) / 100}em;'
     style += f'letter-spacing:{banner.letter_spacing / 100}em;'
     if banner.subfont:
-        style += f'font-family:{font_name(banner.subfont)},Verdana,Arial,Helvetica,Microsoft JhengHei,Segoe UI Semibold,Segoe UI,Lucida Grande,sans-serif;'
+        style += f'font-family:{font_name(banner.subfont)},-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif;'
     return style[:-1]
 
 @register.filter

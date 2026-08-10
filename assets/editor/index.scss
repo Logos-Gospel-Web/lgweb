@@ -1,11 +1,11 @@
 $contentName: 'lgweb-richtext-content';
 
+@use "../styles/variables.scss";
 @use "./reset" with ( $name: $contentName );
 @use "../styles/components/richtext" with ( $name: $contentName );
 @use "./components/tiptap-ui-primitive/dropdown-menu/dropdown-menu";
 
 div.#{$contentName} {
-    font-family: Verdana, Arial, Helvetica, Microsoft JhengHei, Segoe UI Semibold, Segoe UI, Lucida Grande, sans-serif;
     line-height: 1.5;
     font-size: 16px;
     color: #000;
@@ -20,6 +20,14 @@ div.#{$contentName} {
 
     hr {
         display: block;
+    }
+
+    &.content_tc {
+        font-family: variables.$font-family-tc;
+    }
+
+    &.content_sc {
+        font-family: variables.$font-family-sc;
     }
 }
 

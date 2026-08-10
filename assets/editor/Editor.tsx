@@ -764,7 +764,7 @@ const RichtextEditor: React.FunctionComponent<{
         injectCSS: false,
         editorProps: {
             attributes: {
-                class: 'lgweb-richtext-content',
+                class: 'lgweb-richtext-content ' + props.name,
             },
         },
         content: props.content,

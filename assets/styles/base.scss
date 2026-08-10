@@ -1,3 +1,13 @@
+@use "./variables";
+
+body:lang(zh-hant) {
+    font-family: variables.$font-family-tc;
+}
+
+body:lang(zh-hans) {
+    font-family: variables.$font-family-sc;
+}
+
 #app {
     width: 100%;
     background-color: #f5fafd;
