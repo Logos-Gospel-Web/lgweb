@@ -1,11 +1,6 @@
-import json
 from django import forms
 from django.contrib import admin
-from django.forms.utils import flatatt
 from django.forms.widgets import Input, TextInput, HiddenInput
-from django.templatetags.static import static
-from django.utils.html import format_html, html_safe
-from django.utils.safestring import mark_safe
 from .lang import LANGUAGE_NAMES, with_lang
 from .models import Banner, HomePage, HomeBanner, Promotion, Message, Topic, ChildMenuItem, ParentMenuItem, Contact
 
@@ -27,37 +22,6 @@ class RichTextInput(Input):
         js = (
             '/richtext_editor_script.js',
         )
-
-class JS:
-    def __init__(self, js, attrs=None):
-        self.js = js
-        self.attrs = attrs or {}
-
-    def startswith(self, _):
-        return True
-
-    def __repr__(self):
-        return f"JS({self.js}, {json.dumps(self.attrs, sort_keys=True)})"
-
-    def __str__(self):
-        return format_html(
-            '<script src="{}"{}></script>',
-            self.js
-                if self.js.startswith(("http://", "https://", "/"))
-                else static(self.js),
-            mark_safe(flatatt(self.attrs)),
-        )
-
-    def __eq__(self, other):
-        if isinstance(other, JS):
-            return self.js == other.js and self.attrs == other.attrs
-        return self.js == other and not self.attrs
-
-    def __hash__(self):
-        return hash((self.js, json.dumps(self.attrs, sort_keys=True)))
-
-
-JS = html_safe(JS)
 
 class ColorInput(TextInput):
     input_type = 'color'
