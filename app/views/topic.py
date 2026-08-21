@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.db.models import Prefetch
 from django.http import HttpRequest
+from django.urls import reverse
 
 from ..lang import Language, with_lang
 from ..models import Topic
@@ -35,6 +36,7 @@ def topic(request: HttpRequest, context: RequestContext, lang: Language, slug):
     banner = page.banner[lang]
     return render(request, f'site/pages/{template}', {
         **context.asdict(),
+        'edit_url': reverse('admin:app_topic_change', args=[page.id]),
         'title': make_title(page.title[lang]),
         'fonts': [banner.subfont] if banner and banner.subfont and not banner.hide_title else None,
         'topic': page,

@@ -3,6 +3,11 @@
 <a class="toolbar toolbar--language" href="{{ request.path|switch_language }}{{ url_suffix }}">{% translate 'Language' %}</a>
 <div class="icon toolbar toolbar--fontsize"></div>
 <div class="icon toolbar toolbar--search"></div>
+{% if user.is_staff %}
+{% if edit_url %}
+<a class="toolbar toolbar--edit" href="{{ edit_url }}">✏️</a>
+{% endif %}
+{% endif %}
 <div class="icon toolbar toolbar--qrcode"></div>
 <div class="icon toolbar toolbar--share"></div>
 <div class="icon toolbar toolbar--fullscreen"></div>

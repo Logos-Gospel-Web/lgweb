@@ -16,7 +16,7 @@ def use_cache(disabled: Callable[[HttpRequest], bool] | None = None):
                 response['Cache-Control'] = 'no-store'
                 return response
 
-            key = request.path
+            key = request.path + ('#' if request.user.is_staff else '')
 
             current_etag = caches['etag'].get(key)
             client_etag: str | None = request.META.get('HTTP_IF_NONE_MATCH')

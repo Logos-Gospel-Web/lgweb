@@ -1,5 +1,6 @@
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
+from django.urls import reverse
 from django.utils.translation import gettext as _
 
 from ..lang import Language
@@ -29,6 +30,7 @@ def home(request: HttpRequest, context: RequestContext, lang: Language) -> HttpR
     banners = get_home_banners(lang)
     return render(request, 'site/pages/home.html', {
         **context.asdict(),
+        'edit_url': reverse('admin:app_homepage_change', args=[lang]),
         'title': make_title(_('首頁')),
         'banners': banners,
         'fonts': set((b.banner.subfont for b in banners if b.banner.subfont and not b.banner.hide_title)),

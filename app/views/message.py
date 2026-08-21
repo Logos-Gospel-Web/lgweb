@@ -64,6 +64,7 @@ def message(request: HttpRequest, context: RequestContext, lang: Language, slug,
     author = format_author(raw_author, author_format)
     return render(request, 'site/pages/message.html', {
         **context.asdict(),
+        'edit_url': reverse('admin:app_message_change', args=[page.id]),
         'title': make_title(page.title[lang]),
         'fonts': [banner.subfont] if banner and banner.subfont and not banner.hide_title else None,
         'message': page,
