@@ -714,6 +714,16 @@ const Toolbar: React.FunctionComponent<{ editor: Editor }> = ({ editor }) => {
     )
 }
 
+function getLanguage(name: string) {
+    if (name.endsWith('_tc')) {
+        return 'tc'
+    } else if (name.endsWith('_sc')) {
+        return 'sc'
+    } else {
+        return ''
+    }
+}
+
 const RichtextEditor: React.FunctionComponent<{
     name: string
     content: string
@@ -764,7 +774,7 @@ const RichtextEditor: React.FunctionComponent<{
         injectCSS: false,
         editorProps: {
             attributes: {
-                class: 'lgweb-richtext-content ' + props.name,
+                class: 'lgweb-richtext-content ' + getLanguage(props.name),
             },
         },
         content: props.content,

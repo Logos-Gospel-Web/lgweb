@@ -22,11 +22,11 @@ div.#{$contentName} {
         display: block;
     }
 
-    &.content_tc {
+    &.tc {
         font-family: variables.$font-family-tc;
     }
 
-    &.content_sc {
+    &.sc {
         font-family: variables.$font-family-sc;
     }
 }
