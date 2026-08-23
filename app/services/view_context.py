@@ -31,7 +31,6 @@ class RequestContext:
 
         tz = get_current_timezone()
         now = datetime.now(tz=tz)
-        self.now = now
         # print(now)
 
         has_preview = _PREVIEW_KEY in request.GET
@@ -44,6 +43,8 @@ class RequestContext:
                 url_suffix = f'?{_PREVIEW_KEY}={preview}'
             except ValueError:
                 pass
+
+        self.now = now
 
         base_url = get_base_url(request)
         self.base_url = base_url
