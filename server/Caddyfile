@@ -46,5 +46,7 @@
 }
 
 {$GOATCOUNTER_HOSTNAME} {
+    header -Server
+    header -Via
     reverse_proxy {$GOATCOUNTER_URL}
 }
