@@ -230,7 +230,7 @@ class HomePageAdmin(admin.ModelAdmin):
 
 @admin.register(Contact)
 class ContactAdmin(admin.ModelAdmin):
-    fields = ['name', 'email', 'comment', 'submitted_at', 'language', 'ip', 'fingerprint']
+    fields = ['name', 'email', 'comment', 'submitted_at', 'language', 'ip']
     def has_add_permission(self, request, obj=None):
         return False
 

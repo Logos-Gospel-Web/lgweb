@@ -270,7 +270,6 @@ class Contact:
     id = make_id_field()
     submitted_at = models.DateTimeField(auto_now_add=True)
     ip = models.CharField('IP', max_length=45)
-    fingerprint = models.CharField(max_length=64)
     language = models.TextField(choices=LANGUAGE_NAMES)
     name = models.TextField()
     email = models.EmailField()

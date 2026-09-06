@@ -7,7 +7,7 @@ import re
 
 from ..lang import Language
 from ..models import Contact
-from ..services.client_info import get_ip, get_fingerprint
+from ..services.client_info import get_ip
 from ..services.send_email import send_contact_email
 from ..services.view_cache import use_cache
 from ..services.view_context import RequestContext, with_context, make_title
@@ -102,7 +102,7 @@ def contact(request: HttpRequest, context: RequestContext, lang: Language) -> Ht
                 status = _('發送次數超出頻次限制，請稍後再嘗試。')
                 failed = True
             else:
-                id = submit_form(values, ip=get_ip(request), language=lang, fingerprint=get_fingerprint(request))
+                id = submit_form(values, ip=get_ip(request), language=lang)
                 send_contact_email(id, context.base_url, values['name'], values['email'], values['comment'])
 
         if not failed:
