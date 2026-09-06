@@ -1,5 +1,7 @@
 services:
     migrations:
+        env_file:
+            - .env
         build:
             dockerfile: ./infrastructure/production/Dockerfile
             target: migrations
