@@ -2,6 +2,7 @@ volumes:
     caddy_data: {}
     db: {}
     reports: {}
+    goatcounter_data: {}
 services:
     migrations:
         build: &build
@@ -15,15 +16,18 @@ services:
         ports:
             - '8000:8000'
             - '8001:8001'
+            - '8002:8002'
         build:
             <<: *build
             target: server
         environment:
             - MAIN_URL=main:8000
             - ADMIN_URL=admin:8000
+            - GOATCOUNTER_URL=goatcounter:8080
             - WEB_HOSTNAME=:8000
             - WEB_REDIR_HOSTNAME=:8001
             - WEB_REDIR_TARGET=http://localhost:8000
+            - GOATCOUNTER_HOSTNAME=:8002
         volumes:
             - caddy_data:/data/
     main: &main
@@ -55,3 +59,12 @@ services:
         build:
             <<: *build
             target: cron
+    goatcounter:
+        image: lgweb/goatcounter:latest
+        volumes:
+            - goatcounter_data:/home/goatcounter/goatcounter-data
+        command:
+            - serve
+            - -automigrate
+            - -ratelimit
+            - export:1/1

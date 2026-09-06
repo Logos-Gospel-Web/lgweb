@@ -4,18 +4,22 @@ volumes:
     db: {}
     nodemodules: {}
     caddy_data: {}
+    goatcounter_data: {}
 services:
     server:
         ports:
             - '8000:8000'
             - '8001:8001'
+            - '8002:8002'
         image: caddy:2.11-alpine
         environment:
             - MAIN_URL=main:8000
             - ADMIN_URL=main:8000
+            - GOATCOUNTER_URL=goatcounter:8080
             - WEB_HOSTNAME=:8000
             - WEB_REDIR_HOSTNAME=:8001
             - WEB_REDIR_TARGET=http://localhost:8000
+            - GOATCOUNTER_HOSTNAME=:8002
             - CACHE_CONTROL=max-age=60
         volumes:
             - ../../server/Caddyfile:/etc/caddy/Caddyfile
@@ -36,6 +40,7 @@ services:
             - CONTACT_DB_ROOT=/db/contact.sqlite3
             - ANALYTICS_DB_ROOT=/db/analytics.sqlite3
             - ANALYTICS_TEMP_DB_ROOT=/db/analytics_temp.sqlite3
+            - GOATCOUNTER_HOSTNAME=localhost:8002
             - PYTHONUNBUFFERED=1
         volumes:
             - ../../:/lgweb/
@@ -70,3 +75,12 @@ services:
                 cd /lgweb/assets &&
                 npm i --omit=dev &&
                 npx rspack --mode=development --watch --env output=/compiled
+    goatcounter:
+        image: lgweb/goatcounter:latest
+        volumes:
+            - goatcounter_data:/home/goatcounter/goatcounter-data
+        command:
+            - serve
+            - -automigrate
+            - -ratelimit
+            - export:1/1

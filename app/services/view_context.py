@@ -18,6 +18,7 @@ from ..lang import Language, is_valid_language, to_locale, to_lang_tag
 _contact_email = environ.get('CONTACT_EMAIL')
 _force_https = environ.get('FORCE_HTTPS')
 _head_inject = environ.get('HEAD_INJECT', '')
+_goatcounter_hostname = environ.get('GOATCOUNTER_HOSTNAME', '')
 
 _PREVIEW_KEY = 'preview'
 _DEFAULT_LANG = 'sc'
@@ -62,6 +63,7 @@ class RequestContext:
         self.menu = get_menu(now, cache=not has_preview)
         self.contact_email = _contact_email
         self.head_inject = _head_inject
+        self.goatcounter_hostname = _goatcounter_hostname
 
     def asdict(self):
         return vars(self)

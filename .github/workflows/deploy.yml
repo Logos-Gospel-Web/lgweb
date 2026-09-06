@@ -50,9 +50,11 @@ jobs:
           echo S3_BUCKET_NAME=$S3_BUCKET_NAME >> .env
           echo S3_CUSTOM_DOMAIN=$S3_CUSTOM_DOMAIN >> .env
           echo HEAD_INJECT=$HEAD_INJECT >> .env
+          echo GOATCOUNTER_HOSTNAME=$GOATCOUNTER_HOSTNAME >> .env
           echo WEB_HOSTNAME=$WEB_HOSTNAME >> .env.server
           echo WEB_REDIR_HOSTNAME=$WEB_REDIR_HOSTNAME >> .env.server
           echo WEB_REDIR_TARGET=$WEB_HOSTNAME >> .env.server
+          echo GOATCOUNTER_HOSTNAME=$GOATCOUNTER_HOSTNAME >> .env.server
         env:
           ALLOWED_HOSTS: "${{ vars.ALLOWED_HOSTS }}"
           SECRET_KEY: "${{ secrets.SECRET_KEY }}"
@@ -69,6 +71,7 @@ jobs:
           S3_BUCKET_NAME: "${{ vars.S3_BUCKET_NAME }}"
           S3_CUSTOM_DOMAIN: "${{ vars.S3_CUSTOM_DOMAIN }}"
           HEAD_INJECT: "${{ vars.HEAD_INJECT }}"
+          GOATCOUNTER_HOSTNAME: "${{ vars.GOATCOUNTER_HOSTNAME }}"
           WEB_HOSTNAME: "https://www.${{ vars.WEB_DOMAIN }}"
           WEB_REDIR_HOSTNAME: "http://${{ vars.WEB_DOMAIN }}, https://${{ vars.WEB_DOMAIN }}, http://www.${{ vars.WEB_DOMAIN }}"
 
@@ -79,6 +82,7 @@ jobs:
           docker compose up -d --remove-orphans
         env:
           NAV_THRESHOLD: "${{ vars.NAV_THRESHOLD }}"
+          MAXMIND_LICENSE: "${{ secrets.MAXMIND_LICENSE }}"
           COMPOSE_PROJECT_NAME: lgweb
           COMPOSE_FILE: ${{ inputs.migrate && './infrastructure/production/docker-compose.yml:./infrastructure/production/docker-compose-migrate.yml' || './infrastructure/production/docker-compose.yml' }}
 

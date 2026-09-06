@@ -45,3 +45,7 @@
     header Cache-Control {$CACHE_CONTROL}
     redir {$WEB_REDIR_TARGET}{uri} permanent
 }
+
+{$GOATCOUNTER_HOSTNAME} {
+    reverse_proxy {$GOATCOUNTER_URL}
+}

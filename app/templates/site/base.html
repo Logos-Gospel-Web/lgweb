@@ -19,6 +19,12 @@
         {% include './components/footer.html' %}
     </div>
     {% include './prerendered/base_body.html' %}
+    {% if debug %}
+    <script>
+        window.goatcounter = { allow_local: true }
+    </script>
+    {% endif %}
+    <script data-goatcounter="//{{ goatcounter_hostname }}/count" src="//{{ goatcounter_hostname }}/count.js"></script>
 </body>
 </html>
 {% endspaceless %}
