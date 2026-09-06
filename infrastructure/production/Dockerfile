@@ -40,8 +40,6 @@ RUN pip install -r requirements.txt --break-system-packages &&\
 ENV MODE=production
 ENV DB_ROOT=/db/db.sqlite3
 ENV CONTACT_DB_ROOT=/db/contact.sqlite3
-ENV ANALYTICS_DB_ROOT=/db/analytics.sqlite3
-ENV ANALYTICS_TEMP_DB_ROOT=/db/analytics_temp.sqlite3
 ENV ERROR_LOG_FILE=/reports/error.log
 
 # ========================================

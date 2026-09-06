@@ -28,7 +28,6 @@ export default defineConfig((env, argv) => [
             style: './styles/index.scss',
             noscript: './styles/noscript.scss',
             error: './styles/error.scss',
-            statistics: './styles/statistics.scss',
         },
         output: {
             filename:

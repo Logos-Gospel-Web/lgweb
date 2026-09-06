@@ -38,8 +38,6 @@ services:
             - LOCALE_PATH=/locales
             - DB_ROOT=/db/db.sqlite3
             - CONTACT_DB_ROOT=/db/contact.sqlite3
-            - ANALYTICS_DB_ROOT=/db/analytics.sqlite3
-            - ANALYTICS_TEMP_DB_ROOT=/db/analytics_temp.sqlite3
             - GOATCOUNTER_HOSTNAME=localhost:8002
             - PYTHONUNBUFFERED=1
         volumes:
@@ -58,8 +56,6 @@ services:
                 cp -R ./locales /locales &&
                 python manage.py migrate &&
                 python manage.py migrate --database contact &&
-                python manage.py migrate --database analytics &&
-                python manage.py migrate --database analytics_temp &&
                 python manage.py compilemessages &&
                 python manage.py runserver 0.0.0.0:8000
     compiler:

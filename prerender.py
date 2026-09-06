@@ -13,7 +13,6 @@ _templates = [
     'site/prerendered/base_head.html',
     'site/prerendered/base_body.html',
     'site/prerendered/error_head.html',
-    'site/prerendered/statistics_head.html',
     'site/prerendered/webmanifest.json',
 ]
 
@@ -149,7 +148,6 @@ def main():
         context['css_style'] = manifest['style.css'].strip('/')
         context['css_noscript'] = manifest['noscript.css'].strip('/')
         context['css_error'] = manifest['error.css'].strip('/')
-        context['css_statistics'] = manifest['statistics.css'].strip('/')
 
     if output_dir:
         favicon_hash = _generate_favicons(Path(output_dir))

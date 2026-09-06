@@ -41,13 +41,6 @@ class CustomIndexDashboard(Dashboard):
             'target': '_blank',
         })
 
-        if request.user.has_perm('app.view_analytics'):
-            links.append({
-                'title': 'Statistics',
-                'url': reverse('statistics'),
-                'target': '_blank',
-            })
-
         links.append({
             'title': 'Template Doc',
             'url': default_storage.url('template.doc', parameters={ 'dl': '1' }),

@@ -146,17 +146,6 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': environ.get('CONTACT_DB_ROOT') or BASE_DIR / 'contact.sqlite3',
     },
-    'analytics': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': environ.get('ANALYTICS_DB_ROOT') or BASE_DIR / 'analytics.sqlite3',
-    },
-    'analytics_temp': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': environ.get('ANALYTICS_TEMP_DB_ROOT') or BASE_DIR / 'analytics_temp.sqlite3',
-        'OPTIONS': {
-            'transaction_mode': 'IMMEDIATE',
-        },
-    },
 }
 
 DBBACKUP_DATABASES = ['default', 'contact']

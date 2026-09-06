@@ -9,17 +9,13 @@ from .views.index import index
 from .views.webmanifest import webmanifest
 from .views.error import error400, error404
 from .views.search import search, search_form
-from .views.statistics import statistics
 from .views.purge import purge
-from .views.analytics import analytics
 
 urlpatterns = [
     path('', index, name='index'),
     path('adminapi/', include('app.admin_apis'), name='adminapi'),
     path('private/', include('app.private_apis'), name='privateapi'),
-    path('view', analytics, name='analytics'),
     path('purge', purge, name='purge'),
-    path('statistics', statistics, name='statistics'),
     path('sitemap.xml', sitemap, name='sitemap'),
     path('<slug:lang>/sitemap.xml', sitemap_with_lang, name='sitemap_lang'),
     path('<slug:lang>/contact', contact, name='contact'),
