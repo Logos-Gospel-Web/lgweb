@@ -25,7 +25,7 @@ def topic(request: HttpRequest, context: RequestContext, lang: Language, slug):
     page = get_topic_by_slug(slug, lang, context.now)
     template = 'blog.html' if page.is_blog else 'topic.html'
     children = page.children.all()
-    has_audio = next((True for x in children if x.audio[lang]), False)
+    has_audio = next((True for x in children if x.audio[lang] or x.audio_all), False)
 
     sidebar = None
     if page.is_blog:

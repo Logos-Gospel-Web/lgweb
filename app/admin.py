@@ -118,7 +118,7 @@ class MessageAdmin(admin.ModelAdmin):
     form = MessageForm
     fieldsets = (
         (None, {
-            'fields': ('type', 'parent', 'position', 'enabled', 'publish'),
+            'fields': ('type', 'parent', 'position', 'enabled', 'publish', 'audio_all'),
         }),
     ) + make_multilingual_fields(
         'title', 'author', 'banner', 'prefix',

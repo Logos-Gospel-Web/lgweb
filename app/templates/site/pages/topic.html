@@ -40,7 +40,7 @@
             </thead>
             <tbody>
                 {% for child in topic_children %}
-                    {% include '../components/topic_item.html' with page=child title=child|full_title:language url=child|page_link:topic.slug is_new=child|is_new:now audio=child.audio|file_dl document=child.document|file_dl %}
+                    {% include '../components/topic_item.html' with page=child title=child|full_title:language url=child|page_link:topic.slug is_new=child|is_new:now audio=child|audio_dl document=child|document_dl %}
                 {% endfor %}
             </tbody>
         </table>

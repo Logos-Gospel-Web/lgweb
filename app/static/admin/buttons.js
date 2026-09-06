@@ -76,3 +76,21 @@ function lgwebButtonsAddButtonsToForm() {
 }
 
 document.addEventListener('DOMContentLoaded', lgwebButtonsAddButtonsToForm)
+
+function lgwebAddFileTypeToInput() {
+    document
+        .querySelectorAll('input[type="file"][name^="audio_"')
+        .forEach((el) => {
+            el.setAttribute('accept', 'audio/*')
+        })
+    document
+        .querySelectorAll('input[type="file"][name^="document_"')
+        .forEach((el) => {
+            el.setAttribute(
+                'accept',
+                'application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            )
+        })
+}
+
+document.addEventListener('DOMContentLoaded', lgwebAddFileTypeToInput)

@@ -223,6 +223,7 @@ class Message:
         ordering = ['parent', 'position']
     position = models.PositiveSmallIntegerField()
     parent = models.ForeignKey('Topic', on_delete=models.CASCADE, related_name='children')
+    audio_all = models.FileField('Audio (All)', upload_to='message/audio/', blank=True)
     prefix = lambda _: models.TextField('Prefix', blank=True)
     document = lambda _: models.FileField('Document', upload_to='message/document/', blank=True)
     audio = lambda _: models.FileField('Audio', upload_to='message/audio/', blank=True)

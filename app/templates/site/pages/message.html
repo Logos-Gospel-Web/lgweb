@@ -6,7 +6,7 @@
 {% load page_link %}
 
 {% block content %}
-{% with audio_player=message.audio|file audio=message.audio|file_dl document=message.document|file_dl %}
+{% with audio_player=message|audio audio=message|audio_dl document=message|document_dl %}
 {% if message.banner|localize != None %}
     <div class="page-banner">
         {% include '../components/banner.html' with banner=message.banner|localize %}
