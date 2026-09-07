@@ -48,5 +48,12 @@
 {$GOATCOUNTER_HOSTNAME} {
     header -Server
     header -Via
+
+    @external_referer {
+        path /count.js
+        not header Referer {$WEB_REDIR_TARGET}*
+    }
+    respond @external_referer "Unauthorized" 403
+
     reverse_proxy {$GOATCOUNTER_URL}
 }
