@@ -34,7 +34,7 @@ class Paragraph(Block):
 class Remark(Block):
     def to_html(self):
         tag = BeautifulSoup(self.content, 'lxml').p
-        tag.class_ = 'remark'
+        tag['class'] = 'remark'
         return tag
 
     def to_doc(self):
@@ -200,7 +200,7 @@ def process_doc(html: str) -> Document:
                 font_weight = style.getProperty('font-weight')
                 if font_weight and font_weight.value == 'bold':
                     bold += text_len
-        return bold / text_len > 0.8
+        return bold / total > 0.8
 
     def is_subtitle(el, index):
         if el.name == 'h2':
@@ -217,7 +217,7 @@ def process_doc(html: str) -> Document:
                 if text_decoration and text_decoration.value == 'underline':
                     underline += text_len
 
-        return underline / text_len > 0.8
+        return underline / total > 0.8
 
     def is_remark(el, index):
         if el.name != 'p':
