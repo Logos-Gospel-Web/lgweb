@@ -255,6 +255,11 @@ def process_doc(html: str) -> Document:
     if len(body.contents) == 1:
         body = body.contents[0]
 
+    while body.next_sibling and body.next_sibling.name == 'div':
+        for child in body.next_sibling.contents:
+            body.append(child)
+        body.next_sibling.decompose()
+
     # clean doc
     for x in body.find_all():
         if len(x.get_text(strip=True)) == 0:
@@ -306,15 +311,16 @@ def process_doc(html: str) -> Document:
     title = ''
     contents = []
 
-    for index, child in enumerate(body.contents):
-        if isinstance(child, NavigableString):
-            continue
+    raw_contents = ((child, child.get_text().strip()) for child in body.contents if not isinstance(child, NavigableString))
+    raw_contents = [(child, text) for child, text in raw_contents if text != '']
+
+    for index, (child, text) in enumerate(raw_contents):
         if not author and is_author(child, index):
-            author = child.get_text().strip()
+            author = text
         elif not title and is_title(child, index):
-            title = child.get_text().strip()
+            title = text
         elif is_subtitle(child, index):
-            contents.append(Subtitle(_apply_regex_filters(_content_regexp_filters, child.get_text().strip())))
+            contents.append(Subtitle(_apply_regex_filters(_content_regexp_filters, text)))
         elif is_remark(child, index):
             contents.append(Remark(_apply_regex_filters(_content_regexp_filters, to_string(child))))
         elif not is_footer(child, index):
