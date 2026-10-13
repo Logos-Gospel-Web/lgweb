@@ -3,6 +3,7 @@ volumes:
     db: {}
     reports: {}
     goatcounter_data: {}
+    meili_data: {}
 services:
     migrations:
         build: &build
@@ -39,6 +40,8 @@ services:
         environment:
             - PYTHONUNBUFFERED=1
             - ALLOWED_HOSTS=*
+            - MEILI_URL=http://meilisearch:7700
+            - MEILI_MASTER_KEY=qwertyuiop1234567890
         build:
             <<: *build
             target: main
@@ -49,6 +52,8 @@ services:
             - PYTHONUNBUFFERED=1
             - ALLOWED_HOSTS=*
             - MAIN_URL=main:8000
+            - MEILI_URL=http://meilisearch:7700
+            - MEILI_MASTER_KEY=qwertyuiop1234567890
     cron:
         <<: *main
         environment:
@@ -68,3 +73,12 @@ services:
             - -automigrate
             - -ratelimit
             - export:1/1
+    meilisearch:
+        image: getmeili/meilisearch:v1.55.0
+        ports:
+            - '7700:7700'
+        volumes:
+            - meili_data:/meili_data
+        environment:
+            - MEILI_ENV=production
+            - MEILI_MASTER_KEY=qwertyuiop1234567890

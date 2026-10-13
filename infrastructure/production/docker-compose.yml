@@ -24,6 +24,8 @@ services:
         environment:
             - FORCE_HTTPS=1
             - INTERNAL_HOSTS=main
+            - MEILI_URL=http://meilisearch:7700
+            - MEILI_MASTER_KEY=${MEILI_MASTER_KEY}
         build:
             <<: *build
             target: main
@@ -38,6 +40,8 @@ services:
             - FORCE_HTTPS=1
             - INTERNAL_HOSTS=admin
             - MAIN_URL=main:8000
+            - MEILI_URL=http://meilisearch:7700
+            - MEILI_MASTER_KEY=${MEILI_MASTER_KEY}
         deploy:
             resources:
                 limits:
@@ -51,6 +55,8 @@ services:
             - FORCE_HTTPS=1
             - INTERNAL_HOSTS=cron
             - MAIN_URL=main:8000
+            - MEILI_URL=http://meilisearch:7700
+            - MEILI_MASTER_KEY=${MEILI_MASTER_KEY}
         deploy:
             resources:
                 limits:
@@ -66,3 +72,10 @@ services:
             - export:1/1
             - -geodb
             - ${MAXMIND_LICENSE}
+    meilisearch:
+        image: getmeili/meilisearch:v1.55.0
+        volumes:
+            - /opt/lgweb/meilisearch:/meili_data
+        environment:
+            - MEILI_ENV=production
+            - MEILI_MASTER_KEY=${MEILI_MASTER_KEY}

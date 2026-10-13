@@ -5,6 +5,7 @@ volumes:
     nodemodules: {}
     caddy_data: {}
     goatcounter_data: {}
+    meili_data: {}
 services:
     server:
         ports:
@@ -39,6 +40,8 @@ services:
             - DB_ROOT=/db/db.sqlite3
             - CONTACT_DB_ROOT=/db/contact.sqlite3
             - GOATCOUNTER_HOSTNAME=localhost:8002
+            - MEILI_URL=http://meilisearch:7700
+            - MEILI_MASTER_KEY=qwertyuiop1234567890
             - PYTHONUNBUFFERED=1
         volumes:
             - ../../:/lgweb/
@@ -80,3 +83,12 @@ services:
             - -automigrate
             - -ratelimit
             - export:1/1
+    meilisearch:
+        image: getmeili/meilisearch:v1.55.0
+        ports:
+            - '7700:7700'
+        volumes:
+            - meili_data:/meili_data
+        environment:
+            - MEILI_ENV=development
+            - MEILI_MASTER_KEY=qwertyuiop1234567890

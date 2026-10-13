@@ -4,6 +4,7 @@ from django.utils import timezone
 import ulid
 
 from .services.convert_search_text import convert_search_text
+from .services.meilisearch import meili_delete_messages, meili_update_messages
 from .services.purge import purge_cache
 from .lang import LANGUAGES, LANGUAGE_NAMES, with_lang
 
@@ -216,11 +217,37 @@ class Page:
     def __str__(self):
         return f'({self.type.title()}) {print_multilingual(self, "title")}'
 
+class MessageQuerySet(CacheInvalidationQuerySet):
+    def update(self, *args, **kwargs):
+        instances = list(self)
+        result = super().update(*args, **kwargs)
+        meili_update_messages(instances)
+        return result
+
+    def delete(self, *args, **kwargs):
+        ids = [message.id for message in self]
+        result = super().delete(*args, **kwargs)
+        meili_delete_messages(ids)
+        return result
+
+    def bulk_create(self, *args, **kwargs):
+        result = super().bulk_create(*args, **kwargs)
+        meili_update_messages(list(result))
+        return result
+
+    def bulk_update(self, objs, *args, **kwargs):
+        result = super().bulk_update(objs, *args, **kwargs)
+        meili_update_messages(list(objs))
+        return result
+
 @model(multilingual=['prefix', 'document', 'audio', 'content', 'search'], base=Page)
 class Message:
+    objects = MessageQuerySet.as_manager()
+
     class Meta:
         db_table = 'message'
         ordering = ['parent', 'position']
+
     position = models.PositiveSmallIntegerField()
     parent = models.ForeignKey('Topic', on_delete=models.CASCADE, related_name='children')
     audio_all = models.FileField('Audio (All)', upload_to='message/audio/', blank=True)
@@ -248,6 +275,12 @@ class Message:
         self.search_tc = convert_search_text(self.title_tc, self.content_tc)
         self.search_sc = convert_search_text(self.title_sc, self.content_sc)
         super(Message, self).save(*args, **kwargs)
+        meili_update_messages([self])
+
+    def delete(self, *args, **kwargs):
+        id = self.id
+        super(Message, self).delete(*args, **kwargs)
+        meili_delete_messages([id])
 
 @model(multilingual=['message_author_label', 'message_author_format', 'end_msg', 'description'], base=Page)
 class Topic:

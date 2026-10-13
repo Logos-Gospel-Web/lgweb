@@ -83,6 +83,7 @@ jobs:
         env:
           NAV_THRESHOLD: "${{ vars.NAV_THRESHOLD }}"
           MAXMIND_LICENSE: "${{ secrets.MAXMIND_LICENSE }}"
+          MEILI_MASTER_KEY: "${{ secrets.MEILI_MASTER_KEY }}"
           COMPOSE_PROJECT_NAME: lgweb
           COMPOSE_FILE: ${{ inputs.migrate && './infrastructure/production/docker-compose.yml:./infrastructure/production/docker-compose-migrate.yml' || './infrastructure/production/docker-compose.yml' }}
 

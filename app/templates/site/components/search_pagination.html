@@ -1,0 +1,13 @@
+{% if pagination %}
+    <div class="search__pagination">
+        {% for item in pagination %}
+            {% if item.current %}
+                <div class="search__pagination__current">{{ item.text }}</div>
+            {% elif item.page %}
+                <a class="search__pagination__item" href="{{ item.page }}{{ url_suffix }}">{{ item.text }}</a>
+            {% else %}
+                <div class="search__pagination__text">{{ item.text }}</div>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endif %}
