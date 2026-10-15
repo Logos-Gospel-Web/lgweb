@@ -3,7 +3,6 @@ from django.db.models import Q
 from django.utils import timezone
 import ulid
 
-from .services.convert_search_text import convert_search_text
 from .services.meilisearch import meili_delete_messages, meili_update_messages
 from .services.purge import purge_cache
 from .lang import LANGUAGES, LANGUAGE_NAMES, with_lang
@@ -240,7 +239,7 @@ class MessageQuerySet(CacheInvalidationQuerySet):
         meili_update_messages(list(objs))
         return result
 
-@model(multilingual=['prefix', 'document', 'audio', 'content', 'search'], base=Page)
+@model(multilingual=['prefix', 'document', 'audio', 'content'], base=Page)
 class Message:
     objects = MessageQuerySet.as_manager()
 
@@ -255,7 +254,6 @@ class Message:
     document = lambda _: models.FileField('Document', upload_to='message/document/', blank=True)
     audio = lambda _: models.FileField('Audio', upload_to='message/audio/', blank=True)
     content = lambda _: models.TextField('Content', blank=True)
-    search = lambda _: models.TextField(blank=True)
 
     def __str__(self):
         return print_multilingual(self, 'title')
@@ -272,8 +270,6 @@ class Message:
         return self.publish is not None and now.year == self.publish.year and now.month == self.publish.month
 
     def save(self, *args, **kwargs):
-        self.search_tc = convert_search_text(self.title_tc, self.content_tc)
-        self.search_sc = convert_search_text(self.title_sc, self.content_sc)
         super(Message, self).save(*args, **kwargs)
         meili_update_messages([self])
 

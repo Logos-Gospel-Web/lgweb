@@ -45,7 +45,7 @@ class BannerAdmin(admin.ModelAdmin):
 
 class MessageForm(forms.ModelForm):
     class Meta:
-        exclude = ['search_tc', 'search_sc']
+        exclude = []
         model = Message
         widgets = {
             'type': HiddenInput(attrs={'value': 'message'}),

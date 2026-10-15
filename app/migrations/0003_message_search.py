@@ -3,8 +3,18 @@
 from django.db import migrations, models
 from django.apps.registry import Apps
 from django.db.backends.base.schema import BaseDatabaseSchemaEditor
-from app.services.convert_search_text import convert_search_text
+from bs4 import BeautifulSoup
 
+
+def convert_search_text(title: str, html: str) -> str:
+    if not title:
+        return ''
+    if not html:
+        return title.lower()
+    soup = BeautifulSoup(html, 'lxml')
+    for div in soup.find_all('div', class_='box'):
+        div.decompose()
+    return (title + ' ' + soup.body.text).lower()
 
 def add_search(apps: Apps, schema_editor: BaseDatabaseSchemaEditor):
     Message = apps.get_model('app', 'Message')
