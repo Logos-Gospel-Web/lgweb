@@ -61,6 +61,7 @@ export function createDrag(options: DragOptions) {
             options.onStart(p)
         }
         touches = ev.touches.length
+        isTouchDown = true
     })
     listen(document, 'touchmove', onTouchChange)
     listen(document, 'touchend', onTouchChange)

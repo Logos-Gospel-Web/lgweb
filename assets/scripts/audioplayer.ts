@@ -54,12 +54,6 @@ function createAudioPlayer(player: HTMLAudioElement) {
                 play()
             }
         },
-        onChange(val) {
-            if (player.paused) {
-                const v = (val * player.duration) / 1000
-                if (v === v) player.currentTime = v
-            }
-        },
     })
 
     controlContainer.appendChild(controlSlider.element)
@@ -139,8 +133,8 @@ function createAudioPlayer(player: HTMLAudioElement) {
 
     function play() {
         playpauseIcon.className = 'icon icon--pause'
-        player.play()
         ended = false
+        player.play()
     }
 
     function pause() {

@@ -29,17 +29,34 @@ function registerFullscreenButton() {
     })
 }
 
+const fontSizeLocalStorageKey = 'fontsize'
+
+function getInitialFontSize() {
+    try {
+        return Number(localStorage.getItem(fontSizeLocalStorageKey)) || 100
+    } catch (_) {
+        return 100
+    }
+}
+
+function storeFontSize(val: number) {
+    try {
+        localStorage.setItem(fontSizeLocalStorageKey, val + '')
+    } catch (_) {
+        // Omitted
+    }
+}
+
 function registerFontsizeButton() {
-    const localStorageKey = 'fontsize'
-    const initialValue = Number(localStorage.getItem(localStorageKey)) || 100
+    const initialValue = getInitialFontSize()
     const main = document.querySelector<HTMLElement>('.main')!
     const slider = createRangeSlider({
         min: 80,
         max: 160,
         value: initialValue,
         onChange(val) {
-            localStorage.setItem(localStorageKey, val + '')
             main.style.fontSize = (val / 100).toFixed(2) + 'em'
+            storeFontSize(val)
         },
     })
 
@@ -86,9 +103,10 @@ function registerQrcodeButton() {
                 popup.appendChild(qrcode)
             }
             const qrcodeSize =
-                Math.min(500, window.innerWidth, window.innerHeight) -
-                100 +
-                'px'
+                Math.max(
+                    100,
+                    Math.min(500, window.innerWidth, window.innerHeight) - 100,
+                ) + 'px'
             popup.style.width = qrcodeSize
             popup.style.height = qrcodeSize
             container.classList.remove('qrcode--hidden')

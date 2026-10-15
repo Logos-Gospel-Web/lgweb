@@ -653,14 +653,6 @@ export function getQRCode(content: string): HTMLElement {
     return printMatrix(matrix)
 }
 
-export {
-    getData,
-    getECData,
-    getECDataForBlock,
-    getGeneratorPoly,
-    getModuleSequence,
-}
-
 const EC_TABLE: [
     [number, number],
     [number, number],

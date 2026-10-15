@@ -16,7 +16,3 @@ export const supportPassiveListener = (() => {
     }
     return supportsPassiveOption
 })()
-
-export const supportServiceWorker = 'serviceWorker' in navigator
-
-export const supportHistory = !!(window.history && window.history.pushState)

@@ -1,5 +1,7 @@
 import { listen, listenMany } from './events'
 
+const MENU_ITEM_HEIGHT = 48
+
 const header = document.querySelector<HTMLElement>('.header')!
 const offcanvas = document.querySelector<HTMLElement>(
     '.header__offcanvas__inner',
@@ -18,7 +20,9 @@ listenMany(expandElems, 'click', (ev) => {
     const item = list.parentElement!
 
     const expanded = item.classList.toggle('nav__item--expanded')
-    list.style.maxHeight = expanded ? list.children.length * 48 + 'px' : ''
+    list.style.maxHeight = expanded
+        ? list.children.length * MENU_ITEM_HEIGHT + 'px'
+        : ''
 })
 
 const closeElems = document.querySelectorAll<HTMLElement>(
