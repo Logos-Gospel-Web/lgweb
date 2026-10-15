@@ -24,7 +24,6 @@ export default defineConfig((env, argv) => [
         target: 'browserslist',
         entry: {
             script: './scripts/index.ts',
-            sw: './scripts/service.worker.ts',
             style: './styles/index.scss',
             noscript: './styles/noscript.scss',
             error: './styles/error.scss',

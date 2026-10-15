@@ -164,5 +164,5 @@ function createAudioPlayer(player: HTMLAudioElement) {
 const players = document.querySelectorAll<HTMLAudioElement>('.audio__player')
 
 for (let i = 0, n = players.length; i < n; i += 1) {
-    createAudioPlayer(players[i])
+    createAudioPlayer(players[i]!)
 }

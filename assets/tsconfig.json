@@ -27,8 +27,5 @@
         "noErrorTruncation": true,
         "useDefineForClassFields": false
     },
-    "include": ["assets/scripts/**/*"],
-    "references": [
-        { "path": "./tsconfig.worker.json" },
-    ]
+    "include": ["scripts/**/*"],
 }

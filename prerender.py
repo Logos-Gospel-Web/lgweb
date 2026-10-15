@@ -144,7 +144,6 @@ def main():
     if manifest_file:
         manifest = _read_manifest(Path(manifest_file))
         context['js_script'] = manifest['script.js'].strip('/')
-        context['js_sw'] = manifest['sw.js'].strip('/')
         context['css_style'] = manifest['style.css'].strip('/')
         context['css_noscript'] = manifest['noscript.css'].strip('/')
         context['css_error'] = manifest['error.css'].strip('/')
