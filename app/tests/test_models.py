@@ -1,9 +1,10 @@
 import os
 from unittest.mock import patch
 
+from django.db import IntegrityError, transaction
 from django.test import TestCase
 
-from ..models import Message, Topic
+from ..models import Banner, HomeBanner, HomePage, Message, Promotion, Topic
 
 
 class MessageModelTests(TestCase):
@@ -87,3 +88,70 @@ class MessageModelTests(TestCase):
         update.assert_called_once()
         indexed = list(update.call_args.args[0])
         self.assertEqual(indexed[0].content_tc, '<p>new</p>')
+
+
+class UniqueConstraintTests(TestCase):
+    def setUp(self):
+        self.env = patch.dict(os.environ, {'MEILI_URL': ''})
+        self.env.start()
+        self.addCleanup(self.env.stop)
+
+        self.purge = patch('app.models.purge_cache')
+        self.purge.start()
+        self.addCleanup(self.purge.stop)
+
+    def make_topic(self, slug='topic'):
+        return Topic.objects.create(type='topic', slug=slug, is_blog=False)
+
+    def make_banner(self):
+        return Banner.objects.create(
+            title='Banner',
+            image='banner/image/banner.png',
+        )
+
+    def test_topic_slug_is_unique(self):
+        self.make_topic('same-slug')
+
+        with self.assertRaises(IntegrityError), transaction.atomic():
+            self.make_topic('same-slug')
+
+    def test_message_position_is_unique_per_topic(self):
+        topic = self.make_topic()
+        Message.objects.create(type='message', parent=topic, position=0)
+
+        with self.assertRaises(IntegrityError), transaction.atomic():
+            Message.objects.create(type='message', parent=topic, position=0)
+
+    def test_message_position_can_be_reused_across_topics(self):
+        first = self.make_topic('first')
+        second = self.make_topic('second')
+        Message.objects.create(type='message', parent=first, position=0)
+        Message.objects.create(type='message', parent=second, position=0)
+
+    def test_home_banner_position_is_unique_per_language(self):
+        language = HomePage.objects.get(pk='tc')
+        banner = self.make_banner()
+        HomeBanner.objects.create(
+            language=language, position=0, banner=banner,
+        )
+
+        with self.assertRaises(IntegrityError), transaction.atomic():
+            HomeBanner.objects.create(
+                language=language, position=0, banner=banner,
+            )
+
+    def test_promotion_position_is_unique_per_language(self):
+        language = HomePage.objects.get(pk='tc')
+        page = self.make_topic()
+        values = {
+            'language': language,
+            'position': 0,
+            'image': 'promotion/image/promotion.png',
+            'title': 'Title',
+            'description': 'Description',
+            'page': page,
+        }
+        Promotion.objects.create(**values)
+
+        with self.assertRaises(IntegrityError), transaction.atomic():
+            Promotion.objects.create(**values)

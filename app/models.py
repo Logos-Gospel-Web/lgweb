@@ -129,6 +129,12 @@ class HomeBanner:
     class Meta:
         db_table = 'home_banner'
         ordering = ['position']
+        constraints = [
+            models.UniqueConstraint(
+                fields=['language', 'position'],
+                name='app_homebanner_unique_language_position',
+            ),
+        ]
 
     id = make_id_field()
     language = models.ForeignKey('HomePage', on_delete=models.CASCADE)
@@ -148,6 +154,12 @@ class Promotion:
     class Meta:
         db_table = 'promotion'
         ordering = ['position']
+        constraints = [
+            models.UniqueConstraint(
+                fields=['language', 'position'],
+                name='app_promotion_unique_language_position',
+            ),
+        ]
     id = make_id_field()
     position = models.PositiveSmallIntegerField()
     language = models.ForeignKey('HomePage', on_delete=models.CASCADE)
@@ -240,6 +252,12 @@ class Message:
     class Meta:
         db_table = 'message'
         ordering = ['parent', 'position']
+        constraints = [
+            models.UniqueConstraint(
+                fields=['parent', 'position'],
+                name='app_message_unique_parent_position',
+            ),
+        ]
 
     position = models.PositiveSmallIntegerField()
     parent = models.ForeignKey('Topic', on_delete=models.CASCADE, related_name='children')
@@ -268,7 +286,7 @@ class Topic:
     class Meta:
         db_table = 'topic'
     is_blog = models.BooleanField('Blog layout')
-    slug = models.SlugField('Slug')
+    slug = models.SlugField('Slug', unique=True)
     message_author_label = lambda _: models.TextField('Message author label', blank=True)
     message_author_format = lambda _: models.TextField('Message author format', blank=True)
     end_msg = lambda _: models.TextField('"End" message', blank=True)
