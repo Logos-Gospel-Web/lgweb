@@ -3,7 +3,7 @@ from django.db.models import Q
 from django.utils import timezone
 import ulid
 
-from .services.meilisearch import meili_delete_messages, meili_update_messages
+from .services.meilisearch import is_meili_enabled, meili_update_messages
 from .services.purge import purge_cache
 from .lang import LANGUAGES, LANGUAGE_NAMES, with_lang
 
@@ -217,26 +217,20 @@ class Page:
         return f'({self.type.title()}) {print_multilingual(self, "title")}'
 
 class MessageQuerySet(CacheInvalidationQuerySet):
+    def _sync_meili(self, ids):
+        if not is_meili_enabled():
+            return
+
+        ids = [id for id in ids if id]
+        if not ids:
+            return
+
+        meili_update_messages(self.model.objects.filter(pk__in=ids))
+
     def update(self, *args, **kwargs):
-        instances = list(self)
+        ids = list(self.values_list('pk', flat=True))
         result = super().update(*args, **kwargs)
-        meili_update_messages(instances)
-        return result
-
-    def delete(self, *args, **kwargs):
-        ids = [message.id for message in self]
-        result = super().delete(*args, **kwargs)
-        meili_delete_messages(ids)
-        return result
-
-    def bulk_create(self, *args, **kwargs):
-        result = super().bulk_create(*args, **kwargs)
-        meili_update_messages(list(result))
-        return result
-
-    def bulk_update(self, objs, *args, **kwargs):
-        result = super().bulk_update(objs, *args, **kwargs)
-        meili_update_messages(list(objs))
+        self._sync_meili(ids)
         return result
 
 @model(multilingual=['prefix', 'document', 'audio', 'content'], base=Page)
@@ -268,15 +262,6 @@ class Message:
 
     def is_new(self, now):
         return self.publish is not None and now.year == self.publish.year and now.month == self.publish.month
-
-    def save(self, *args, **kwargs):
-        super(Message, self).save(*args, **kwargs)
-        meili_update_messages([self])
-
-    def delete(self, *args, **kwargs):
-        id = self.id
-        super(Message, self).delete(*args, **kwargs)
-        meili_delete_messages([id])
 
 @model(multilingual=['message_author_label', 'message_author_format', 'end_msg', 'description'], base=Page)
 class Topic:
