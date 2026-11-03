@@ -1,0 +1,48 @@
+name: Restore Audio
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        type: boolean
+        description: List files that would be restored without modifying them
+        default: true
+      delete_backups:
+        type: boolean
+        description: Delete backups after successfully restoring them
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: normalize-audio
+  cancel-in-progress: false
+
+jobs:
+  restore:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - name: Checkout current branch
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        run: |
+          python3 -m venv .venv
+          .venv/bin/python -m pip install --disable-pip-version-check boto3==1.42.49
+
+      - name: Restore audio
+        shell: bash
+        env:
+          S3_ENDPOINT_URL: "${{ secrets.S3_ENDPOINT_URL }}"
+          S3_ACCESS_KEY_ID: "${{ secrets.S3_ACCESS_KEY_ID }}"
+          S3_SECRET_ACCESS_KEY: "${{ secrets.S3_SECRET_ACCESS_KEY }}"
+          S3_BUCKET_NAME: "${{ vars.S3_BUCKET_NAME }}"
+          DRY_RUN: "${{ inputs.dry_run }}"
+          DELETE_BACKUPS: "${{ inputs.delete_backups }}"
+        run: |
+          args=()
+          if [ "$DRY_RUN" = "true" ]; then args+=(--dry-run); fi
+          if [ "$DELETE_BACKUPS" = "true" ]; then args+=(--delete-backups); fi
+          .venv/bin/python .github/scripts/restore_audio.py "${args[@]}"
