@@ -1,0 +1,53 @@
+name: Normalize Audio
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        type: boolean
+        description: Check audio without modifying files
+        default: false
+      ignore_cache:
+        type: boolean
+        description: Re-check files even when their cached size matches
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: normalize-audio
+  cancel-in-progress: false
+
+jobs:
+  normalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - name: Checkout current branch
+        uses: actions/checkout@v6
+
+      - name: Install ffmpeg
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+
+      - name: Set up Python
+        run: |
+          python3 -m venv .venv
+          .venv/bin/python -m pip install --disable-pip-version-check boto3==1.42.49
+
+      - name: Normalize audio
+        shell: bash
+        env:
+          S3_ENDPOINT_URL: "${{ secrets.S3_ENDPOINT_URL }}"
+          S3_ACCESS_KEY_ID: "${{ secrets.S3_ACCESS_KEY_ID }}"
+          S3_SECRET_ACCESS_KEY: "${{ secrets.S3_SECRET_ACCESS_KEY }}"
+          S3_BUCKET_NAME: "${{ vars.S3_BUCKET_NAME }}"
+          DRY_RUN: "${{ inputs.dry_run }}"
+          IGNORE_CACHE: "${{ inputs.ignore_cache }}"
+        run: |
+          args=()
+          if [ "$DRY_RUN" = "true" ]; then args+=(--dry-run); fi
+          if [ "$IGNORE_CACHE" = "true" ]; then args+=(--ignore-cache); fi
+          .venv/bin/python .github/scripts/normalize_audio.py "${args[@]}"
