@@ -17,7 +17,7 @@ from botocore.exceptions import ClientError
 AUDIO_PREFIX = 'message/audio/'
 BACKUP_PREFIX = 'message/audio_backup/'
 CACHE_KEY = 'message/audio-cache.json'
-MAX_SAMPLE_RATE = 22050
+MAX_OUTPUT_SAMPLE_RATE = 22050
 TARGET_BITRATE = 32000
 MAX_ACCEPTED_BITRATE = 35200
 MIN_BITRATE = 8000
@@ -140,14 +140,14 @@ def probe(path):
 
 def is_compliant(info):
     return (
-        0 < info['sample_rate'] <= MAX_SAMPLE_RATE
+        info['sample_rate'] > 0
         and 0 < info['channels'] <= 1
         and 0 < info['bitrate'] <= MAX_ACCEPTED_BITRATE
     )
 
 
 def choose_sample_rate(sample_rate):
-    cap = min(sample_rate or MAX_SAMPLE_RATE, MAX_SAMPLE_RATE)
+    cap = min(sample_rate or MAX_OUTPUT_SAMPLE_RATE, MAX_OUTPUT_SAMPLE_RATE)
     valid = [rate for rate in VALID_SAMPLE_RATES if rate <= cap]
     return max(valid) if valid else VALID_SAMPLE_RATES[0]
 
