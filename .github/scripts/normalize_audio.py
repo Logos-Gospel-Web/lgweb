@@ -18,10 +18,11 @@ AUDIO_PREFIX = 'message/audio/'
 BACKUP_PREFIX = 'message/audio_backup/'
 CACHE_KEY = 'message/audio-cache.json'
 MAX_SAMPLE_RATE = 22050
-MAX_BITRATE = 32000
+TARGET_BITRATE = 32000
+MAX_ACCEPTED_BITRATE = 35200
+MIN_BITRATE = 8000
 SUPPORTED_CONTENT_TYPES = {'.mp3': 'audio/mpeg'}
 VALID_SAMPLE_RATES = (8000, 11025, 12000, 16000, 22050, 24000, 32000, 44100, 48000)
-VALID_BITRATES_KBPS = (8, 16, 24, 32, 40, 48, 56, 64, 80, 96, 112, 128, 144, 160, 192, 224, 256, 320)
 
 
 def require_env(name):
@@ -141,7 +142,7 @@ def is_compliant(info):
     return (
         0 < info['sample_rate'] <= MAX_SAMPLE_RATE
         and 0 < info['channels'] <= 1
-        and 0 < info['bitrate'] <= MAX_BITRATE
+        and 0 < info['bitrate'] <= MAX_ACCEPTED_BITRATE
     )
 
 
@@ -151,10 +152,8 @@ def choose_sample_rate(sample_rate):
     return max(valid) if valid else VALID_SAMPLE_RATES[0]
 
 
-def choose_bitrate_kbps(bitrate):
-    cap = min(bitrate or MAX_BITRATE, MAX_BITRATE) // 1000
-    valid = [rate for rate in VALID_BITRATES_KBPS if rate <= cap]
-    return valid[-1] if valid else VALID_BITRATES_KBPS[0]
+def choose_bitrate(bitrate):
+    return max(MIN_BITRATE, min(bitrate or TARGET_BITRATE, TARGET_BITRATE))
 
 
 def describe(info):
@@ -163,7 +162,7 @@ def describe(info):
 
 def compress(source, output, info):
     sample_rate = choose_sample_rate(info['sample_rate'])
-    bitrate = choose_bitrate_kbps(info['bitrate'])
+    bitrate = choose_bitrate(info['bitrate'])
     result = subprocess.run(
         [
             'ffmpeg', '-hide_banner', '-loglevel', 'error', '-nostdin', '-y',
@@ -173,7 +172,8 @@ def compress(source, output, info):
             '-ac', '1',
             '-ar', str(sample_rate),
             '-c:a', 'libmp3lame',
-            '-b:a', f'{bitrate}k',
+            '-b:a', str(bitrate),
+            '-abr', '1',
             '-map_metadata', '0',
             str(output),
         ],
