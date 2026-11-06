@@ -62,7 +62,7 @@ services:
                 limits:
                     cpus: '0.5'
     goatcounter:
-        image: lgweb/goatcounter:latest
+        image: ghcr.io/logos-gospel-web/goatcounter:latest
         volumes:
             - /opt/lgweb/goatcounter:/home/goatcounter/goatcounter-data
         command:

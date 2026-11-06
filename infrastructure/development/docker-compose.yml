@@ -75,7 +75,7 @@ services:
                 npm i --omit=dev &&
                 npx rspack --mode=development --watch --env output=/compiled
     goatcounter:
-        image: lgweb/goatcounter:latest
+        image: ghcr.io/logos-gospel-web/goatcounter:latest
         volumes:
             - goatcounter_data:/home/goatcounter/goatcounter-data
         command:

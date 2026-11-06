@@ -65,7 +65,7 @@ services:
             <<: *build
             target: cron
     goatcounter:
-        image: lgweb/goatcounter:latest
+        image: ghcr.io/logos-gospel-web/goatcounter:latest
         volumes:
             - goatcounter_data:/home/goatcounter/goatcounter-data
         command:
