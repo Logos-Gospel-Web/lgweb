@@ -32,6 +32,8 @@
             pass_thru
         }
         reverse_proxy /admin/* {$ADMIN_URL}
+        reverse_proxy /adminapi/* {$ADMIN_URL}
+        reverse_proxy /grappelli/* {$ADMIN_URL}
         reverse_proxy {$MAIN_URL}
     }
 }
