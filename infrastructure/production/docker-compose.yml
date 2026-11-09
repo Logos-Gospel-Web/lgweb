@@ -17,6 +17,7 @@ services:
             - GOATCOUNTER_URL=goatcounter:8080
         volumes:
             - /opt/lgweb/caddy_data/:/data/
+
     main: &main
         restart: unless-stopped
         env_file:
@@ -34,6 +35,7 @@ services:
             - /opt/lgweb/reports/:/reports/
         logging:
             driver: local
+
     admin:
         <<: *main
         environment:
@@ -46,6 +48,7 @@ services:
             resources:
                 limits:
                     cpus: '0.5'
+
     cron:
         <<: *main
         build:
@@ -61,6 +64,7 @@ services:
             resources:
                 limits:
                     cpus: '0.5'
+
     goatcounter:
         image: ghcr.io/logos-gospel-web/goatcounter:latest
         volumes:
@@ -72,6 +76,7 @@ services:
             - export:1/1
             - -geodb
             - ${MAXMIND_LICENSE}
+
     meilisearch:
         image: getmeili/meilisearch:v1.55.0
         volumes:

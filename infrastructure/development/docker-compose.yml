@@ -26,6 +26,7 @@ services:
             - ../../server/Caddyfile:/etc/caddy/Caddyfile
             - compiled:/public/
             - caddy_data:/data/
+
     main: &main
         build:
             dockerfile: ./infrastructure/development/Dockerfile
@@ -61,6 +62,7 @@ services:
                 python manage.py migrate --database contact &&
                 python manage.py compilemessages &&
                 python manage.py runserver 0.0.0.0:8000
+
     compiler:
         <<: *main
         volumes:
@@ -74,6 +76,7 @@ services:
                 cd /lgweb/assets &&
                 npm i --omit=dev &&
                 npx rspack --mode=development --watch --env output=/compiled
+
     goatcounter:
         image: ghcr.io/logos-gospel-web/goatcounter:latest
         volumes:
@@ -83,6 +86,7 @@ services:
             - -automigrate
             - -ratelimit
             - export:1/1
+
     meilisearch:
         image: getmeili/meilisearch:v1.55.0
         ports:

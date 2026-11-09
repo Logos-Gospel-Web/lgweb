@@ -13,6 +13,7 @@ services:
         volumes: &volumes
             - db:/db/
             - reports:/reports/
+
     server:
         ports:
             - '8000:8000'
@@ -31,6 +32,7 @@ services:
             - GOATCOUNTER_HOSTNAME=:8002
         volumes:
             - caddy_data:/data/
+
     main: &main
         depends_on:
             migrations:
@@ -46,6 +48,7 @@ services:
             <<: *build
             target: main
         volumes: *volumes
+
     admin:
         <<: *main
         environment:
@@ -54,6 +57,7 @@ services:
             - MAIN_URL=main:8000
             - MEILI_URL=http://meilisearch:7700
             - MEILI_MASTER_KEY=qwertyuiop1234567890
+
     cron:
         <<: *main
         environment:
@@ -64,6 +68,7 @@ services:
         build:
             <<: *build
             target: cron
+
     goatcounter:
         image: ghcr.io/logos-gospel-web/goatcounter:latest
         volumes:
@@ -73,6 +78,7 @@ services:
             - -automigrate
             - -ratelimit
             - export:1/1
+
     meilisearch:
         image: getmeili/meilisearch:v1.55.0
         ports:
