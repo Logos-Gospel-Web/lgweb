@@ -5,22 +5,14 @@ volumes:
     goatcounter_data: {}
     meili_data: {}
 services:
-    migrations:
-        build: &build
-            dockerfile: ./infrastructure/production/Dockerfile
-            target: migrations
-            context: ../..
-        volumes: &volumes
-            - db:/db/
-            - reports:/reports/
-
     server:
         ports:
             - '8000:8000'
             - '8001:8001'
             - '8002:8002'
-        build:
-            <<: *build
+        build: &build
+            dockerfile: ./infrastructure/production/Dockerfile
+            context: ../..
             target: server
         environment:
             - MAIN_URL=main:8000
@@ -34,9 +26,6 @@ services:
             - caddy_data:/data/
 
     main: &main
-        depends_on:
-            migrations:
-                condition: service_completed_successfully
         env_file:
             - .env
         environment:
@@ -47,7 +36,9 @@ services:
         build:
             <<: *build
             target: main
-        volumes: *volumes
+        volumes:
+            - db:/db/
+            - reports:/reports/
 
     admin:
         <<: *main

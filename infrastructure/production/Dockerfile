@@ -89,16 +89,6 @@ CMD [ "crond", "-f", "-d", "6" ]
 
 # ========================================
 
-FROM base AS migrations
-
-COPY --from=preprocessor /lgweb /lgweb
-COPY --parents app/migrations /lgweb/
-COPY --parents --chmod=700 server/migrations /lgweb/
-
-CMD [ "./server/migrations" ]
-
-# ========================================
-
 FROM caddy:2.11-alpine AS server
 
 ENV CACHE_CONTROL='max-age=3600'
