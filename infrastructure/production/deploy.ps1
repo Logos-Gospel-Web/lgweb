@@ -4,7 +4,7 @@ docker compose `
     --env-file .\infrastructure\production\.env.server `
     -p lgweb `
     -f .\infrastructure\production\docker-compose.yml `
-    build
+    pull
 docker compose `
     --env-file .\infrastructure\production\.env `
     --env-file .\infrastructure\production\.env.server `

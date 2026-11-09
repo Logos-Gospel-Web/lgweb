@@ -3,8 +3,47 @@ name: Deploy
 on:
   workflow_dispatch:
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        target: [server, main, cron]
+    steps:
+      - name: Checkout current branch
+        uses: actions/checkout@v6
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push ${{ matrix.target }} image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./infrastructure/production/Dockerfile
+          target: ${{ matrix.target }}
+          platforms: linux/amd64
+          push: true
+          build-args: |
+            NAV_THRESHOLD=${{ vars.NAV_THRESHOLD }}
+          tags: ghcr.io/logos-gospel-web/lgweb-${{ matrix.target }}:latest
+          cache-from: type=gha,scope=${{ matrix.target }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.target }}
+
   deploy:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout current branch
@@ -28,7 +67,7 @@ jobs:
       - name: Deploy
         shell: sh
         run: |
-          docker compose build --build-arg NAV_THRESHOLD=$NAV_THRESHOLD
+          docker compose pull
           docker compose run --rm --no-deps cron ./server/migrations
           docker compose up -d --remove-orphans
         env:
@@ -55,6 +94,7 @@ jobs:
           NAV_THRESHOLD: "${{ vars.NAV_THRESHOLD }}"
           MAXMIND_LICENSE: "${{ secrets.MAXMIND_LICENSE }}"
           MEILI_MASTER_KEY: "${{ secrets.MEILI_MASTER_KEY }}"
+          IMAGE_TAG: latest
           COMPOSE_PROJECT_NAME: lgweb
           COMPOSE_FILE: ./infrastructure/production/docker-compose.yml
 

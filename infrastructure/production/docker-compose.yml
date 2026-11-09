@@ -27,10 +27,7 @@ services:
             - '80:80'
             - '443:443'
             - '443:443/udp'
-        build: &build
-            dockerfile: ./infrastructure/production/Dockerfile
-            target: server
-            context: ../..
+        image: ghcr.io/logos-gospel-web/lgweb-server:${IMAGE_TAG:-latest}
         environment:
             MAIN_URL: main:8000
             ADMIN_URL: admin:8000
@@ -47,9 +44,7 @@ services:
         environment:
             <<: *app-env
             INTERNAL_HOSTS: main
-        build:
-            <<: *build
-            target: main
+        image: ghcr.io/logos-gospel-web/lgweb-main:${IMAGE_TAG:-latest}
         volumes:
             - /opt/lgweb/db/:/db/
             - /opt/lgweb/reports/:/reports/
@@ -69,9 +64,7 @@ services:
 
     cron:
         <<: *main
-        build:
-            <<: *build
-            target: cron
+        image: ghcr.io/logos-gospel-web/lgweb-cron:${IMAGE_TAG:-latest}
         environment:
             <<: *app-env
             INTERNAL_HOSTS: cron
