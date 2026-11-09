@@ -2,11 +2,11 @@
 
 # ========================================
 
-FROM alpine:3.23.3 AS compiler
+FROM alpine:3.24.4 AS compiler
 
 WORKDIR /assets
 
-RUN apk add --no-cache 'nodejs=~24' 'npm=~11'
+RUN apk add --no-cache 'nodejs' 'npm'
 
 COPY assets/package*.json /assets/
 
@@ -20,13 +20,13 @@ RUN npx rspack --mode=production --env output=/compiled --env navThreshold=$NAV_
 
 # ========================================
 
-FROM alpine:3.23.3 AS base
+FROM alpine:3.24.4 AS base
 
 WORKDIR /lgweb
 
 ENV TZ=Asia/Hong_Kong
 
-RUN apk add --no-cache 'abiword=~3' 'abiword-plugin-openxml=~3' 'build-base' 'gettext' 'python3=~3.12' 'py3-pip=~25' 'tzdata' &&\
+RUN apk add --no-cache 'abiword' 'abiword-plugin-openxml' 'build-base' 'gettext' 'python3' 'py3-pip' 'tzdata' &&\
     ln -sf /usr/bin/python3 /usr/bin/python &&\
     ln -sf /usr/bin/pip3 /usr/bin/pip &&\
     pip install gunicorn --break-system-packages
