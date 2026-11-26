@@ -139,6 +139,7 @@ class HomeBanner:
     id = make_id_field()
     language = models.ForeignKey('HomePage', on_delete=models.CASCADE)
     position = models.PositiveSmallIntegerField()
+    publish = models.DateField('Publish at', blank=True, null=True)
     banner = models.ForeignKey('Banner', on_delete=models.CASCADE)
     target_page = models.ForeignKey('Page', blank=True, null=True, on_delete=models.SET_NULL)
 
@@ -162,6 +163,7 @@ class Promotion:
         ]
     id = make_id_field()
     position = models.PositiveSmallIntegerField()
+    publish = models.DateField('Publish at', blank=True, null=True)
     language = models.ForeignKey('HomePage', on_delete=models.CASCADE)
     image = models.ImageField('Image', upload_to='promotion/image/')
     alt = models.TextField('Image Hint', blank=True)
@@ -176,7 +178,7 @@ class MenuQuerySet(WithTopicQuerySet):
     page_field = 'page'
 
     def filter_disabled_item(self, now, include_null = False):
-        query = self.with_topic().filter(enabled=True)
+        query = self.with_topic().filter(enabled=True, publish__lte=now)
         q = { f'{self.page_field}__enabled': True, f'{self.page_field}__publish__lte': now }
         if include_null:
             return query.filter(Q(**{ f'{self.page_field}__isnull': True }) | Q(**q))
@@ -191,6 +193,7 @@ class MenuItem:
     id = make_id_field()
     position = models.PositiveSmallIntegerField()
     enabled = models.BooleanField('Enabled', default=True)
+    publish = models.DateField('Publish at', blank=True, null=True)
     page = models.ForeignKey('Page', blank=True, null=True, on_delete=models.SET_NULL)
     title = lambda _: models.TextField('Title')
 

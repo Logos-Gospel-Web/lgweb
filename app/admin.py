@@ -146,7 +146,7 @@ class ChildMenuItemInline(admin.StackedInline):
     form = ChildMenuItemForm
     fieldsets = (
         (None, {
-            'fields': ('position', 'enabled', 'page'),
+            'fields': ('position', 'enabled', 'publish', 'page'),
         }),
     ) + make_multilingual_fields('title')
 
@@ -165,7 +165,7 @@ class ParentMenuItemAdmin(admin.ModelAdmin):
     inlines = [ChildMenuItemInline]
     fieldsets = (
         (None, {
-            'fields': ('position', 'enabled', 'page'),
+            'fields': ('position', 'enabled', 'publish', 'page'),
         }),
     ) + make_multilingual_fields('title')
 
@@ -188,7 +188,7 @@ class HomeBannerInline(admin.StackedInline):
     form = HomeBannerForm
     fieldsets = (
         (None, {
-            'fields': ('position', 'banner', 'target_page'),
+            'fields': ('position', 'publish', 'banner', 'target_page'),
         }),
     )
 
@@ -210,7 +210,7 @@ class PromotionInline(admin.StackedInline):
     form = PromotionForm
     fieldsets = (
         (None, {
-            'fields': ('position', 'title', 'description', 'image', 'alt', 'page'),
+            'fields': ('position', 'publish', 'title', 'description', 'image', 'alt', 'page'),
         }),
     )
 

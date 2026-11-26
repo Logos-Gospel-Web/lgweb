@@ -7,18 +7,24 @@ def _get_now():
 _last_check = _get_now()
 _count = None
 
-def _check_past_page_count(now: datetime):
-    from ..models import Page
-    return Page.objects.filter(enabled=True, publish__lte=now).count()
+def _check_visible_counts(now: datetime):
+    from ..models import Page, HomeBanner, Promotion, ParentMenuItem, ChildMenuItem
+    return (
+        Page.objects.filter(enabled=True, publish__lte=now).count(),
+        HomeBanner.objects.filter(publish__lte=now).count(),
+        Promotion.objects.filter(publish__lte=now).count(),
+        ParentMenuItem.objects.filter(enabled=True, publish__lte=now).count(),
+        ChildMenuItem.objects.filter(enabled=True, publish__lte=now).count(),
+    )
 
 def check_has_new_page():
     global _count, _last_check
 
     if _count is None:
-        _count = _check_past_page_count(_last_check)
+        _count = _check_visible_counts(_last_check)
 
     _last_check = _get_now()
-    current_count = _check_past_page_count(_last_check)
+    current_count = _check_visible_counts(_last_check)
     has_new = _count != current_count
     _count = current_count
     return has_new
